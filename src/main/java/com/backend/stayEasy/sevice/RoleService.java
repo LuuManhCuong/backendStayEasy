@@ -42,11 +42,15 @@ public class RoleService {
 	}
 
 	public Role save(Role role) {
+		
+		System.out.println("role1: "+ role);
 		if (role.getId() == null) {
 			role.setCreatedAt(LocalDateTime.now());
 		}
+		role.setId(UUID.randomUUID());
 
 		role.setUpdatedAt(LocalDateTime.now());
+		System.out.println("role 2: "+ role);
 		return roleRepository.save(role);
 	}
 }
