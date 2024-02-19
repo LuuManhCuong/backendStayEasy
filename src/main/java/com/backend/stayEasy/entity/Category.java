@@ -5,8 +5,10 @@ import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name="Category")
 public class Category {
 	@Id
