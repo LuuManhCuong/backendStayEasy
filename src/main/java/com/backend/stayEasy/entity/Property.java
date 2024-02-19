@@ -1,5 +1,6 @@
 package com.backend.stayEasy.entity;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -10,8 +11,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
+@Data
+@Table(name="property")
 public class Property {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +34,7 @@ public class Property {
     private int numGuests;
     @Column(name = "discount")
     private int discount;
-    
+    private Float rating;
     @ManyToOne()
     private User user;
     

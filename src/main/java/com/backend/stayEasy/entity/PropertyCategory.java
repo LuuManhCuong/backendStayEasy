@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-@Table(name="Property_category")
+@Data
+@Table(name="property_category")
 public class PropertyCategory {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
