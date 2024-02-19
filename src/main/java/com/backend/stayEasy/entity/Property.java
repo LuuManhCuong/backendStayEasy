@@ -35,7 +35,6 @@ public class Property {
     private int numGuests;
     @Column(name = "discount")
     private int discount;
-    private Float rating;
     @ManyToOne()
     private User user;
     
