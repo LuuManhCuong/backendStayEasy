@@ -23,6 +23,7 @@ public class Property {
     private String thumbnail;
     private String address;
     private Float price;
+    private Float rating;
     @Column(name = "is_null")
     private boolean isNull;
     @Column(name = "num_guests")

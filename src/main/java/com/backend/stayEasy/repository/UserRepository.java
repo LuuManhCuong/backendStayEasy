@@ -12,6 +12,6 @@ import com.backend.stayEasy.entity.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
 	Optional<User> findByEmail(String email);
-	
+
 	Optional<User> findUserById(UUID id);
 }
