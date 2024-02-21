@@ -47,7 +47,7 @@ public class User{
 	String lastName;
 
 	String phone;
-
+	@Column(name = "avatar")
 	String avatar;
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
