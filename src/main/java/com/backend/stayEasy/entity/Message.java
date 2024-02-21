@@ -13,7 +13,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +29,7 @@ public class Message {
 	
 	@Column(name="user_id")
 	private UUID userId;
-	
+	@Column(name="content",columnDefinition = "nvarchar(255)" )
 	private String content;
 	@Column(name = "createAt")
 	private LocalDateTime createAt;
