@@ -17,8 +17,8 @@ import com.backend.stayEasy.sevice.IImageService;
 import com.backend.stayEasy.sevice.IPropertyService;
 
 
-@CrossOrigin
 @RestController
+@CrossOrigin
 @RequestMapping(value="/api/property", produces = "application/json")
 public class PropertyAPI {
 	
