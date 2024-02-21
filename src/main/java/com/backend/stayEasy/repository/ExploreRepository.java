@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.backend.stayEasy.entity.Property;
@@ -12,5 +13,11 @@ import com.backend.stayEasy.entity.Property;
 public interface ExploreRepository extends JpaRepository<Property, UUID> {
 
     List<Property> findAll();
-    List<Property> findByPropertyNameContainingIgnoreCase(String keySearch); // Tìm kiếm trong trường propertyName
+    @Query(value = "SELECT * FROM property WHERE (property_name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch% OR description COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch%)", nativeQuery = true)
+    List<Property> findByPropertyNameOrDescriptionContainingIgnoreCase(String keySearch);
+    
+    @Query(value = "SELECT TOP 5 * FROM property WHERE (property_name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch% OR description COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch%) ORDER BY rating DESC", nativeQuery = true)
+    List<Property> findByPropertyNameOrDescriptionContainingIgnoreCaseOrderByRatingDesc(String keySearch);
+
+
 }

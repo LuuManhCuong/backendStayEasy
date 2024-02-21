@@ -26,7 +26,14 @@ public class ExploreApi {
 	@GetMapping("/explore/search")
 	public List<Property> searchExplore(@RequestParam("keySearch") String keySearch) {
 		System.out.println("keysearch: " + keySearch);
-		List<Property> searchResults = exploreRepository.findByPropertyNameContainingIgnoreCase(keySearch);
+		List<Property> searchResults = exploreRepository.findByPropertyNameOrDescriptionContainingIgnoreCase(keySearch);
+        return searchResults;
+	}
+	
+	@GetMapping("/explore/search/suggest")
+	public List<Property> searchExploreSuggest(@RequestParam("keySearch") String keySearch) {
+		System.out.println("keysearch: " + keySearch);
+		List<Property> searchResults = exploreRepository.findByPropertyNameOrDescriptionContainingIgnoreCaseOrderByRatingDesc(keySearch);
         return searchResults;
 	}
 
