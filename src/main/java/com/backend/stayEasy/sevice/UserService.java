@@ -31,7 +31,7 @@ public class UserService {
 		for(User user: userRepository.findAll()) {
 			List<String> roles = new ArrayList<>();
 			user.getRoles().stream().map(r->roles.add(r.getName())).collect(Collectors.toList());
-			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),roles));
+			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),user.getAvatar(),roles));
 		}
 		return result;
 	}
