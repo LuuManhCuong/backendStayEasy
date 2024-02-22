@@ -24,7 +24,7 @@ public class Property {
     private UUID propertyId;
 	@Column(name = "property_name", columnDefinition = "nvarchar(255)")
 	private String propertyName;
-	@Column(columnDefinition = "nvarchar(254)")
+	@Column(columnDefinition = "ntext")
     private String description;
     private String thumbnail;
     @Column(columnDefinition = "nvarchar(255)")

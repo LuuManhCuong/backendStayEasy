@@ -21,6 +21,9 @@ public class Utilities {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID propertyUtilitiId;
 	
+	@Column(name = "utilities_name", columnDefinition = "nvarchar(255)")
+	private String utilitiesName;
+	
 	@OneToMany(mappedBy = "utilities")
 	private Set<PropertyUilitis> propertyUilitis;
 }
