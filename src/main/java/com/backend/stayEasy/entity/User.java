@@ -1,18 +1,23 @@
 package com.backend.stayEasy.entity;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.backend.stayEasy.enums.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +32,7 @@ import lombok.ToString;
 @Entity
 @ToString
 @Table(name = "users")
-public class User{
+public class User implements UserDetails {
 
 	@Id
 	@Column(name = "id", unique = true, updatable = false)
@@ -40,63 +45,58 @@ public class User{
 	@Column(name = "password", nullable = false)
 	String password;
 
-	@Column(name = "firstName", nullable = false)
+	@Column(name = "firstName", nullable = true)
 	String firstName;
 
-	@Column(name = "lastName", nullable = false)
+	@Column(name = "lastName")
 	String lastName;
 
 	String phone;
-	@Column(name = "avatar")
-	String avatar;
 
-	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
-	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-	private List<Role> roles;
+	String avatar;
 
 	LocalDateTime createdAt;
 
 	LocalDateTime updatedAt;
 
-//	@Override
-//	public Collection<? extends GrantedAuthority> getAuthorities() {
-//		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-//
-//		for (Role role : roles) {
-//			authorities.add(new SimpleGrantedAuthority(role.getName()));
-//		}
-//		return authorities;
-//	}
-//
-//	@Override
-//	public String getUsername() {
-//		// our "username" for security is the email field
-//		return email;
-//	}
-//
-//	@Override
-//	public String getPassword() {
-//		return password;
-//	}
-//
-//	@Override
-//	public boolean isAccountNonExpired() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isAccountNonLocked() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isCredentialsNonExpired() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isEnabled() {
-//		return true;
-//	}
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
+	@OneToMany(mappedBy = "user")
+	private List<Token> tokens;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return role.getAuthorities();
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

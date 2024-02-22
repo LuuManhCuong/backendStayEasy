@@ -1,6 +1,5 @@
 package com.backend.stayEasy.dto;
 
-import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -10,8 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleDTO {
+public class TokenDTO {
 	private UUID id;
-	private String name;
-	private List<UUID> userId;
+	private boolean expired;
+	private boolean revoked;
+	private String token;
+	private String type;
+	private UUID userId;
 }
