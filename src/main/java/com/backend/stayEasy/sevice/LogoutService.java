@@ -1,7 +1,6 @@
 package com.backend.stayEasy.sevice;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,7 @@ public class LogoutService implements LogoutHandler {
 	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 		final String authHeader = request.getHeader("Authorization");
 		final String jwt;
+		System.out.println(authHeader);
 		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 			return;
 		}
@@ -30,7 +30,6 @@ public class LogoutService implements LogoutHandler {
 			storedToken.setExpired(true);
 			storedToken.setRevoked(true);
 			tokenRepository.save(storedToken);
-			SecurityContextHolder.clearContext();
 		}
 	}
 }

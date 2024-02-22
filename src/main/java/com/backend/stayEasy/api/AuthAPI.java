@@ -13,7 +13,6 @@ import com.backend.stayEasy.dto.SignInRequest;
 import com.backend.stayEasy.dto.SignInResponse;
 import com.backend.stayEasy.dto.SignUpRequest;
 import com.backend.stayEasy.dto.TokenDTO;
-import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.sevice.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +43,6 @@ public class AuthAPI {
 	
 	@GetMapping("/token")
 	public ResponseEntity<TokenDTO> getAllToken() {
-		
 		return ResponseEntity.ok(null);
 	}
 	
