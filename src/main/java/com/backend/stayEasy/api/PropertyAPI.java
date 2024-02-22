@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Property;
-import com.backend.stayEasy.sevice.IImageService;
 import com.backend.stayEasy.sevice.IPropertyService;
 
 
@@ -22,9 +20,7 @@ import com.backend.stayEasy.sevice.IPropertyService;
 @RequestMapping(value="/api/property", produces = "application/json")
 public class PropertyAPI {
 	
-	@Autowired
-	private IImageService imageService;
-	
+
 	@Autowired
 	private IPropertyService propertyService;
 	
@@ -43,8 +39,4 @@ public class PropertyAPI {
 		return propertyService.findByCategory(categoryId);
 	}
 	
-	@GetMapping("/images/{propertyId}")
-	public List<Images> getPropertyImage(@PathVariable("propertyId") UUID propertyId){
-		return imageService.getPropertyImage(propertyId);
-	}
 }
