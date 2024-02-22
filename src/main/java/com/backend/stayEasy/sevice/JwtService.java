@@ -18,16 +18,6 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-
-	@Value("${token.secret.key}")
-	private String secretKey;
-	
-	@Value("${expiration}")
-	private long jwtExpiration;
-	
-	@Value("${refresh-token.expiration}")
-	private long refreshExpiration;
-
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
 	}
@@ -42,11 +32,11 @@ public class JwtService {
 	}
 
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-		return buildToken(extraClaims, userDetails, jwtExpiration);
+		return buildToken(extraClaims, userDetails, 86400000);
 	}
 
 	public String generateRefreshToken(UserDetails userDetails) {
-		return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+		return buildToken(new HashMap<>(), userDetails, 3600000);
 	}
 
 	private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
@@ -74,7 +64,7 @@ public class JwtService {
 	}
 
 	private Key getSignInKey() {
-		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+		byte[] keyBytes = Decoders.BASE64.decode("404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970");
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }

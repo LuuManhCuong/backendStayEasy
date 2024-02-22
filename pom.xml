@@ -96,12 +96,6 @@
 		    <artifactId>guava</artifactId>
 		    <version>30.0-jre</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.exam</groupId>
-			<artifactId>hospital</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>
