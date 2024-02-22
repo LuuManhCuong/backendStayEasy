@@ -14,9 +14,11 @@ import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.entity.PropertyCategory;
+import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.repository.IImageRepository;
 import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
+import com.backend.stayEasy.repository.PropertyUilitisRepository;
 
 
 @Service
@@ -34,6 +36,9 @@ public class PropertyService implements IPropertyService{
 	@Autowired
 	private IImageRepository imageRepository;
 	
+	@Autowired
+	private PropertyUilitisRepository propertyUtilitiesRepository;
+	
 	@Override
 	public List<Property> findAll() {
 		// TODO Auto-generated method stub
@@ -45,9 +50,12 @@ public class PropertyService implements IPropertyService{
 		// TODO Auto-generated method stub
 		Property property = propertyRepository.findById(id).get();
 		List<Images> imagelist = imageRepository.findByPropertyPropertyId(id);
+		List<PropertyUilitis> propertyUtilitiesList = propertyUtilitiesRepository.findByPropertyPropertyId(id);
 		PropertyDTO propertyDTO = propertyConverter.toDTO(property);
 		Set<Images> imagesSet = new HashSet<>(imagelist);
+		Set<PropertyUilitis> propertyUtilitiesSet = new HashSet<>(propertyUtilitiesList);
 		propertyDTO.setImagesList(imagesSet);
+		propertyDTO.setPropertyUtilitis(propertyUtilitiesSet);
 		return propertyDTO;
 	}
 
