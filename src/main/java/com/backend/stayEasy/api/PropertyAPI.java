@@ -15,8 +15,8 @@ import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.sevice.IPropertyService;
 
 
-@CrossOrigin
 @RestController
+@CrossOrigin
 @RequestMapping(value="/api/property", produces = "application/json")
 public class PropertyAPI {
 	

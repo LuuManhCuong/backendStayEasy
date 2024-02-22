@@ -22,19 +22,21 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "property_id")
     private UUID propertyId;
-	@Column(name = "property_name")
+	@Column(name = "property_name", columnDefinition = "nvarchar(255)")
 	private String propertyName;
+	@Column(columnDefinition = "nvarchar(254)")
     private String description;
     private String thumbnail;
+    @Column(columnDefinition = "nvarchar(255)")
     private String address;
     private Float price;
+    private Float rating;
     @Column(name = "is_null")
     private boolean isNull;
     @Column(name = "num_guests")
     private int numGuests;
     @Column(name = "discount")
     private int discount;
-    private Float rating;
     @ManyToOne()
     private User user;
     

@@ -9,5 +9,6 @@ import com.backend.stayEasy.entity.PropertyCategory;
 
 
 public interface IPropertyCategoryRepository extends JpaRepository<PropertyCategory, UUID>{
+	
 	List<PropertyCategory> findByCategoryCategoryId(UUID categoryId);
 }

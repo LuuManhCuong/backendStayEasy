@@ -17,7 +17,6 @@ import lombok.Data;
 public class Images {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	
     private UUID imageId;
 	private String url;
 	private String description;
