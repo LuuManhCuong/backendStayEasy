@@ -35,9 +35,13 @@ public class PropertyService implements IPropertyService{
 	private IImageRepository imageRepository;
 	
 	@Override
-	public List<Property> findAll() {
+	public List<PropertyDTO> findAll() {
+		List<PropertyDTO> result = new ArrayList<>();
+		for(Property p : propertyRepository.findAll()) {
+			result.add(propertyConverter.toDTO(p));
+		}
 		// TODO Auto-generated method stub
-		return propertyRepository.findAll();
+		return result;
 	}
 
 	@Override
