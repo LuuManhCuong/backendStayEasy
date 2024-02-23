@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.backend.stayEasy.dto.SignUpRequest;
 import com.backend.stayEasy.enums.Role;
+import com.backend.stayEasy.repository.UserRepository;
 import com.backend.stayEasy.sevice.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SeedDataConfig implements CommandLineRunner {
 
+	private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
 
     @Override
     public void run(String... args) throws Exception {
-        
+    	if (userRepository.count() == 0) {
     	SignUpRequest admin = SignUpRequest
                       .builder()
                       .firstName("admin")
@@ -56,6 +58,7 @@ public class SeedDataConfig implements CommandLineRunner {
         log.debug("created ADMIN user - {}", admin);
         log.debug("created OWNER user - {}", owner);
         log.debug("created USER user - {}", user);
+    	}
     }
 
 }

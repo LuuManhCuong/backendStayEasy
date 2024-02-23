@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +18,7 @@ import com.backend.stayEasy.repository.ExploreRepository;
 
 @RestController
 @CrossOrigin
+@RequestMapping(value="/api/v1/", produces = "application/json")
 public class ExploreApi {
 	@Autowired
 	private ExploreRepository exploreRepository;
