@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +28,7 @@ public class UserService {
 	public List<UserDTO> getAllUser() {
 		List<UserDTO> result = new ArrayList<>();
 		for(User user: userRepository.findAll()) {
-			List<String> roles = new ArrayList<>();
-			user.getRoles().stream().map(r->roles.add(r.getName())).collect(Collectors.toList());
-			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),user.getAvatar(),roles));
+			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),null,user.getRole().name()));
 		}
 		return result;
 	}

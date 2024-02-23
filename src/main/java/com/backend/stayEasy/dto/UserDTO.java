@@ -1,7 +1,7 @@
 package com.backend.stayEasy.dto;
 
-import java.util.List;
 import java.util.UUID;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +16,8 @@ public class UserDTO {
 	private String email;
 	private String firstName;
 	private String lastName;
+
 	private String avatar;
-	private List<String> roles;
+
+	private String roleName;
 }

@@ -1,10 +1,13 @@
 package com.backend.stayEasy.sevice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.stayEasy.convertor.CategoryConverter;
+import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.entity.Category;
 import com.backend.stayEasy.repository.ICategoryRepository;
 
@@ -13,11 +16,19 @@ public class CategoryService implements ICategoryService{
 	
 	@Autowired
 	private ICategoryRepository categoryRepository;
+	
+	@Autowired
+	private CategoryConverter categoryConverter;
 
 	@Override
-	public List<Category> findAll() {
+	public List<CategoryDTO> findAll() {
 		// TODO Auto-generated method stub
-		return categoryRepository.findAll();
+		List<CategoryDTO> categoryDTOList = new ArrayList<>();
+		List<Category> categoryList = categoryRepository.findAll();
+		for (Category category : categoryList) {
+			categoryDTOList.add(categoryConverter.toDTO(category));
+		}
+		return categoryDTOList;
 	}
 
 	

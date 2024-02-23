@@ -1,7 +1,6 @@
 package com.backend.stayEasy.dto;
 
-import java.util.List;
-import java.util.UUID;
+import com.backend.stayEasy.enums.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequest {
-  String email;
-  String password;
-  String firstName;
-  String lastName;
-  List<UUID> roleIds;
+	private String email;
+	private String password;
+	private String firstName;
+	private String lastName;
+	private Role role;
 }
-
