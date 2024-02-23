@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.stayEasy.dto.DataPropertyExploreDTO;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.repository.ExploreRepository;
 
@@ -28,15 +29,26 @@ public class ExploreApi {
         return exploreRepository.findAll();
     }
 	
-	@GetMapping("/explore/search")
-	public Page<Property> searchExplore(@RequestParam("keySearch") String keySearch, @RequestParam("page") int page, @RequestParam("size") int size) {
-	    System.out.println("keysearch: " + keySearch);
-	    System.out.println("page: " + page);
-	    System.out.println("size: " + size);
-	    Pageable pageable = PageRequest.of(page, size);
-	    return exploreRepository.findByPropertyNameOrDescriptionContainingIgnoreCase(keySearch, pageable);
-	}
-	
+	 @GetMapping("/explore/search")
+	    public DataPropertyExploreDTO searchExplore(
+	            @RequestParam("keySearch") String keySearch,
+	            @RequestParam("page") int page,
+	            @RequestParam("size") int size
+	    ) {
+	        System.out.println("keysearch: " + keySearch);
+	        System.out.println("page: " + page);
+	        System.out.println("size: " + size);
+	        
+	        // Tạo đối tượng Pageable từ page và size
+	        Pageable pageable = PageRequest.of(page, size);
+	        
+	        // Lấy tổng số lượng bản ghi
+	        long totalCount = exploreRepository.count();
+	        
+	        // Trả về kết quả truy vấn kèm theo tổng số lượng bản ghi
+	        Page<Property> properties = exploreRepository.findByPropertyNameOrDescriptionContainingIgnoreCase(keySearch, pageable);
+	        return new DataPropertyExploreDTO(totalCount, properties);
+	    }
 	
 	
 	
