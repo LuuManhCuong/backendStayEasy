@@ -18,7 +18,7 @@ import com.backend.stayEasy.repository.ExploreRepository;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value="/api/v1/", produces = "application/json")
+@RequestMapping("/api/v1/stayeasy")
 public class ExploreApi {
 	@Autowired
 	private ExploreRepository exploreRepository;
