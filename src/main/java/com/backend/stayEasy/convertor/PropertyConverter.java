@@ -1,5 +1,7 @@
 package com.backend.stayEasy.convertor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,10 +40,16 @@ public class PropertyConverter {
 		propertyDTO.setPropertyName(property.getPropertyName());
 		propertyDTO.setRating(property.getRating());
 		propertyDTO.setThumbnail(property.getThumbnail());
-		propertyDTO.setFeedbackList(property.getFeedbacks());
-		propertyDTO.setImagesList(property.getImages());
-		propertyDTO.setPropertyUtilitis(property.getPropertyUilitis());
 		propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
 		return propertyDTO;
 	}
+	
+	public List<PropertyDTO> arrayToDTO(List<Property> propertyList) {
+		List<PropertyDTO> propertyDTOList = new ArrayList<>();
+		for (Property property : propertyList) {
+			propertyDTOList.add(toDTO(property));
+		}
+		return propertyDTOList;
+	}
+	
 }

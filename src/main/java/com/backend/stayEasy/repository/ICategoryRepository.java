@@ -4,10 +4,9 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.backend.stayEasy.entity.Utilities;
+import com.backend.stayEasy.entity.Category;
 
 
-
-public interface UtilitiesRepository extends JpaRepository<Utilities, UUID>{
+public interface ICategoryRepository extends JpaRepository<Category, UUID>{
 
 }

@@ -30,6 +30,8 @@ public class SeedDataConfig implements CommandLineRunner {
                 .builder()
                 .email("user@gmail.com")
                 .password(passwordEncoder.encode("user123"))
+                .firstName("Minh")
+                .lastName("Tran Cong")
                 .role(Role.USER)
                 .build();
         authService.register(user);

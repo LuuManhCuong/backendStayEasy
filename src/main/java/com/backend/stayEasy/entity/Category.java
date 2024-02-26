@@ -15,8 +15,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "category_id")
     private UUID categoryId;
-
-	private String category_name;
+	
+	@Column(name = "category_name", columnDefinition = "nvarchar(255)")
+	private String categoryName;
 	
 	@OneToMany(mappedBy = "category")
 	private Set<PropertyCategory> propertyCategories;

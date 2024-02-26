@@ -28,7 +28,7 @@ public class PropertyDTO {
     private int discount;
     private Float rating;
     private UserDTO owner;
-    private Set<Images> imagesList;
-    private Set<Feedback> feedbackList;
-    private Set<PropertyUilitis> propertyUtilitis;
+    private Set<ImagesDTO> imagesList;
+    private Set<FeedbackDTO> feedbackList;
+    private Set<PropertyUtilitiesDTO> propertyUtilitis;
 }

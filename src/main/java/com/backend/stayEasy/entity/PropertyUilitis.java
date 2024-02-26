@@ -18,9 +18,9 @@ import lombok.Data;
 public class PropertyUilitis {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID utilityId;
+    private UUID propertyUtilitiesId;
 
-    private String utilityName;
+    private int quantity;
     
     @ManyToOne()
     private Property property;
