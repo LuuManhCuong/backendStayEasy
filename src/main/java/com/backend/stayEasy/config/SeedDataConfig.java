@@ -2,6 +2,7 @@ package com.backend.stayEasy.config;
 
 
 import org.springframework.boot.CommandLineRunner;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ public class SeedDataConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         
     	if (userRepository.count() == 0) {
         SignUpRequest user = SignUpRequest
@@ -33,6 +35,7 @@ public class SeedDataConfig implements CommandLineRunner {
                 .role(Role.USER)
                 .build();
         authService.register(user);
+
         System.out.println("created USER user - {}"+user);
     	}
     }

@@ -18,7 +18,7 @@ public interface ExploreRepository extends JpaRepository<Property, UUID> {
     @Query(value = "SELECT * FROM property WHERE (property_name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch% OR description COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch%)", nativeQuery = true)
     Page<Property> findByPropertyNameOrDescriptionContainingIgnoreCase(String keySearch, Pageable pageable);
 
-
+    long count();
     @Query(value = "SELECT TOP 5 * FROM property WHERE (property_name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch% OR description COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch%) ORDER BY rating DESC", nativeQuery = true)
     List<Property> findByPropertyNameOrDescriptionContainingIgnoreCaseOrderByRatingDesc(String keySearch);
 

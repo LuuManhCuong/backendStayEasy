@@ -28,7 +28,7 @@ import com.backend.stayEasy.sevice.UserService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/user")
+@RequestMapping(value = "/api/v1/stayeasy/user", produces = "application/json")
 public class UserAPI {
 
 	@Autowired

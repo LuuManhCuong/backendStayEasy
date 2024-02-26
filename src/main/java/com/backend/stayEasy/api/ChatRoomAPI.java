@@ -24,7 +24,7 @@ import com.backend.stayEasy.sevice.IChatRoomService;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value="/api/v1/chatroom", produces = "application/json")
+@RequestMapping(value="/api/v1/stayeasy/chatroom", produces = "application/json")
 public class ChatRoomAPI {
 	@Autowired
 	private IChatRoomService chatRoomService;
