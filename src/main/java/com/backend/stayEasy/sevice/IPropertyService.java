@@ -9,7 +9,7 @@ import com.backend.stayEasy.entity.Property;
 
 
 public interface IPropertyService {
-	List<Property> findAll();
+	List<PropertyDTO> findAll();
 	PropertyDTO findById(UUID id);
 	List<Property> findByCategory(UUID categoryId);
 }

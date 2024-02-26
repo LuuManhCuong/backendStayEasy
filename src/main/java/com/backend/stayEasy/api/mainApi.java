@@ -1,5 +1,6 @@
 package com.backend.stayEasy.api;
 
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,5 +14,10 @@ public class mainApi {
 	@GetMapping
 	public String homePage() {
 		return "WELCOME TO STAYEASY.";
+	}
+	
+	@GetMapping("/alo")
+	public String homePagetest() {
+		return "WELCOME TO STAYEASY1.";
 	}
 }

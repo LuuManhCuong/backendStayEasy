@@ -19,7 +19,7 @@ import com.backend.stayEasy.sevice.IPropertyService;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value="/api/property", produces = "application/json")
+@RequestMapping("/api/v1/stayeasy/property")
 public class PropertyAPI {
 	
 	@Autowired
@@ -28,10 +28,15 @@ public class PropertyAPI {
 	@Autowired
 	private IPropertyService propertyService;
 	
-	@GetMapping("")
-	public List<Property> getProperty(){
+	@GetMapping
+	public List<PropertyDTO> getProperty(){
 		return propertyService.findAll();
 	}
+	
+//	@GetMapping
+//	public String getProperty(){
+//		return "OK";
+//	}
 	
 	@GetMapping("/{id}")
 	public PropertyDTO getDetailProperty(@PathVariable("id") UUID id) {
