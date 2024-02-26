@@ -53,7 +53,8 @@ public class SecurityConfig {
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 		.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
 						req -> req.requestMatchers(WHITE_LIST_URL).permitAll()
-						.requestMatchers("/api/v1/user/**").hasAnyRole(ADMIN.name(), OWNER.name())
+						.requestMatchers("/api/v1/owner/**").hasAnyRole(OWNER.name())
+						.requestMatchers("/api/v1/user/**").hasAnyRole(ADMIN.name())
 						.requestMatchers(GET, "/api/v1/user/**").hasAnyAuthority(ADMIN_READ.name(), OWNER_READ.name())
 						.requestMatchers(POST, "/api/v1/user/**").hasAnyAuthority(ADMIN_CREATE.name())
 						.requestMatchers(PUT, "/api/v1/user/**").hasAnyAuthority(ADMIN_UPDATE.name())

@@ -22,13 +22,9 @@ public class CategoryService implements ICategoryService{
 
 	@Override
 	public List<CategoryDTO> findAll() {
-		// TODO Auto-generated method stub
-		List<CategoryDTO> categoryDTOList = new ArrayList<>();
+		// TODO Auto-generated method stub	
 		List<Category> categoryList = categoryRepository.findAll();
-		for (Category category : categoryList) {
-			categoryDTOList.add(categoryConverter.toDTO(category));
-		}
-		return categoryDTOList;
+		return categoryConverter.arrayToDTO(categoryList);
 	}
 
 	

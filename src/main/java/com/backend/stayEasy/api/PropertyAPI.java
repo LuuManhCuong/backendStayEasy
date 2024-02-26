@@ -24,10 +24,15 @@ public class PropertyAPI {
 	@Autowired
 	private IPropertyService propertyService;
 	
-	@GetMapping("")
-	public List<Property> getProperty(){
+	@GetMapping
+	public List<PropertyDTO> getProperty(){
 		return propertyService.findAll();
 	}
+	
+//	@GetMapping
+//	public String getProperty(){
+//		return "OK";
+//	}
 	
 	@GetMapping("/{id}")
 	public PropertyDTO getDetailProperty(@PathVariable("id") UUID id) {
@@ -35,7 +40,7 @@ public class PropertyAPI {
 	}
 	
 	@GetMapping("/category/{category}")
-	public List<Property> getPropertyByCategory(@PathVariable("category") UUID categoryId){
+	public List<PropertyDTO> getPropertyByCategory(@PathVariable("category") UUID categoryId){
 		return propertyService.findByCategory(categoryId);
 	}
 	

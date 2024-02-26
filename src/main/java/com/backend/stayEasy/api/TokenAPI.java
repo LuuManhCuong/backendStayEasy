@@ -16,7 +16,7 @@ import com.backend.stayEasy.sevice.TokenService;
 
 @RestController
 @RequestMapping("/api/v1/token")
-@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_OWNER') or hasRole('ROLE_USER')")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class TokenAPI {
 	
 	@Autowired

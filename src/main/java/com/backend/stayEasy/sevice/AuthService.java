@@ -45,7 +45,6 @@ public class AuthService {
 				.createdAt(LocalDateTime.now())
 				.updatedAt(LocalDateTime.now()) 
 				.build();
-		System.out.println("new user: " + user);
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
