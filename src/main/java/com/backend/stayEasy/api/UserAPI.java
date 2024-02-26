@@ -28,7 +28,8 @@ import com.backend.stayEasy.sevice.UserService;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/api/v1/stayeasy/user", produces = "application/json")
+@RequestMapping(value = "/api/v1/stayeasy/user")
+//@RequestMapping(value = "/api/v1/stayeasy/user", produces = "application/json")
 public class UserAPI {
 
 	@Autowired
@@ -38,13 +39,13 @@ public class UserAPI {
 	private AuthService authService;
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('admin:read')")
+//	@PreAuthorize("hasAuthority('admin:read')")
 	public ResponseEntity<List<UserDTO>> getAllUser() {
 		return ResponseEntity.ok(userService.getAllUser());
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasAuthority('owner:read')")
+//	@PreAuthorize("hasAuthority('owner:read')")
 	public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
 		return ResponseEntity.ok(userService.getUserById(UUID.fromString(id)));
 	}

@@ -1,5 +1,6 @@
 package com.backend.stayEasy.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,23 +14,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.dto.DataPropertyExploreDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.repository.ExploreRepository;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/stayeasy")
+@RequestMapping("/api/v1/stayeasy/explore")
 public class ExploreApi {
 	@Autowired
 	private ExploreRepository exploreRepository;
 	
-	@GetMapping("/explore")
-	public List<Property> getAllProperties() {
-        return exploreRepository.findAll();
+	@Autowired
+	private PropertyConverter propertyConverter;
+	
+	@GetMapping()
+	public List<PropertyDTO> getAllProperties() {
+		List<Property> propertyList = exploreRepository.findAll();
+		List<PropertyDTO> propertyDTOs = new ArrayList<>();
+		for (Property property : propertyList) {
+			propertyDTOs.add(propertyConverter.toDTO(property));
+		}
+        return propertyDTOs;
     }
 	
-	 @GetMapping("/explore/search")
+	 @GetMapping("/search")
 	    public DataPropertyExploreDTO searchExplore(
 	            @RequestParam("keySearch") String keySearch,
 	            @RequestParam("page") int page,
@@ -47,16 +58,26 @@ public class ExploreApi {
 	        
 	        // Trả về kết quả truy vấn kèm theo tổng số lượng bản ghi
 	        Page<Property> properties = exploreRepository.findByPropertyNameOrDescriptionContainingIgnoreCase(keySearch, pageable);
-	        return new DataPropertyExploreDTO(totalCount, properties);
+	        
+			List<PropertyDTO> propertyDTOs = new ArrayList<>();
+			for (Property property : properties) {
+				propertyDTOs.add(propertyConverter.toDTO(property));
+			}
+			
+	        return new DataPropertyExploreDTO(totalCount, propertyDTOs);
 	    }
 	
 	
 	
-	@GetMapping("/explore/search/suggest")
-	public List<Property> searchExploreSuggest(@RequestParam("keySearch") String keySearch) {
-		System.out.println("keysearch: " + keySearch);
+	@GetMapping("/search/suggest")
+	public List<PropertyDTO> searchExploreSuggest(@RequestParam("keySearch") String keySearch) {
+		System.out.println("keysearch suggest: " + keySearch);
 		List<Property> searchResults = exploreRepository.findByPropertyNameOrDescriptionContainingIgnoreCaseOrderByRatingDesc(keySearch);
-        return searchResults;
+		List<PropertyDTO> propertyDTOs = new ArrayList<>();
+		for (Property property : searchResults) {
+			propertyDTOs.add(propertyConverter.toDTO(property));
+		}
+        return propertyDTOs;
 	}
 
 }

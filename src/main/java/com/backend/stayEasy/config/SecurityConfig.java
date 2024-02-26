@@ -44,7 +44,7 @@ public class SecurityConfig {
 	@Autowired
 	private LogoutService logoutService;
 
-	private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**","/api/v1/stayeasy/**"};
+	private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**", "/api/v1/stayeasy/**"};
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final AuthenticationProvider authenticationProvider;
 
