@@ -16,8 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataPropertyExploreDTO {
-
-	
 	private long totalCount;
     private List<PropertyDTO> properties;
 
