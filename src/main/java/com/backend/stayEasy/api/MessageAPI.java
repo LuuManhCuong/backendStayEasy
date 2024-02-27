@@ -22,7 +22,7 @@ import com.backend.stayEasy.sevice.IMessageService;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value="/api/v1/message", produces = "application/json")
+@RequestMapping(value="/api/v1/stayeasy/message", produces = "application/json")
 public class MessageAPI {
 	@Autowired
 	private IMessageService messageService;

@@ -27,12 +27,12 @@ public class ChatAppController {
 	
 	
 	@MessageMapping("/chat/{roomId}")
-    @SendTo("/topic/{roomId}")
+    @SendTo("/api/v1/stayeasy/topic/{roomId}")
 	public Message sendMessage(@Payload Message mess, @DestinationVariable UUID roomId) {
+		System.out.println(mess.getContent());
 		mess.setUpdateAt(LocalDateTime.now());
 		mess.setCreateAt(LocalDateTime.now());
 		messageService.saveMessage(mess);
-		
 		return mess;
 		
 	}

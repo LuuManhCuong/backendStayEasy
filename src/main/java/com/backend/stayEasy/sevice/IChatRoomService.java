@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.backend.stayEasy.dto.HostDTO;
 import com.backend.stayEasy.entity.ChatRoom;
 import com.backend.stayEasy.entity.Message;
 
@@ -15,4 +16,6 @@ public interface IChatRoomService {
 	List<Message> getAllMessageChatRoom(UUID id);
 	
 	List<ChatRoom> findByUserIdOrHostId(UUID userId, UUID hostId);
+
+	HostDTO findHostById(UUID id);
 }

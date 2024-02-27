@@ -7,9 +7,12 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.stayEasy.dto.HostDTO;
 import com.backend.stayEasy.entity.ChatRoom;
 import com.backend.stayEasy.entity.Message;
+import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.IChatRoomRepository;
+import com.backend.stayEasy.repository.UserRepository;
 
 @Service
 public class ChatRoomService implements IChatRoomService{
@@ -17,6 +20,8 @@ public class ChatRoomService implements IChatRoomService{
 	@Autowired
 	private IChatRoomRepository chatRoomRepository;
 
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Override
 	public List<ChatRoom> getAllChatRoom() {
@@ -53,5 +58,16 @@ public class ChatRoomService implements IChatRoomService{
     public List<ChatRoom> findByUserIdOrHostId(UUID userId, UUID hostId) {
         return chatRoomRepository.findByUserIdOrHostId(userId, hostId);
     }
+
+	@Override
+	public HostDTO findHostById(UUID id) {
+		User user = userRepository.findById(id).get();
+		HostDTO host = new HostDTO();
+		host.setAvatar(user.getAvatar());
+		host.setFirstName(user.getFirstName());
+		host.setLastName(user.getLastName());
+
+		return host;
+	}
 
 }
