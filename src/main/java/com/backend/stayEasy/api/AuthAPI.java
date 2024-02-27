@@ -33,6 +33,7 @@ public class AuthAPI {
 
 	@PostMapping("/register")
 	public ResponseEntity<SignInResponse> register(@RequestBody SignUpRequest request) {
+		System.out.println(request);
 		return ResponseEntity.ok(service.register(request));
 	}
 
