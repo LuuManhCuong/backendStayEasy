@@ -1,0 +1,17 @@
+package com.backend.stayEasy.dto;
+
+import lombok.Data;
+
+import java.util.UUID;
+
+@Data
+public class PaymentDTO {
+    private UUID paymentBillId ;
+    private  String paymentId;
+    private  UUID bookingId;
+    private  float amount;
+    private String method;
+    private String accountType;
+    private String status;
+    private String createTime;
+}

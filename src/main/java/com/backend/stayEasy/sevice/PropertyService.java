@@ -1,14 +1,5 @@
 package com.backend.stayEasy.sevice;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Images;
@@ -17,6 +8,10 @@ import com.backend.stayEasy.entity.PropertyCategory;
 import com.backend.stayEasy.repository.IImageRepository;
 import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 
 @Service
@@ -39,7 +34,11 @@ public class PropertyService implements IPropertyService{
 		// TODO Auto-generated method stub
 		return propertyRepository.findAll();
 	}
-
+	public Property getById(UUID id)  {
+		Property property;
+		property = propertyRepository.findById(id).get();
+		return property;
+	}
 	@Override
 	public PropertyDTO findById(UUID id) {
 		// TODO Auto-generated method stub

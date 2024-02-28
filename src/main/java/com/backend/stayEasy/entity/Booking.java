@@ -1,29 +1,45 @@
 package com.backend.stayEasy.entity;
 
-import java.time.LocalDateTime;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.sql.Date;
 import java.util.UUID;
 
-import jakarta.persistence.*;
-
 @Entity
-
+@Getter
+@Setter
+@Table(name = "Booking")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Booking {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID bookingId;
-	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "property_id", nullable = false)
+	private Property property;
+	@Column(name = "check-in")
+	private Date checkIn;
+	@Column(name = "check-out")
+	private Date checkOut;
+	@Column(name = "date-booking")
+	private Date dateBooking;
+//	@OneToMany(mappedBy = "booking")
+//	private Set<BookingGuest> bookingGuests;
 	
-	@OneToMany(mappedBy = "booking")
-	private Set<BookingGuest> bookingGuests;
-	
-	@OneToMany(mappedBy = "booking")
-	private Set<BookingDetail> bookingDetails;
-	
+//	@OneToMany(mappedBy = "booking")
+//	private Set<BookingDetail> bookingDetails;
+	@Column(name = "numNight")
+	private int numNight;
 	@Column(name = "total_price")
     private Float totalPrice;
-    private boolean status;
-
+	@Column(name = "status")
+	private Boolean status;
+	@Column(name = "num-guest")
+	private int numGuest;
 }
