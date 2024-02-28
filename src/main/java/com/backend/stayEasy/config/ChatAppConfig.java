@@ -12,13 +12,13 @@ public class ChatAppConfig implements WebSocketMessageBrokerConfigurer{
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		// TODO Auto-generated method stub
-		config.enableSimpleBroker("/topic");
-		config.setApplicationDestinationPrefixes("/app");
+		config.enableSimpleBroker("/api/v1/stayeasy/topic");
+		config.setApplicationDestinationPrefixes("/api/v1/stayeasy/app");
 	}
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry config) { 
 		// TODO Auto-generated method stub
-		config.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
+		config.addEndpoint("/api/v1/stayeasy/ws").setAllowedOriginPatterns("*").withSockJS();
 	}
 }

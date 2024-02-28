@@ -26,8 +26,10 @@ public class ChatRoom {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="chat_room_id")
 	private UUID roomChatId;
+
 	@Column(name="user_id")
 	private UUID userId;
+	
 	@Column(name="host_id")
 	private UUID hostId;
 	
