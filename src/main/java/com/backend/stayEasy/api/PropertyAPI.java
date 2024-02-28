@@ -37,17 +37,7 @@ public class PropertyAPI {
 		return propertyService.findAll();
 	}
 	
-	@GetMapping("/full")
-	public List<PropertyDTO> getFullProperty(){
-		List<Property> properties =  propertyRepository.findAllPropertiesWithSets();
-		System.out.println("oki");
-		List<PropertyDTO> propertyDTOs = new ArrayList<>();
-		for (Property property : properties) {
-			System.out.println("element: " + property);
-			propertyDTOs.add(propertyConverter.toDTO(property));
-		}
-		return propertyDTOs;
-	}
+
 	
 	@GetMapping("/{id}")
 	public PropertyDTO getDetailProperty(@PathVariable("id") UUID id) {

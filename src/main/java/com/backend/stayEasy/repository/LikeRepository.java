@@ -12,4 +12,7 @@ import com.backend.stayEasy.entity.Like;
 public interface LikeRepository extends JpaRepository<Like, UUID> {
 
 	List<Like> findByPropertyPropertyId(UUID propertyId);
+
+	void deleteByPropertyPropertyIdAndUserId(UUID idPost, UUID idUser);
+
 }
