@@ -71,9 +71,12 @@ public class PropertyService implements IPropertyService{
 		 for (Property property : properties) {
 			 PropertyDTO propertyDTO = propertyConverter.toDTO(property); // Chuyển đổi Property thành PropertyDTO
 			 List<Like> likes = likeRepository.findByPropertyPropertyId(property.getPropertyId());
+			 List<Images> images = imageRepository.findByPropertyPropertyId(property.getPropertyId());
 			 
+			 Set<ImagesDTO> imagesDTO = imagesConverter.arrayToDTO(images);
 			 Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
 			 propertyDTO.setLikeList(likeRequestDTOs);
+			 propertyDTO.setImagesList(imagesDTO);
 			 propertyDTOs.add(propertyDTO);
 		}
 		
@@ -93,9 +96,8 @@ public class PropertyService implements IPropertyService{
 		List<PropertyUilitis> propertyUtilitiesList = propertyUtilitiesRepository.findByPropertyPropertyId(id);
 		List<Images> imagesList = imageRepository.findByPropertyPropertyId(id);
 		PropertyDTO propertyDTO = propertyConverter.toDTO(property);
-		Set<ImagesDTO> imagesSet = new HashSet<>(imagesConverter.arrayToDTO(imagesList));
 		Set<PropertyUtilitiesDTO> propertyUtilitiesSet = new HashSet<>(propertyUtilitiesConverter.arrayToDTO(propertyUtilitiesList));
-		propertyDTO.setImagesList(imagesSet);
+		propertyDTO.setImagesList(imagesConverter.arrayToDTO(imagesList));
 		propertyDTO.setPropertyUtilitis(propertyUtilitiesSet);
 		return propertyDTO;
 	}

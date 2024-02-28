@@ -1,7 +1,9 @@
 package com.backend.stayEasy.convertor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -20,11 +22,12 @@ public class ImagesConventer {
 		return imagesDTO;
 	}
 	
-	public List<ImagesDTO> arrayToDTO(List<Images> imagesList) {
+	public Set<ImagesDTO> arrayToDTO(List<Images> imagesList) {
 		List<ImagesDTO> imagesDTOList = new ArrayList<>();
 		for (Images image : imagesList) {
 			imagesDTOList.add(toDTO(image));
 		}
-		return imagesDTOList;
+		Set<ImagesDTO> imagesSet = new HashSet<>(imagesDTOList);
+		return imagesSet;
 	}
 }
