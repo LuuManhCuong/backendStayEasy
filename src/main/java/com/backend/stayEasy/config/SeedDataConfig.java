@@ -25,13 +25,14 @@ public class SeedDataConfig implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         
-    	if (userRepository.count() == 0) {
+    	if (userRepository.count() == 0) 
+    	{
         SignUpRequest user = SignUpRequest
                 .builder()
-                .email("user@gmail.com")
-                .password(passwordEncoder.encode("user123"))
-                .firstName("Minh")
-                .lastName("Tran Cong")
+                .email("cuong@gmail.com")
+                .password(passwordEncoder.encode("cuong123"))
+                .firstName("cuong")
+                .lastName("manh")
                 .role(Role.USER)
                 .build();
         authService.register(user);

@@ -1,5 +1,6 @@
 package com.backend.stayEasy.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Property;
+import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.sevice.IPropertyService;
 
 
@@ -24,15 +27,17 @@ public class PropertyAPI {
 	@Autowired
 	private IPropertyService propertyService;
 	
+	@Autowired
+	private IPropertyRepository propertyRepository;
+	@Autowired
+	private PropertyConverter propertyConverter;
+	
 	@GetMapping
 	public List<PropertyDTO> getProperty(){
 		return propertyService.findAll();
 	}
 	
-//	@GetMapping
-//	public String getProperty(){
-//		return "OK";
-//	}
+
 	
 	@GetMapping("/{id}")
 	public PropertyDTO getDetailProperty(@PathVariable("id") UUID id) {
