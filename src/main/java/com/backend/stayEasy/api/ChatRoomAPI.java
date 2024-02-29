@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.stayEasy.dto.ChatRoomDTO;
+import com.backend.stayEasy.dto.HostDTO;
 import com.backend.stayEasy.entity.ChatRoom;
 import com.backend.stayEasy.entity.Message;
 import com.backend.stayEasy.sevice.IChatRoomService;
@@ -74,4 +76,14 @@ public class ChatRoomAPI {
     		@PathVariable("id") UUID id) {
         return chatRoomService.findByUserIdOrHostId(id, id);
     }
+
+	@GetMapping("/get-host/{id}")
+	public HostDTO getHostRoom(@PathVariable("id") UUID id) {
+		return chatRoomService.findHostById(id);
+	}
+
+	@PostMapping("/first-room")
+	public void addFirstRoom(@RequestBody ChatRoomDTO chatRoom) {
+		chatRoomService.addFirstRoom(chatRoom);
+	}
 }
