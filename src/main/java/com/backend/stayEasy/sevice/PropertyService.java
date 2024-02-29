@@ -70,7 +70,7 @@ public class PropertyService implements IPropertyService{
 		 
 		 for (Property property : properties) {
 			 PropertyDTO propertyDTO = propertyConverter.toDTO(property); // Chuyển đổi Property thành PropertyDTO
-			 List<Like> likes = likeRepository.findByPropertyPropertyId(property.getPropertyId());
+			 List<Like> likes = likeRepository.findByPropertyPropertyId(property.getPropertyId()); // get like tương ứng mỗi property
 			 
 			 Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
 			 propertyDTO.setLikeList(likeRequestDTOs);
@@ -78,11 +78,7 @@ public class PropertyService implements IPropertyService{
 		}
 		
 		return propertyDTOs;
-//		// TODO Auto-generated method stub
-//		List<LikeRequestDTO> likeRequestDTOs =likeConverter.arraytoDTO(likeRepository.findAll());
-//		System.out.println("like o day"+likeRequestDTOs);
-//		return propertyConverter.arrayToDTO(propertyRepository.findAll(), likeRequestDTOs);
-		
+
 		
 	}
 
