@@ -81,11 +81,7 @@ public class PropertyService implements IPropertyService{
 		}
 		
 		return propertyDTOs;
-//		// TODO Auto-generated method stub
-//		List<LikeRequestDTO> likeRequestDTOs =likeConverter.arraytoDTO(likeRepository.findAll());
-//		System.out.println("like o day"+likeRequestDTOs);
-//		return propertyConverter.arrayToDTO(propertyRepository.findAll(), likeRequestDTOs);
-		
+
 		
 	}
 

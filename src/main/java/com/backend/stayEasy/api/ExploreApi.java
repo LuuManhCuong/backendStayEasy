@@ -2,7 +2,7 @@ package com.backend.stayEasy.api;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -14,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.dto.DataPropertyExploreDTO;
+import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.repository.ExploreRepository;
+import com.backend.stayEasy.repository.LikeRepository;
 
 @RestController
 @CrossOrigin
@@ -29,6 +33,12 @@ public class ExploreApi {
 	
 	@Autowired
 	private PropertyConverter propertyConverter;
+	
+	@Autowired
+	private LikeRepository likeRepository;
+	
+	@Autowired
+	private LikeConverter likeConverter;
 	
 	@GetMapping()
 	public List<PropertyDTO> getAllProperties() {
@@ -52,7 +62,7 @@ public class ExploreApi {
 	        
 	        // Tạo đối tượng Pageable từ page và size
 	        Pageable pageable = PageRequest.of(page, size);
-	        
+	        System.out.println("pageable : " + pageable);
 	        // Lấy tổng số lượng bản ghi
 	        long totalCount = exploreRepository.count();
 	        
@@ -60,8 +70,17 @@ public class ExploreApi {
 	        Page<Property> properties = exploreRepository.findByPropertyNameOrDescriptionContainingIgnoreCase(keySearch, pageable);
 	        
 			List<PropertyDTO> propertyDTOs = new ArrayList<>();
+			
 			for (Property property : properties) {
-				propertyDTOs.add(propertyConverter.toDTO(property));
+				 PropertyDTO propertyDTO = propertyConverter.toDTO(property);
+				List<Like> likes = likeRepository.findByPropertyPropertyId(property.getPropertyId()); // get like tương ứng mỗi property
+			
+				Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+				
+				 propertyDTO.setLikeList(likeRequestDTOs);
+				 propertyDTOs.add(propertyDTO);
+				 
+			
 			}
 			
 	        return new DataPropertyExploreDTO(totalCount, propertyDTOs);

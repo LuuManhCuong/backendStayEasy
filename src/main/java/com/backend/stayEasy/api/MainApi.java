@@ -42,7 +42,7 @@ public class MainApi {
     public ResponseEntity<String> handleLike(@RequestBody LikeRequestDTO likeRequest) {
 //		viêt hàm jpa để lưu vào bảng like
 		likeRepository.save(likeConverter.convertToLikeEntity(likeRequest));
-		return ResponseEntity.ok("Liked post with ID: " + likeRequest.getIdPost() + " by user with ID: " + likeRequest.getIdUser());
+		return ResponseEntity.ok("Like: " + likeRequest.getIdPost());
     }
 	
 	
@@ -50,6 +50,6 @@ public class MainApi {
 	 @DeleteMapping("/unlike")
 	    public ResponseEntity<String> unlikeProperty(@RequestParam UUID idPost, @RequestParam UUID idUser) {
 	        likeRepository.deleteByPropertyPropertyIdAndUserId(idPost, idUser);
-	        return ResponseEntity.ok("Successfully unliked the property.");
+	        return ResponseEntity.ok("unLike: " + idPost);
 	    }
 }
