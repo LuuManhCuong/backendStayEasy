@@ -24,5 +24,6 @@ public class Like {
 	
 	@ManyToOne()
 	private Property property;
+
 	
 }

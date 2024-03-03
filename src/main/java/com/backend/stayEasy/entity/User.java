@@ -3,6 +3,7 @@ package com.backend.stayEasy.entity;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -79,6 +80,8 @@ public class User implements UserDetails {
 	public String getUsername() {
 		return email;
 	}
+	
+
 
 	@Override
 	public boolean isAccountNonExpired() {

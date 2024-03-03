@@ -36,7 +36,6 @@ public class PropertyAPI {
 	public List<PropertyDTO> getProperty(){
 		return propertyService.findAll();
 	}
-	
 
 	
 	@GetMapping("/{id}")

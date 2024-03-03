@@ -16,9 +16,6 @@ import org.springframework.stereotype.Controller;
 import com.backend.stayEasy.entity.Message;
 import com.backend.stayEasy.sevice.IMessageService;
 
-
-
-
 @Controller
 public class ChatAppController {
 	

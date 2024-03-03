@@ -9,6 +9,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class ChatAppConfig implements WebSocketMessageBrokerConfigurer{
+	 
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry config) { 
+		// TODO Auto-generated method stub
+		config.addEndpoint("/api/v1/stayeasy/ws").setAllowedOriginPatterns("*").withSockJS();
+	}
+	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		// TODO Auto-generated method stub
@@ -16,9 +23,5 @@ public class ChatAppConfig implements WebSocketMessageBrokerConfigurer{
 		config.setApplicationDestinationPrefixes("/api/v1/stayeasy/app");
 	}
 
-	@Override
-	public void registerStompEndpoints(StompEndpointRegistry config) { 
-		// TODO Auto-generated method stub
-		config.addEndpoint("/api/v1/stayeasy/ws").setAllowedOriginPatterns("*").withSockJS();
-	}
+	
 }

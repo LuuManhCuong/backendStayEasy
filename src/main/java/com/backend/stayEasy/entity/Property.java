@@ -37,15 +37,16 @@ public class Property {
     private int numGuests;
     @Column(name = "discount")
     private int discount;
+    
     @ManyToOne()
     private User user;
     
     @OneToMany(mappedBy =  "property")
     private Set<Like> likes;
     
-    @OneToMany(mappedBy = "property")
-    private Set<Feedback> feedbacks;
-    
+//    @OneToMany(mappedBy = "property")
+//    private Set<Feedback> feedbacks;
+//    
     @OneToMany(mappedBy = "property")
     private Set<Images> images;
     
