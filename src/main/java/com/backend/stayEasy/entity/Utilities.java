@@ -19,7 +19,10 @@ import lombok.Data;
 public class Utilities {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID propertyUtilitiId;
+	private UUID utilitiId;
+	
+	@Column(name = "utilities_name", columnDefinition = "nvarchar(255)")
+	private String utilitiesName;
 	
 	@OneToMany(mappedBy = "utilities")
 	private Set<PropertyUilitis> propertyUilitis;

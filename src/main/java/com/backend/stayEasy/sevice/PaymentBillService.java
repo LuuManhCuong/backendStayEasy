@@ -10,8 +10,10 @@ import com.paypal.api.payments.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentBillService {
@@ -19,21 +21,31 @@ public class PaymentBillService {
     private PaymentRepository PaymentRepo;
     @Autowired
     private BookingRepository bookingRepository;
+    @Autowired
+    private PaymentConverter paymentConverter;
     public PaymentDTO  savePayment (Payment paymentParams, UUID bookingId ) {
+
+        // Nhận json tư Payment Paypal sau đó set dữ liệu trong database
         Optional<Booking> booking ;
         booking = bookingRepository.findById(bookingId);
-        System.out.println(booking.get().getProperty().getPropertyName());
         PaymentDTO paymentDTO = new PaymentDTO();
         paymentDTO.setMethod(paymentParams.getPayer().getPaymentMethod());
         paymentDTO.setStatus(paymentParams.getState());
         paymentDTO.setCreateTime(paymentParams.getCreateTime());
         paymentDTO.setAccountType(paymentParams.getPayer().getPayerInfo().getPayerId());
-        paymentDTO.setAmount(Float.parseFloat(paymentParams.getTransactions().get(0).getAmount().getTotal())); // Assuming first transaction holds relevant amount
+        paymentDTO.setAmount(Float.parseFloat(paymentParams.getTransactions().get(0).getAmount().getTotal()));
+        // Assuming first transaction holds relevant amount
         paymentDTO.setPaymentId(paymentParams.getId());
         paymentDTO.setBookingId(booking.get().getBookingId());
-        PaymentBill paymentBill = PaymentConverter.convert(paymentDTO);
+        PaymentBill paymentBill = paymentConverter.toEntity(paymentDTO);
         PaymentRepo.save(paymentBill);
-        return  PaymentConverter.convertToDTO(paymentBill);
+        return  paymentConverter.toDTO(paymentBill);
+    }
+    public List<PaymentDTO> findByPaymentId (String paymentId) {
+        return PaymentRepo.findByPaymentId(paymentId)
+                .stream()
+                .map(paymentConverter::toDTO)
+                .collect(Collectors.toList());
     }
     private PaymentDTO extractPaymentDetails(Payment paymentParams) {
         PaymentDTO paymentDTO = new PaymentDTO();

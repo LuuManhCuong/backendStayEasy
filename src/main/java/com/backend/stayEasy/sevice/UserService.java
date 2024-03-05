@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,22 +26,14 @@ public class UserService {
 	public List<UserDTO> getAllUser() {
 		List<UserDTO> result = new ArrayList<>();
 		for(User user: userRepository.findAll()) {
-			List<String> roles = new ArrayList<>();
-			user.getRoles().stream().map(r->roles.add(r.getName())).collect(Collectors.toList());
-			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),user.getAvatar(),roles));
+			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),null,user.getRole().name()));
 		}
 		return result;
 	}
 
 	public UserDTO getUserById(UUID id) {
-		return userConverter.toDTO(userRepository.findUserById(id).get());
+		return userConverter.toDTO(userRepository.findById(id).get());
 	}
-	public User findById(UUID id) {
-		User employee;
-		employee  = userRepository.findById(id).get();
-		return employee;
-	}
-
 	public UserDTO getUserByEmail(String email) {
 		return userConverter.toDTO(userRepository.findByEmail(email).get());
 	}

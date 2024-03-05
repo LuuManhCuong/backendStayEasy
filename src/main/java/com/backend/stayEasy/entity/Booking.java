@@ -37,7 +37,7 @@ public class Booking {
 	@Column(name = "numNight")
 	private int numNight;
 	@Column(name = "total_price")
-    private Float totalPrice;
+    private Double totalPrice;
 	@Column(name = "status")
 	private Boolean status;
 	@Column(name = "num-guest")

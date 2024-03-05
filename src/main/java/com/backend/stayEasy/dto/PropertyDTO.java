@@ -1,17 +1,11 @@
 package com.backend.stayEasy.dto;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import com.backend.stayEasy.entity.Feedback;
-import com.backend.stayEasy.entity.Images;
-import com.backend.stayEasy.entity.PropertyUilitis;
-import com.backend.stayEasy.entity.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -27,8 +21,9 @@ public class PropertyDTO {
     private int numGuests;
     private int discount;
     private Float rating;
-    private User owner;
-    private Set<Images> imagesList;
-    private Set<Feedback> feedbackList;
-    private Set<PropertyUilitis> propertyUtilitis;
+    private UserDTO owner;
+    private Set<ImagesDTO> imagesList;
+    private Set<FeedbackDTO> feedbackList;
+    private Set<PropertyUtilitiesDTO> propertyUtilitis;
+    private Set<LikeRequestDTO> likeList;
 }

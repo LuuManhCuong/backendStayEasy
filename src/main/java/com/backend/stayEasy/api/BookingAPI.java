@@ -1,7 +1,7 @@
 package com.backend.stayEasy.api;
 
+import com.backend.stayEasy.convertor.BookingConverter;
 import com.backend.stayEasy.dto.BookingDTO;
-import com.backend.stayEasy.dto.BookingParam;
 import com.backend.stayEasy.dto.PaymentDTO;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.sevice.BookingService;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/booking")
+@RequestMapping("/api/v1/stayeasy/booking")
 public class BookingAPI {
     @Autowired
     private BookingService bookingService;
@@ -33,6 +33,9 @@ public class BookingAPI {
     private PropertyService propertyService;
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private BookingConverter bookingConverter;
     @Autowired
     PaypalService service;
     @Autowired
@@ -63,13 +66,13 @@ public class BookingAPI {
         bookingService.deleteBooking(id);
     }
 
-    @PostMapping("")
-    public ResponseEntity<String> createBooking(@RequestBody BookingParam bookingParam) throws JsonProcessingException {
+    @PostMapping("/create")
+    public ResponseEntity<String> createBooking(@RequestBody BookingDTO bookingParam) throws JsonProcessingException {
 
         if (bookingService.isRoomAvailable(bookingParam.getPropertyId(), bookingParam.getCheckIn(), bookingParam.getCheckOut())) {
             BookingDTO bookingDTO = bookingService.newBooking(bookingParam);
             // Lưu booking vào cơ sở dữ liệu
-            BookingDTO savedBooking = bookingService.crateBooking(bookingDTO); //  phương thức saveBooking
+            BookingDTO savedBooking = bookingService.crateBooking(bookingConverter.toEntity(bookingDTO)); //  phương thức saveBooking
             if(savedBooking != null) {
                 bookingId = savedBooking.getBookingId();
                 // Chuyển hướng đến PayPal để thanh town
@@ -86,11 +89,11 @@ public class BookingAPI {
             return new ResponseEntity<>("Phòng chưa thể đặt trong thời gian này", HttpStatus.BAD_REQUEST);
         }
     }
-    public String payment(BookingParam bookingParam) {
+    public String payment(BookingDTO bookingDTO) {
         try {
-            Payment payment = service.createPayment(bookingParam.getPrice(), bookingParam.getCurrency(), bookingParam.getIntent(),
-                    bookingParam.getMethod(), bookingParam.getDescription(), "http://localhost:8080/api/v1/booking" + CANCEL_URL,
-                    "http://localhost:8080/api/v1/booking" + SUCCESS_URL);
+            Payment payment = service.createPayment(bookingDTO.getPrice(), bookingDTO.getCurrency(), bookingDTO.getIntent(),
+                    bookingDTO.getMethod(), bookingDTO.getDescription(), "http://localhost:3000/payment" + CANCEL_URL,
+                    "http://localhost:3000/payment" + SUCCESS_URL);
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
                     System.out.println("link" + link.getRel());
@@ -101,29 +104,36 @@ public class BookingAPI {
         } catch (PayPalRESTException e) {
             e.printStackTrace();
         }
-        return "redirect:/";
+        return "";
     }
 
     @GetMapping(value = SUCCESS_URL)
-    @ResponseBody
-    public PaymentDTO successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+    public  ResponseEntity <List<PaymentDTO>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) throws JsonProcessingException {
         try {
             Payment payment = service.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-                // Lưu thông tin payment và cập nhật trạng thái booking
-                PaymentDTO paymentDTO = paymentService.savePayment(payment, bookingId); // Giả sử bạn có dịch vụ paymentService
+                // Update thong tin booking thanh true
                 bookingService.updateBookingStatus(bookingId , true);
-                return paymentDTO;
-            } else {
-                // Thanh toán thất bại
-                return null;
+                paymentService.savePayment(payment, bookingId);
+                // Lưu thông tin payment
+                return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
             }
         } catch (PayPalRESTException e) {
+            bookingService.deleteBooking(bookingId);
+//            String message = " Thanh toán không thành công ! ";
+//            return  ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(message));
             System.out.println(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null;
-    }
+            }
 
+    @GetMapping("/lookup-transaction")
+    public ResponseEntity <List<PaymentDTO>>  LookupTrans (@RequestParam("paymentId") String paymentId) {
+        System.out.println("running");
+        return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
+    }
 }
+
+

@@ -1,11 +1,13 @@
 package com.backend.stayEasy.repository;
 
-import java.util.UUID;
-
+import com.backend.stayEasy.entity.PropertyUilitis;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.backend.stayEasy.entity.Property;
+import java.util.List;
+import java.util.UUID;
 
-public interface PropertyUilitisRepository  extends JpaRepository<Property, UUID>{
 
+
+public interface PropertyUilitisRepository  extends JpaRepository<PropertyUilitis, UUID>{
+	List<PropertyUilitis> findByPropertyPropertyId(UUID propertyId);
 }

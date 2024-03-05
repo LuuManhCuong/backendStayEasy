@@ -8,6 +8,7 @@ import java.util.UUID;
 public class PaymentDTO {
     private UUID paymentBillId ;
     private  String paymentId;
+    private BookingDTO bookingDTO ;
     private  UUID bookingId;
     private  float amount;
     private String method;
