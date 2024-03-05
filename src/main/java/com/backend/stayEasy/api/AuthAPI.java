@@ -32,8 +32,9 @@ public class AuthAPI {
 	private final AuthService service;
 
 	@PostMapping("/register")
-	public ResponseEntity<SignInResponse> register(@RequestBody SignUpRequest request) {
-		return ResponseEntity.ok(service.register(request));
+	public ResponseEntity<?> register(@RequestBody SignUpRequest request) {
+		
+		return service.register(request);
 	}
 
 	@PostMapping("/login")

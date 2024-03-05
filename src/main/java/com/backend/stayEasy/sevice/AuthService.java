@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,14 @@ public class AuthService {
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
-	public SignInResponse register(SignUpRequest request) {
+	public ResponseEntity<?> register(SignUpRequest request) {
+		// Kiểm tra xem email đã tồn tại trong hệ thống chưa
+        if (repository.existsByEmail(request.getEmail())) {
+            // Trả về thông báo lỗi khi email đã tồn tại
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Email already exists: " + request.getEmail());
+        }
+        
 		var user = User.builder()
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())
@@ -44,17 +52,17 @@ public class AuthService {
 				.password(passwordEncoder.encode(request.getPassword()))
 				.role(request.getRole())
 				.createdAt(LocalDateTime.now())
-				.updatedAt(LocalDateTime.now()) 
+				.updatedAt(LocalDateTime.now())
 				.build();
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
 		saveUserToken(savedUser, jwtToken);
-		return SignInResponse.builder()
+		return ResponseEntity.ok(SignInResponse.builder()
 				.accessToken(jwtToken)
 				.refreshToken(refreshToken)
 				.user(userConverter.toDTO(user))
-				.build();
+				.build());
 	}
 
 	public SignInResponse authenticate(SignInRequest request) {

@@ -52,8 +52,8 @@ public class UserAPI {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('admin:create')")
-	public ResponseEntity<SignInResponse> post(@RequestBody SignUpRequest request) {
-		return ResponseEntity.ok(authService.register(request));
+	public ResponseEntity<?> post(@RequestBody SignUpRequest request) {
+		return authService.register(request);
 	}
 
 	@PutMapping

@@ -1,9 +1,7 @@
 package com.backend.stayEasy.config;
 
 
-import java.awt.print.Printable;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;

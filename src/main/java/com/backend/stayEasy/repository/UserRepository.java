@@ -10,7 +10,8 @@ import com.backend.stayEasy.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-
+	boolean existsByEmail(String email);
+	
 	Optional<User> findByEmail(String email);
 
 	Optional<User> findUserById(UUID id);
