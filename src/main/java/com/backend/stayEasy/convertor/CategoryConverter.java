@@ -1,14 +1,11 @@
 package com.backend.stayEasy.convertor;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.backend.stayEasy.dto.CategoryDTO;
+import com.backend.stayEasy.entity.Category;
 import org.springframework.stereotype.Component;
 
-import com.backend.stayEasy.dto.CategoryDTO;
-import com.backend.stayEasy.dto.ImagesDTO;
-import com.backend.stayEasy.entity.Category;
-import com.backend.stayEasy.entity.Images;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Component

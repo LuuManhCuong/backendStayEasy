@@ -1,19 +1,17 @@
 package com.backend.stayEasy.sevice;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +32,8 @@ public class UserService {
 	}
 
 	public UserDTO getUserById(UUID id) {
-		return userConverter.toDTO(userRepository.findUserById(id).get());
+		return userConverter.toDTO(userRepository.findById(id).get());
 	}
-
 	public UserDTO getUserByEmail(String email) {
 		return userConverter.toDTO(userRepository.findByEmail(email).get());
 	}

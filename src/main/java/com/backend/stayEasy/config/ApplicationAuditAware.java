@@ -1,14 +1,13 @@
 package com.backend.stayEasy.config;
 
-import java.util.Optional;
-import java.util.UUID;
-
+import com.backend.stayEasy.entity.User;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.backend.stayEasy.entity.User;
+import java.util.Optional;
+import java.util.UUID;
 
 public class ApplicationAuditAware implements AuditorAware<UUID> {
     @Override

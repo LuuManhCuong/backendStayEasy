@@ -1,8 +1,7 @@
 package com.backend.stayEasy.api;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.backend.stayEasy.dto.TokenDTO;
+import com.backend.stayEasy.sevice.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,8 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.stayEasy.dto.TokenDTO;
-import com.backend.stayEasy.sevice.TokenService;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/token")
