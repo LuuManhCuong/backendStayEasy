@@ -1,13 +1,11 @@
 package com.backend.stayEasy.convertor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-
 import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
 import com.backend.stayEasy.entity.PropertyUilitis;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 

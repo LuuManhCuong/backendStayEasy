@@ -25,6 +25,12 @@ import com.backend.stayEasy.dto.SignUpRequest;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.sevice.AuthService;
 import com.backend.stayEasy.sevice.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin

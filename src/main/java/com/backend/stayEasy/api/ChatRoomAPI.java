@@ -1,9 +1,17 @@
 package com.backend.stayEasy.api;
 
+import com.backend.stayEasy.entity.ChatRoom;
+
+import com.backend.stayEasy.entity.Message;
+import com.backend.stayEasy.sevice.IChatRoomService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
