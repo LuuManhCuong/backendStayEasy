@@ -1,6 +1,7 @@
 package com.backend.stayEasy.repository;
 
 import java.util.List;
+
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -23,5 +24,7 @@ public interface ExploreRepository extends JpaRepository<Property, UUID> {
     @Query(value = "SELECT TOP 5 * FROM property WHERE (property_name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch% OR description COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch%) ORDER BY rating DESC", nativeQuery = true)
     List<Property> findByPropertyNameOrDescriptionContainingIgnoreCaseOrderByRatingDesc(String keySearch);
 
+    @Query(value = "SELECT TOP 5 * FROM property WHERE (address COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:address%) ORDER BY rating DESC", nativeQuery = true)
+    List<Property> findByAddressContainingIgnoreCaseOrderByRatingDesc(String address);
 
 }

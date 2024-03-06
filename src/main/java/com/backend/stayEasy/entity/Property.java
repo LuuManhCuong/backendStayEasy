@@ -42,8 +42,8 @@ public class Property {
     @OneToMany(mappedBy = "property")
     private Set<Images> images;
     
-    @OneToMany(mappedBy = "property")
-    private Set<BookingDetail> bookingDetails;
+//    @OneToMany(mappedBy = "property")
+//    private Set<BookingDetail> bookingDetails;
     
     @OneToMany(mappedBy = "property")
     private Set<PropertyCategory> propertyCategories;
