@@ -1,6 +1,13 @@
 package com.backend.stayEasy.convertor;
 
 import java.awt.Image;
+
+import com.backend.stayEasy.dto.LikeRequestDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Property;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +36,7 @@ import com.backend.stayEasy.repository.UserRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+
 
 @Component
 public class PropertyConverter {
@@ -65,7 +73,6 @@ public class PropertyConverter {
 			for (Category c : property.getCategories()) {
 				categoryIds.add(c.getCategoryId());
 			}
-			System.out.println("iddd: " + categoryIds);
 		}
 		propertyDTO.setCategoryIds(categoryIds);
 

@@ -14,11 +14,8 @@ public class UserConverter {
 		result.setEmail(user.getEmail());
 		result.setFirstName(user.getFirstName());
 		result.setLastName(user.getLastName());
-
 		result.setAvatar(user.getAvatar());
-
 		result.setRoleName(user.getRole().name());
-
 		return result;
 	}
 

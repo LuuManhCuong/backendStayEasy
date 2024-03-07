@@ -10,3 +10,4 @@ public class StayEasyApplication {
 		SpringApplication.run(StayEasyApplication.class, args);
 	}
 }
+ 
