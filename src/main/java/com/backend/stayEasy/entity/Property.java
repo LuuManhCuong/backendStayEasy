@@ -1,6 +1,7 @@
 package com.backend.stayEasy.entity;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
 
 import java.sql.Date;

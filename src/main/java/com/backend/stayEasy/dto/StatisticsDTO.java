@@ -14,11 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StatisticsDTO {
 	private UUID statisticsId;
-	private int month;
+	private Date date;
 	private float revenue;
-	private int totalAccount;
-	private int totalBookings;
-	private int totalPost;
-	private int totalCancelPost;
-	private int visitCount;
+	private long totalAccount;
+	private long totalBookings;
+	private long totalPost;
+	private long totalCancelPost;
+	private long visitCount;
+
 }
