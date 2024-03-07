@@ -28,6 +28,7 @@ public class Statistics {
 		private long totalPost;
 		private long totalCancelPost;
 		private long visitCount;
+		
 	
 
 }

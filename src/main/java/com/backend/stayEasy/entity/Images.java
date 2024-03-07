@@ -2,9 +2,6 @@ package com.backend.stayEasy.entity;
 
 import java.util.UUID;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,4 +26,19 @@ public class Images {
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Property property;
+	
+	
+	
+	public Images(String url, String description, Property property) {
+		this.url = url;
+		this.description = description;
+		this.property = property;
+	}
+
+
+
+	public Images() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 }

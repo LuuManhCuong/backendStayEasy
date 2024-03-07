@@ -26,6 +26,6 @@ public class Utilities {
 	@Column(name = "utilities_name", columnDefinition = "nvarchar(255)")
 	private String utilitiesName;
 	
-	@OneToMany(mappedBy = "utilities",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PropertyUilitis> propertyUilitis;
 }

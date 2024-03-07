@@ -14,4 +14,5 @@ public class ImagesDTO {
 	private UUID imageId;
 	private String url;
 	private String description;
+	private UUID propertyId;
 }

@@ -1,6 +1,8 @@
 package com.backend.stayEasy.sevice;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.http.HttpHeaders;
@@ -37,14 +39,19 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 
 	public SignInResponse register(SignUpRequest request) {
+		  // Lấy ngày hiện tại
+        LocalDate currentDate = LocalDate.now();
+     // Chuyển đổi từ LocalDate sang Date
+        Date date = Date.valueOf(currentDate);
+        
 		var user = User.builder()
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())
 				.email(request.getEmail())
 				.password(passwordEncoder.encode(request.getPassword()))
 				.role(request.getRole())
-				.createdAt(LocalDateTime.now())
-				.updatedAt(LocalDateTime.now()) 
+				.createdAt(date)
+				.updatedAt(date) 
 				.build();
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
