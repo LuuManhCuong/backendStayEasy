@@ -76,8 +76,8 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Token> tokens;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Roles> roles;
+//	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<Roles> roles;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

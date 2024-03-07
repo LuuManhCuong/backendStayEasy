@@ -74,7 +74,7 @@ public class StatisticSevice {
 	        return result;
 	    }
 	    
-	@Transactional
+//	@Transactional
 	  public Statistics calculateRevenueForMonth(Date startDate, Date endDate) {
 	        Statistics statistics = new Statistics();
 	        
