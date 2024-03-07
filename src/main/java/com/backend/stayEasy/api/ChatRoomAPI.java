@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,8 @@ import com.backend.stayEasy.dto.HostDTO;
 import com.backend.stayEasy.entity.ChatRoom;
 import com.backend.stayEasy.entity.Message;
 import com.backend.stayEasy.sevice.IChatRoomService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 
 
@@ -66,8 +69,8 @@ public class ChatRoomAPI {
 	}
 	
 	@GetMapping("/get/all/{id}")
-	public List<Message> getAllMessageChatRoomById(@PathVariable("id") UUID id) {
-		return chatRoomService.getAllMessageChatRoom(id);
+	public  ResponseEntity<List<Message>> getAllMessageChatRoomById(@PathVariable("id") UUID id, HttpServletRequest request) {
+		return chatRoomService.getAllMessageChatRoom(id,request.getHeader("Authorization"));
 	}
 	
 	
@@ -85,5 +88,9 @@ public class ChatRoomAPI {
 	@PostMapping("/first-room")
 	public void addFirstRoom(@RequestBody ChatRoomDTO chatRoom) {
 		chatRoomService.addFirstRoom(chatRoom);
+	}
+	@GetMapping("/check-room/{roomId}")
+	public boolean checkRoom(@PathVariable("roomId") UUID roomId, HttpServletRequest request) {
+		return chatRoomService.checkRoom(request.getHeader("Authorization"),roomId);
 	}
 }
