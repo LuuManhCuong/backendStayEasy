@@ -11,4 +11,5 @@ import com.backend.stayEasy.entity.Images;
 
 public interface IImageRepository extends JpaRepository<Images, UUID>{
 	List<Images> findByPropertyPropertyId(UUID propertyId);
+	void deleteByPropertyPropertyId(UUID propertyId);
 }

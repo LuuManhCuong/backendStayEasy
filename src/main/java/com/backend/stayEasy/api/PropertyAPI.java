@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,16 @@ public class PropertyAPI {
 	@GetMapping("/category/{category}")
 	public List<PropertyDTO> getPropertyByCategory(@PathVariable("category") UUID categoryId){
 		return propertyService.findByCategory(categoryId);
+	}
+	
+	@GetMapping("/user/{id}")
+	public List<PropertyDTO> getPropertyByUserId(@PathVariable("id") UUID id){
+		return propertyService.findByUserId(id);
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public void deleteProperty(@PathVariable("id") UUID id) {
+		propertyService.deleteProperty(id);
 	}
 	
 }

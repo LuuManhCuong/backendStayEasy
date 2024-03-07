@@ -59,4 +59,12 @@ public class PropertyConverter {
 		return propertyDTOList;
 	}
 	
+	public List<PropertyDTO> arrayToDTO(List<Property> propertyList) {
+		List<PropertyDTO> propertyDTOList = new ArrayList<>();
+		for (Property property : propertyList) {
+			propertyDTOList.add(toDTO(property));
+		}
+		return propertyDTOList;
+	}
+	
 }

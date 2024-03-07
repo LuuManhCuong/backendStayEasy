@@ -2,6 +2,7 @@ package com.backend.stayEasy.repository;
 
 
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -17,6 +18,5 @@ public interface IPropertyRepository extends JpaRepository<Property, UUID>{
 
 
 	Property findByPropertyId(UUID propertyId);
-	
-
+	List<Property> findByUserId(UUID userId);
 }

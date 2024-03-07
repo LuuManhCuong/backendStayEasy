@@ -24,7 +24,7 @@ public class BookingDetail {
     @ManyToOne()
     private Booking booking;
     
-    @ManyToOne
+    @ManyToOne()
     private Property property;
 
 }

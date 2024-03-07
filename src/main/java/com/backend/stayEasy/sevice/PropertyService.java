@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
 import com.backend.stayEasy.repository.PropertyUilitisRepository;
+import com.google.common.base.Optional;
+
+import jakarta.transaction.Transactional;
 
 
 @Service
@@ -66,6 +70,7 @@ public class PropertyService implements IPropertyService{
 	@Override
 	public List<PropertyDTO> findAll() {
 		 List<Property> properties = propertyRepository.findAll(); // Lấy tất cả các Property
+		 System.out.println(properties);
 		 List<PropertyDTO> propertyDTOs = new ArrayList<>(); // Danh sách PropertyDTO để lưu kết quả
 		 
 		 for (Property property : properties) {
@@ -109,4 +114,33 @@ public class PropertyService implements IPropertyService{
 	    return properties;
 	}
 
+	@Override
+	public List<PropertyDTO> findByUserId(UUID userId) {
+		// TODO Auto-generated method stub
+		return propertyConverter.arrayToDTO(propertyRepository.findByUserId(userId));
+	}
+
+	@Override
+	@Transactional
+	public void deleteProperty(UUID id) {
+	    deleteImagesByPropertyId(id);
+	    System.out.println("ok");
+	    propertyUtilitiesRepository.deleteByPropertyPropertyId(id);
+	    propertyRepository.deleteById(id);
+	}
+	
+	public void deleteImagesByPropertyId(UUID propertyId) {
+        // Handle null properties gracefully before deletion
+        List<Images> imagesWithNullProperty = imageRepository.findByPropertyPropertyId(propertyId)
+                                                            .stream()
+                                                            .filter(image -> image.getProperty() == null)
+                                                            .collect(Collectors.toList());
+        // Delete images with null property
+        imageRepository.deleteAll(imagesWithNullProperty);
+        
+        // Now, you can safely delete images associated with the propertyId
+        imageRepository.deleteByPropertyPropertyId(propertyId);
+    }
+	
+	
 }

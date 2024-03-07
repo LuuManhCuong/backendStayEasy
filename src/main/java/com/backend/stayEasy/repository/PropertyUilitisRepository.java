@@ -10,4 +10,5 @@ import java.util.UUID;
 
 public interface PropertyUilitisRepository  extends JpaRepository<PropertyUilitis, UUID>{
 	List<PropertyUilitis> findByPropertyPropertyId(UUID propertyId);
+	void deleteByPropertyPropertyId(UUID propertyId);
 }

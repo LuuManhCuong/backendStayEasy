@@ -33,21 +33,23 @@ public class Property {
     @ManyToOne()
     private User user;
     
-    @OneToMany(mappedBy =  "property")
+    @OneToMany(mappedBy =  "property",cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<Like> likes;
     
 //    @OneToMany(mappedBy = "property")
 //    private Set<Feedback> feedbacks;
 //    
-    @OneToMany(mappedBy = "property")
+    @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<Images> images;
     
-    @OneToMany(mappedBy = "property")
+    @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<BookingDetail> bookingDetails;
     
-    @OneToMany(mappedBy = "property")
+    @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<PropertyCategory> propertyCategories;
     
-    @OneToMany(mappedBy = "property")
+    @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<PropertyUilitis> propertyUilitis;
+    
+    
 }
