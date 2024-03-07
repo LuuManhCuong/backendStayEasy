@@ -42,8 +42,8 @@ public class Property {
     @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<Images> images;
     
-    @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
-    private Set<BookingDetail> bookingDetails;
+//    @OneToMany(mappedBy = "property")
+//    private Set<BookingDetail> bookingDetails;
     
     @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<PropertyCategory> propertyCategories;
