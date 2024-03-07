@@ -26,5 +26,9 @@ public interface IPropertyRepository extends JpaRepository<Property, UUID>{
 	           "WHERE b.checkIn <= :endDate AND b.checkOut >= :startDate) " +
 	           "AND LOWER(p.address) LIKE LOWER(CONCAT('%', :address, '%'))")
 	List<Property> findAvailableProperties(Date startDate, Date endDate, String address);
+	
+	
+	@Query("SELECT COUNT(p) FROM Property p WHERE p.createAt BETWEEN :startDate AND :endDate")
+    long countPropertiesBetween(Date startDate, Date endDate);
 
 }
