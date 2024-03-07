@@ -1,5 +1,8 @@
 package com.backend.stayEasy.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,12 +25,13 @@ public class AdminApi {
 	@Autowired
 	private StatisticsConverter statisticsConverter;
 	@GetMapping("/revenue")
-	public StatisticsDTO getRevenueByMonth() {
-		System.out.println("home");
-		Statistics statistics = statisticSevice.calculateRevenueForCurrentMonth();
-		
-		System.out.println("dt0: " + statisticsConverter.toDTO(statistics));
-		return statisticsConverter.toDTO(statistics);
+	public List<StatisticsDTO> getRevenueByMonth() {
+		List<StatisticsDTO> statisticsDTOs = new ArrayList<>();
+		List<Statistics> statisticsList = statisticSevice.calculateRevenueForCurrentAndPreviousMonth();
+		for (Statistics statisticsItem : statisticsList) {
+			statisticsDTOs.add(statisticsConverter.toDTO(statisticsItem));
+		}
+		return statisticsDTOs;
 	}
 	
 
