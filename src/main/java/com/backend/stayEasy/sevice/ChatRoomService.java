@@ -6,15 +6,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.backend.stayEasy.dto.ChatRoomDTO;
 import com.backend.stayEasy.dto.HostDTO;
 import com.backend.stayEasy.entity.ChatRoom;
 import com.backend.stayEasy.entity.Message;
+import com.backend.stayEasy.entity.Token;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.IChatRoomRepository;
 import com.backend.stayEasy.repository.IMessageRepository;
+import com.backend.stayEasy.repository.TokenRepository;
 import com.backend.stayEasy.repository.UserRepository;
 import com.backend.stayEasy.sevice.impl.IChatRoomService;
 
@@ -29,6 +33,9 @@ public class ChatRoomService implements IChatRoomService {
 
 	@Autowired
 	private IMessageRepository messageRepository;
+
+	@Autowired
+	private TokenRepository tokenRepository;
 
 	@Override
 	public List<ChatRoom> getAllChatRoom() {
@@ -55,9 +62,28 @@ public class ChatRoomService implements IChatRoomService {
 	}
 
 	@Override
-	public List<Message> getAllMessageChatRoom(UUID id) {
-		// TODO Auto-generated method stub
-		return chatRoomRepository.findAllMessagesByChatRoomId(id);
+	public ResponseEntity<List<Message>> getAllMessageChatRoom(UUID id, String token) {
+		System.out.println(token);
+		System.out.println(id);
+		String[] headerParts = token.split(" ");
+		String t = headerParts.length == 2 ? headerParts[1] : null;
+		Optional<Token> data = tokenRepository.findByToken(t);
+		if (data.isPresent()) {
+			// System.out.println(data);
+			Token tokenObject = data.get();
+			User user = tokenObject.getUser();
+			UUID idUser = user.getId();
+			ChatRoom chatroom = chatRoomRepository.findById(id).get();
+			if (idUser.equals(chatroom.getHostId()) || idUser.equals(chatroom.getUserId())) {
+				List<Message> messages = chatRoomRepository.findAllMessagesByChatRoomId(id);
+				return new ResponseEntity<>(messages, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+			}
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 
 	}
 
@@ -82,11 +108,11 @@ public class ChatRoomService implements IChatRoomService {
 		UUID userId = chatRoom.getUserId();
 		UUID hostId = chatRoom.getHostId();
 		ChatRoom existingRoom = chatRoomRepository.findByUserIdAndHostId(userId, hostId);
-		if(existingRoom == null){
+		if (existingRoom == null) {
 			existingRoom = chatRoomRepository.findByUserIdAndHostId(hostId, userId);
 		}
 
-		if(existingRoom == null){
+		if (existingRoom == null) {
 			ChatRoom room = new ChatRoom();
 			room.setUserId(userId);
 			room.setHostId(hostId);
@@ -100,7 +126,7 @@ public class ChatRoomService implements IChatRoomService {
 			m.setCreateAt(LocalDateTime.now());
 			m.setUpdateAt(LocalDateTime.now());
 			messageRepository.save(m);
-		}else{
+		} else {
 			Message m = new Message();
 			m.setChatRoomId(existingRoom.getRoomChatId());
 			m.setContent(chatRoom.getContent());
@@ -109,7 +135,30 @@ public class ChatRoomService implements IChatRoomService {
 			m.setUpdateAt(LocalDateTime.now());
 			messageRepository.save(m);
 		}
-		
+
+	}
+
+	@Override
+	public boolean checkRoom(String token, UUID roomId) {
+		String[] headerParts = token.split(" ");
+		String t = headerParts.length == 2 ? headerParts[1] : null;
+		Optional<Token> data = tokenRepository.findByToken(t);
+
+		if (data.isPresent()) {
+			// System.out.println(data);
+			Token tokenObject = data.get();
+			User user = tokenObject.getUser();
+			UUID idUser = user.getId();
+			ChatRoom chatroom = chatRoomRepository.findById(roomId).get();
+			if (idUser.equals(chatroom.getHostId()) || idUser.equals(chatroom.getUserId())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+
 	}
 
 }
