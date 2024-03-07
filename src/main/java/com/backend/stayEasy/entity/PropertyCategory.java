@@ -15,9 +15,9 @@ public class PropertyCategory {
 	@Column(name = "property_category_id")
     private UUID propertyCategoryId;
 
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Property property;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Category category;
 }

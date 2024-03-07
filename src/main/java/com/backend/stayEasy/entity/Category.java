@@ -19,6 +19,6 @@ public class Category {
 	@Column(name = "category_name", columnDefinition = "nvarchar(255)")
 	private String categoryName;
 	
-	@OneToMany(mappedBy = "category")
+	@OneToMany(mappedBy = "category",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PropertyCategory> propertyCategories;
 }

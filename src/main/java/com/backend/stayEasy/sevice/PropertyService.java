@@ -120,10 +120,14 @@ public class PropertyService implements IPropertyService{
 	}
 
 	@Override
-	public void deleteProperty(UUID id) {
-		Property test = propertyRepository.getById(id);
-		propertyRepository.delete(test);
-	    System.out.println("ok");
+	public Property deleteProperty(UUID id) {
+		if(propertyRepository.existsById(id)) {
+			Property test = propertyRepository.findByPropertyId(id);
+			propertyRepository.delete(test);;
+		}else {
+			System.out.println("loi");
+		}
+		return null;
 	}
 	
 

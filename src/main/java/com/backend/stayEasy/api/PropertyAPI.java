@@ -83,8 +83,8 @@ public class PropertyAPI {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public void deleteProperty(@PathVariable("id") UUID id) {
-		propertyService.deleteProperty(id);
+	public Property deleteProperty(@PathVariable("id") UUID id) {
+		return propertyService.deleteProperty(id);
 	}
 	
 	@GetMapping("/search/suggest")

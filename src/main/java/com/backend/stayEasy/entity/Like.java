@@ -5,6 +5,7 @@ import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,10 +21,10 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID likeId;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private User user;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Property property;
 
 	

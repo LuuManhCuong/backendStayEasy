@@ -13,5 +13,5 @@ public interface IPropertyService {
 	PropertyDTO findById(UUID id);
 	List<PropertyDTO> findByCategory(UUID categoryId);
 	List<PropertyDTO> findByUserId(UUID userId);
-	void deleteProperty(UUID id);
+	Property deleteProperty(UUID id);
 }
