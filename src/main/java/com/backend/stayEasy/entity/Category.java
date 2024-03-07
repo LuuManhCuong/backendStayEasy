@@ -1,6 +1,8 @@
 package com.backend.stayEasy.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,4 +23,7 @@ public class Category {
 	
 	@OneToMany(mappedBy = "category")
 	private Set<PropertyCategory> propertyCategories;
+	
+	@ManyToMany(mappedBy = "categories")
+	private Set<Property> properties = new HashSet<>();
 }

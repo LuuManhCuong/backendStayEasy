@@ -19,6 +19,9 @@ public class ImagesConventer {
 		imagesDTO.setDescription(images.getDescription());
 		imagesDTO.setImageId(images.getImageId());
 		imagesDTO.setUrl(images.getUrl());
+		if(!images.getProperty().isNull()) {
+			imagesDTO.setPropertyId(images.getProperty().getPropertyId());
+		}
 		return imagesDTO;
 	}
 	

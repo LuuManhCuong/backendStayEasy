@@ -1,5 +1,6 @@
 package com.backend.stayEasy.dto;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,4 +19,5 @@ import lombok.NoArgsConstructor;
 public class CategoryDTO {
 	private UUID categoryId;
 	private String categoryName;
+	private List<UUID> propertyId;
 }

@@ -1,5 +1,6 @@
 package com.backend.stayEasy.entity;
 
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
@@ -9,23 +10,17 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.ManyToMany;
 
 @Entity
-@Data
-@Table(name = "[Like]")
-public class Like {
+public class Roles {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID likeId;
+	@Column(name = "role_id")
+    private UUID roleId;
+	private String roleName;
+	private String code;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private User user;
-	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Property property;
-
-	
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<User> users;
 }

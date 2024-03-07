@@ -43,5 +43,7 @@ public class Feedback {
 	@Column(name = "property_id")
 	private UUID propertyId;
 	
+	@ManyToOne
+	private Property property;
 
 }
