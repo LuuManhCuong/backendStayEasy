@@ -11,13 +11,13 @@ import java.util.UUID;
 @Data
 @Table(name="property")
 public class Property {
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "property_id")
+    @Column(name = "property_id")
     private UUID propertyId;
-	@Column(name = "property_name", columnDefinition = "nvarchar(255)")
-	private String propertyName;
-	@Column(columnDefinition = "ntext")
+    @Column(name = "property_name", columnDefinition = "nvarchar(255)")
+    private String propertyName;
+    @Column(columnDefinition = "ntext")
     private String description;
     private String thumbnail;
     @Column(columnDefinition = "nvarchar(255)")
@@ -35,23 +35,15 @@ public class Property {
     @ManyToOne()
     private User user;
     
-    @OneToMany(mappedBy =  "property",cascade=CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Like> likes;
     
-//    @OneToMany(mappedBy = "property")
-//    private Set<Feedback> feedbacks;
-//    
-    @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Images> images;
     
-//    @OneToMany(mappedBy = "property")
-//    private Set<BookingDetail> bookingDetails;
-    
-    @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PropertyCategory> propertyCategories;
     
-    @OneToMany(mappedBy = "property",cascade=CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PropertyUilitis> propertyUilitis;
-    
-    
 }

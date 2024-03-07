@@ -70,7 +70,6 @@ public class PropertyService implements IPropertyService{
 	@Override
 	public List<PropertyDTO> findAll() {
 		 List<Property> properties = propertyRepository.findAll(); // Lấy tất cả các Property
-		 System.out.println(properties);
 		 List<PropertyDTO> propertyDTOs = new ArrayList<>(); // Danh sách PropertyDTO để lưu kết quả
 		 
 		 for (Property property : properties) {
@@ -121,26 +120,13 @@ public class PropertyService implements IPropertyService{
 	}
 
 	@Override
-	@Transactional
 	public void deleteProperty(UUID id) {
-	    deleteImagesByPropertyId(id);
+		Property test = propertyRepository.getById(id);
+		propertyRepository.delete(test);
 	    System.out.println("ok");
-	    propertyUtilitiesRepository.deleteByPropertyPropertyId(id);
-	    propertyRepository.deleteById(id);
 	}
 	
-	public void deleteImagesByPropertyId(UUID propertyId) {
-        // Handle null properties gracefully before deletion
-        List<Images> imagesWithNullProperty = imageRepository.findByPropertyPropertyId(propertyId)
-                                                            .stream()
-                                                            .filter(image -> image.getProperty() == null)
-                                                            .collect(Collectors.toList());
-        // Delete images with null property
-        imageRepository.deleteAll(imagesWithNullProperty);
-        
-        // Now, you can safely delete images associated with the propertyId
-        imageRepository.deleteByPropertyPropertyId(propertyId);
-    }
+
 	
 	
 }
