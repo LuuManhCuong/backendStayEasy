@@ -4,18 +4,20 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-@Table(name="Property_category")
+@Data
+@Table(name="property_category")
 public class PropertyCategory {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "property_category_id")
     private UUID propertyCategoryId;
 
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Property property;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Category category;
 }
