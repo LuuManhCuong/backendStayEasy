@@ -32,7 +32,7 @@ public class PropertyDTO {
     private Float rating;
     private UUID ownerId;
     private UserDTO owner;
-    private List<ImagesDTO> imagesList;
+    private Set<ImagesDTO> imagesList;
     private List<UUID> categoryIds;
     private List<CategoryDTO> categories;
     private Set<FeedbackDTO> feedbackList;

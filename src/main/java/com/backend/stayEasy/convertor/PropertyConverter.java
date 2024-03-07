@@ -57,7 +57,7 @@ public class PropertyConverter {
 	private UserRepository userRepository;
 
 	public PropertyDTO toDTO(Property property) {
-		List<ImagesDTO> listImages = new ArrayList<>();
+		Set<ImagesDTO> listImages = new HashSet<>();
 		List<UUID> categoryIds = new ArrayList<>();
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());

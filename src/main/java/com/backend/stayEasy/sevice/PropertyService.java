@@ -69,14 +69,24 @@ public class PropertyService implements IPropertyService {
 
 	@Override
 	public List<PropertyDTO> findAll() {
-
-		List<PropertyDTO> result = new ArrayList<>();
-
-		for (Property p : propertyRepository.findAll()) {
-			result.add(propertyConverter.toDTO(p));
+		 List<Property> properties = propertyRepository.findAll(); // Lấy tất cả các Property
+		 List<PropertyDTO> propertyDTOs = new ArrayList<>(); // Danh sách PropertyDTO để lưu kết quả
+		 
+		 for (Property property : properties) {
+			 PropertyDTO propertyDTO = propertyConverter.toDTO(property); // Chuyển đổi Property thành PropertyDTO
+			 List<Like> likes = likeRepository.findByPropertyPropertyId(property.getPropertyId());
+			 Set<Images> images = imageRepository.findByPropertyPropertyId(property.getPropertyId());
+			 
+			 Set<ImagesDTO> imagesDTO = imagesConverter.arrayToDTO(images);
+			 Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+			 propertyDTO.setLikeList(likeRequestDTOs);
+			 propertyDTO.setImagesList(imagesDTO);
+			 propertyDTOs.add(propertyDTO);
 		}
+		
+		return propertyDTOs;
 
-		return result;
+		
 	}
 
 	@Override
@@ -88,7 +98,7 @@ public class PropertyService implements IPropertyService {
 	@Override
 	public PropertyDTO add(PropertyDTO propertyDTO) {
 		Property property = new Property();
-		List<Images> images = new ArrayList<>();
+		Set<Images> images = new HashSet<>();
 		Set<Category> categories = new HashSet<>();
 
 		property = propertyConverter.toEntity(propertyDTO);
@@ -120,7 +130,7 @@ public class PropertyService implements IPropertyService {
 
 		Optional<Property> property = propertyRepository.findById(propertyId);
 		
-		List<Images> images = new ArrayList<>();
+		Set<Images> images = new HashSet<>();
 		Set<Category> categories = new HashSet<>();
 
 		if (property.isPresent()) {

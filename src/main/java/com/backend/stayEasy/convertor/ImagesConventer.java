@@ -25,8 +25,8 @@ public class ImagesConventer {
 		return imagesDTO;
 	}
 	
-	public Set<ImagesDTO> arrayToDTO(List<Images> imagesList) {
-		List<ImagesDTO> imagesDTOList = new ArrayList<>();
+	public Set<ImagesDTO> arrayToDTO(Set<Images> imagesList) {
+		Set<ImagesDTO> imagesDTOList = new HashSet<>();
 		for (Images image : imagesList) {
 			imagesDTOList.add(toDTO(image));
 		}

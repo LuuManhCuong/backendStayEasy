@@ -133,9 +133,9 @@ public class PropertyAPI {
 	    		propertyDTOs.add(propertyDTO);
 	    	}
 	        
-	        System.out.println("address: " + address);
-	        System.out.println("checkin: " + checkinDate);
-	        System.out.println("checkout: " + checkoutDate);
+//	        System.out.println("address: " + address);
+//	        System.out.println("checkin: " + checkinDate);
+//	        System.out.println("checkout: " + checkoutDate);
 	        
 	        return propertyDTOs;
 	    }
