@@ -3,6 +3,7 @@ package com.backend.stayEasy.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,7 +30,8 @@ public class Property {
     private int numGuests;
     @Column(name = "discount")
     private int discount;
-    
+    @Column(name = "create_at")
+    private Date createAt;
     @ManyToOne()
     private User user;
     
