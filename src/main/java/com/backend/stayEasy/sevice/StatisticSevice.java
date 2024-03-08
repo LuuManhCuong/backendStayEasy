@@ -79,7 +79,7 @@ public class StatisticSevice {
 	        Statistics statistics = new Statistics();
 	        
 	        // Thiết lập date cho đối tượng statistics
-	        statistics.setDate(startDate);
+	        statistics.setDate(endDate);
 	        
 	        // Tính tổng doanh thu từ ngày đầu tháng đến ngày hiện tại
 	        Float totalRevenue = bookingRepository.getTotalRevenueBetween(startDate, endDate);

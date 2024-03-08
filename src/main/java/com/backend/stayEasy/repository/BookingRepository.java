@@ -1,5 +1,6 @@
 package com.backend.stayEasy.repository;
 
+import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.entity.Booking;
 
 
@@ -28,4 +29,12 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.dateBooking BETWEEN :startDate AND :endDate")
     long countBookingsBetween(Date startDate, Date endDate);
+    
+    @Query("SELECT NEW com.backend.stayEasy.dto.DailyRevenueDTO(b.dateBooking, COALESCE(SUM(b.totalPrice), 0.0)) " +
+    	       "FROM Booking b " +
+    	       "WHERE FUNCTION('MONTH', b.dateBooking) = FUNCTION('MONTH', :date) AND FUNCTION('YEAR', b.dateBooking) = FUNCTION('YEAR', :date) " +
+    	       "GROUP BY b.dateBooking " +
+    	       "ORDER BY b.dateBooking")
+    	List<DailyRevenueDTO> findDailyRevenueByMonthAndYear(@Param("date") Date date);
+
 }
