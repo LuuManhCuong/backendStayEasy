@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,10 +48,10 @@ public class UserService {
         Date date = Date.valueOf(currentDate);
         
 		if (newUser.getId() == null) {
-			newUser.setCreatedAt(date);
+			newUser.setCreatedAt(LocalDateTime.now());
 		}
 
-		newUser.setUpdatedAt(date);
+		newUser.setUpdatedAt(LocalDateTime.now());
 		return userRepository.save(newUser);
 	}
 }

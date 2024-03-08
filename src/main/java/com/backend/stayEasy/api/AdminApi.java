@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.backend.stayEasy.convertor.StatisticsConverter;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
@@ -26,7 +27,7 @@ import com.backend.stayEasy.sevice.StatisticSevice;
 @CrossOrigin
 @RequestMapping("/api/v1/stayeasy/admin")
 public class AdminApi {
-	
+
 	@Autowired
 	private StatisticSevice statisticSevice;
 	@Autowired
