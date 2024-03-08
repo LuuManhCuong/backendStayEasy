@@ -19,10 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.stayEasy.convertor.StatisticsConverter;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
+import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.Statistics;
+import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.StatisticsRepository;
+import com.backend.stayEasy.repository.UserRepository;
 import com.backend.stayEasy.sevice.StatisticSevice;
+import com.backend.stayEasy.sevice.UserService;
 
 @RestController
 @CrossOrigin
@@ -40,6 +44,9 @@ public class AdminApi {
 	
 	@Autowired
 	private BookingRepository bookingRepository;
+	
+	@Autowired
+	private UserService userService;
 	
 	@GetMapping("/revenue")
 	public List<StatisticsDTO> getRevenueByMonth() {
@@ -98,6 +105,12 @@ public class AdminApi {
 	     Date todayDate = Date.valueOf(currentDate);
 
 	     return statisticsRepository.sumRevenueFromStartOfYearToDate(firstDayOfYear, todayDate);
+	 }
+	 
+	 
+	 @GetMapping("/user/all")
+	 public List<UserDTO> getAllUser() {
+		 return userService.getAllUser();
 	 }
 	 
 
