@@ -22,8 +22,8 @@ public class Statistics {
 		private long totalAccount;
 		private long totalBookings;
 		private long totalPost;
-		private long totalCancelPost;
-		private long visitCount;
+		private long totalCancelBooking;
+//		private long visitCount;
 		
 	
 

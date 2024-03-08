@@ -46,13 +46,6 @@ public class AdminApi {
 		return statisticsDTOs;
 	}
 	
-//	@GetMapping("/revenue/daily")
-//	public List<DailyRevenueDTO> getDailyRevenues(@RequestParam("date") Date date) {
-//	    List<DailyRevenueDTO> dailyRevenues = bookingRepository.findDailyRevenueByMonthAndYear(date);
-//	    return dailyRevenues;
-//	}
-
-	
 
 	 @GetMapping("/revenue/daily")
 	    public Map<String, List<DailyRevenueDTO>> getDailyRevenues(@RequestParam("date") Date date) {
@@ -83,5 +76,14 @@ public class AdminApi {
 
 	        return result;
 	    }
+	 @GetMapping("/booking/daily")
+	 public List<Object[]> getBookingDaily() {
+	     LocalDate currentDate = LocalDate.now();
+	     Date firstDayOfMonth = Date.valueOf(currentDate.withDayOfMonth(1));
+	     Date lastDayOfMonth = Date.valueOf(currentDate.withDayOfMonth(currentDate.lengthOfMonth()));
+
+	     return bookingRepository.countBookingAndCancelByDate(firstDayOfMonth, lastDayOfMonth);
+	 }
+	 
 
 }

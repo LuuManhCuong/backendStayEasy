@@ -47,8 +47,8 @@ public class AuthService {
 				.email(request.getEmail())
 				.password(passwordEncoder.encode(request.getPassword()))
 				.role(request.getRole())
-				.createdAt(LocalDateTime.now())
-				.updatedAt(LocalDateTime.now())
+				.createdAt(date)
+				.updatedAt(date)
 				.build();
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);

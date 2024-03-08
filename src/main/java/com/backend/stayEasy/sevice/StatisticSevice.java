@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.backend.stayEasy.entity.Statistics;
@@ -73,6 +74,29 @@ public class StatisticSevice {
 	        
 	        return result;
 	    }
+	  
+		// Chạy vào ngày cuối cùng của tháng lúc 11:50:00 PM
+		@Scheduled(cron = "0 50 23 L * ?")
+		@Transactional
+	    public void calculateAndSaveMonthlyStatistics() {
+	        System.out.println("auto save");
+	        // Lấy ngày hiện tại
+	        LocalDate currentDate = LocalDate.now();
+	        Date todayDate = Date.valueOf(currentDate);
+	        
+	        // Lấy tháng hiện tại
+	        int currentMonth = currentDate.getMonthValue();
+	        
+	        // Lấy ngày đầu của tháng hiện tại
+	        LocalDate firstDayOfCurrentMonth = LocalDate.of(currentDate.getYear(), currentMonth, 1);
+	        Date firstDateOfCurrentMonth = Date.valueOf(firstDayOfCurrentMonth);
+	        
+	        // Tính và lưu thống kê cho tháng hiện tại
+	        Statistics currentMonthStatistics = calculateRevenueForMonth(firstDateOfCurrentMonth, todayDate);
+	        System.out.println(currentMonthStatistics);
+	        statisticsRepository.save(currentMonthStatistics);
+//	        return currentMonthStatistics;
+	    }
 	    
 //	@Transactional
 	  public Statistics calculateRevenueForMonth(Date startDate, Date endDate) {
@@ -97,7 +121,10 @@ public class StatisticSevice {
 	        long totalProperties = propertyRepository.countPropertiesBetween(startDate, endDate);
 	        statistics.setTotalPost(totalProperties);
 	        
+	        // Đếm số lượng cancel booking từ ngày đầu tháng cho đến ngày hiện tại
+	        long totalCancelPost = bookingRepository.countBookingWithCancelNotNull(startDate, endDate);
+	        statistics.setTotalCancelBooking(totalCancelPost);
+	        
 	        return statistics;
-	    }
-	  
+	    }  
 }

@@ -48,10 +48,10 @@ public class UserService {
         Date date = Date.valueOf(currentDate);
         
 		if (newUser.getId() == null) {
-			newUser.setCreatedAt(LocalDateTime.now());
+			newUser.setCreatedAt(date);
 		}
 
-		newUser.setUpdatedAt(LocalDateTime.now());
+		newUser.setUpdatedAt(date);
 		return userRepository.save(newUser);
 	}
 }
