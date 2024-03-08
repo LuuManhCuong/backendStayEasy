@@ -23,5 +23,4 @@ public class FeedbackDTO {
 	private String avatar;
 	private UUID userId;
 	private UUID propertyId;
-	private LocalDateTime createAt;
 }

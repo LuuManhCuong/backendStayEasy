@@ -20,7 +20,8 @@ import org.springframework.stereotype.Repository;
 public interface IPropertyRepository extends JpaRepository<Property, UUID>{
 
 	Property findByPropertyId(UUID propertyId);
-	List<Property> findByUserId(UUID userId);	
+	
+	
 	@Query("SELECT p FROM Property p WHERE p.propertyId NOT IN ( " +
 	           "SELECT DISTINCT b.property.propertyId FROM Booking b " +
 	           "WHERE b.checkIn <= :endDate AND b.checkOut >= :startDate) " +

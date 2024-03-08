@@ -6,16 +6,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.stayEasy.convertor.CategoryConverter;
 import com.backend.stayEasy.convertor.FeedbackConverter;
 import com.backend.stayEasy.convertor.ImagesConventer;
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.convertor.PropertyUtilitiesConverter;
+import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
@@ -26,15 +27,13 @@ import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.entity.PropertyCategory;
 import com.backend.stayEasy.entity.PropertyUilitis;
+import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.ICategoryRepository;
 import com.backend.stayEasy.repository.IImageRepository;
 import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
 import com.backend.stayEasy.repository.PropertyUilitisRepository;
-
-
-import jakarta.transaction.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -55,13 +54,16 @@ public class PropertyService implements IPropertyService {
 
 	@Autowired
 	private FeedbackConverter feedbackConverter;
+	
+	@Autowired
+	private CategoryConverter categoryConverter;
 
 	@Autowired
 	private PropertyUtilitiesConverter propertyUtilitiesConverter;
 
 	@Autowired
 	private IImageRepository imageRepository;
-
+	
 	@Autowired
 	private PropertyUilitisRepository propertyUtilitiesRepository;
 
@@ -93,26 +95,28 @@ public class PropertyService implements IPropertyService {
 	public PropertyDTO add(PropertyDTO propertyDTO) {
 		Property property = new Property();
 		List<Images> images = new ArrayList<>();
-		Set<Category> categories = new HashSet<>();
+		List<PropertyCategory> propertyCategory = new ArrayList<>();
 
 		property = propertyConverter.toEntity(propertyDTO);
 
 		for (ImagesDTO i : propertyDTO.getImagesList()) {
 			images.add(new Images(i.getUrl(), i.getDescription(), property));
 		}
-
-		// Convert CategoryDTO to Category and associate with the property
-		if (propertyDTO.getCategoryIds() != null && !propertyDTO.getCategoryIds().isEmpty()) {
-			for (UUID categoryId : propertyDTO.getCategoryIds()) {
-				Category category = categoryRepository.findById(categoryId).orElse(null);
-				if (category != null) {
-					categories.add(category);
-				}
+		
+		for (CategoryDTO categoryDTO : propertyDTO.getCategories()) {
+			PropertyCategory temp = new PropertyCategory();
+			temp.setProperty(property);
+			Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
+			if (categoryOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
+				Category category = categoryOp.get(); // Trích xuất giá trị User từ Optional
+			    temp.setCategory(category); // Gán giá trị User cho property
 			}
+			propertyCategory.add(temp);
 		}
 
+
 		property.setImages(images);
-		property.setCategories(categories);
+		property.setPropertyCategories(propertyCategory);
 
 		propertyRepository.save(property);
 
@@ -125,7 +129,7 @@ public class PropertyService implements IPropertyService {
 		Optional<Property> property = propertyRepository.findById(propertyId);
 		
 		List<Images> images = new ArrayList<>();
-		Set<Category> categories = new HashSet<>();
+		List<PropertyCategory> propertyCategory = new ArrayList<>();
 
 		if (property.isPresent()) {
 			Property editProperty = property.get();
@@ -144,18 +148,20 @@ public class PropertyService implements IPropertyService {
 			}
 			
 			// Convert CategoryDTO to Category and associate with the property
-			if (updatePropertyDTO.getCategoryIds() != null && !updatePropertyDTO.getCategoryIds().isEmpty()) {
-				for (UUID categoryId : updatePropertyDTO.getCategoryIds()) {
-					Category category = categoryRepository.findById(categoryId).orElse(null);
-					if (category != null) {
-						categories.add(category);
-					}
+			for (CategoryDTO categoryDTO : updatePropertyDTO.getCategories()) {
+				PropertyCategory temp = new PropertyCategory();
+				temp.setProperty(editProperty);
+				Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
+				if (categoryOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
+					Category category = categoryOp.get(); // Trích xuất giá trị User từ Optional
+				    temp.setCategory(category); // Gán giá trị User cho property
 				}
+				propertyCategory.add(temp);
 			}
 			
 			editProperty.setImages(images);
 			
-			editProperty.setCategories(categories);
+			editProperty.setPropertyCategories(propertyCategory);
 			
 			Property result = propertyRepository.save(editProperty);
 			
@@ -177,12 +183,6 @@ public class PropertyService implements IPropertyService {
 			throw new EntityNotFoundException("Property not found with ID: " + propertyId);
 		}
 
-		return null;
-	}
-
-	@Override
-	public List<PropertyDTO> findByUserId(UUID userId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

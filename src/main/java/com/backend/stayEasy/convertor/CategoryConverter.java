@@ -26,14 +26,14 @@ public class CategoryConverter {
 		categoryDTO.setCategoryId(category.getCategoryId());
 		categoryDTO.setCategoryName(category.getCategoryName());
 		
-		Set<Property> properties = category.getProperties();
-		if (!properties.isEmpty()) {
-			List<UUID> propertyIds = properties.stream()
-					.map(Property::getPropertyId)
-					.collect(Collectors.toList());
-			
-			categoryDTO.setPropertyId(propertyIds);
-		}
+//		Set<Property> properties = category.getProperties();
+//		if (!properties.isEmpty()) {
+//			List<UUID> propertyIds = properties.stream()
+//					.map(Property::getPropertyId)
+//					.collect(Collectors.toList());
+//			
+//			categoryDTO.setPropertyId(propertyIds);
+//		}
 		
 		return categoryDTO;
 	}
@@ -45,5 +45,5 @@ public class CategoryConverter {
 		}
 		return categoryDTOList;
 	}
-
+	
 }

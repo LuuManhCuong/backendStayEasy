@@ -19,5 +19,4 @@ import lombok.NoArgsConstructor;
 public class CategoryDTO {
 	private UUID categoryId;
 	private String categoryName;
-	private List<UUID> propertyId;
 }

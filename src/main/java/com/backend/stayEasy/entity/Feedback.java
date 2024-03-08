@@ -25,7 +25,7 @@ public class Feedback {
 	private UUID feedbackId;
 
 	
-	@Column(name="content",columnDefinition = "ntext" )
+	@Column(name="content",columnDefinition = "TEXT" )
 	private String content;
 	
 	@Column(name = "createAt")

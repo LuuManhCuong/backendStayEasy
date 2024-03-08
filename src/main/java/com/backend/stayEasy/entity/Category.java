@@ -21,9 +21,9 @@ public class Category {
 	@Column(name = "category_name", columnDefinition = "nvarchar(255)")
 	private String categoryName;
 	
-	@OneToMany(mappedBy = "category",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "category")
 	private Set<PropertyCategory> propertyCategories;
 	
-	@ManyToMany(mappedBy = "categories",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Property> properties = new HashSet<>();
+//	@ManyToMany(mappedBy = "categories")
+//	private Set<Property> properties = new HashSet<>();
 }
