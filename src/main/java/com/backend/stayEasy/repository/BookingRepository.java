@@ -35,6 +35,6 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     	       "WHERE FUNCTION('MONTH', b.dateBooking) = FUNCTION('MONTH', :date) AND FUNCTION('YEAR', b.dateBooking) = FUNCTION('YEAR', :date) " +
     	       "GROUP BY b.dateBooking " +
     	       "ORDER BY b.dateBooking")
-    	List<DailyRevenueDTO> findDailyRevenueByMonthAndYear(@Param("date") Date date);
+    List<DailyRevenueDTO> findDailyRevenueByMonthAndYear(@Param("date") Date date);
 
 }

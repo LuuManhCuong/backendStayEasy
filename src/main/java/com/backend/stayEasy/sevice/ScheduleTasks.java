@@ -19,7 +19,7 @@ public class ScheduleTasks {
 	private StatisticsRepository statisticsRepository;
 
 	// Chạy vào ngày cuối cùng của tháng lúc 11:30:00 PM
-	@Scheduled(cron = "0 30 23 L * ?")
+	@Scheduled(cron = "0 10 14 8 3 ?")
     public void calculateAndSaveMonthlyStatistics() {
         
         // Lấy ngày hiện tại

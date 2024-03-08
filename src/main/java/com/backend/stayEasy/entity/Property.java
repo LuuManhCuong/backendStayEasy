@@ -83,39 +83,3 @@ public class Property {
 	@JoinTable(name = "category_property", joinColumns = @JoinColumn(referencedColumnName = "property_id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 }
-//    private String description;
-//    private String thumbnail;
-//    @Column(columnDefinition = "nvarchar(255)")
-//    private String address;
-//    private Float price;
-//    private Float rating;
-//    @Column(name = "is_null")
-//    private boolean isNull;
-//    @Column(name = "num_guests")
-//    private int numGuests;
-//    @Column(name = "discount")
-//    private int discount;
-//    @Column(name = "create_at")
-//    private Date createAt;
-//    @ManyToOne()
-//    private User user;
-
-//    @OneToMany(mappedBy =  "property")
-//    private Set<Like> likes;
-//    
-//    @OneToMany(mappedBy = "property")
-//    private Set<Feedback> feedbacks;
-//    
-//    @OneToMany(mappedBy = "property")
-//    private Set<Images> images;
-//    
-//    @OneToMany(mappedBy = "property")
-//    private Set<BookingDetail> bookingDetails;
-//    
-//    @OneToMany(mappedBy = "property")
-//    private Set<PropertyCategory> propertyCategories;
-//    
-//    @OneToMany(mappedBy = "property")
-//    private Set<PropertyUilitis> propertyUilitis;
-//}
-//>>>>>>> 132d8e2de88cfdb0eef46987cd4f8aeb1f3b2c0c
