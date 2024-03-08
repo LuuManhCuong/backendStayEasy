@@ -2,8 +2,10 @@ package com.backend.stayEasy.entity;
 
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,6 +23,21 @@ public class Images {
 	private String url;
 	private String description;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Property property;
+	
+	
+	
+	public Images(String url, String description, Property property) {
+		this.url = url;
+		this.description = description;
+		this.property = property;
+	}
+
+
+
+	public Images() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 }

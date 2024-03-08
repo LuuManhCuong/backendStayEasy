@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -38,7 +37,11 @@ public class User implements UserDetails {
 	@Column(name = "lastName")
 	String lastName;
 
+	@Column(name = "phone")
 	String phone;
+
+	@Column(name = "address")
+	String address;
 
 	String avatar;
 
@@ -66,8 +69,6 @@ public class User implements UserDetails {
 	public String getUsername() {
 		return email;
 	}
-	
-
 
 	@Override
 	public boolean isAccountNonExpired() {

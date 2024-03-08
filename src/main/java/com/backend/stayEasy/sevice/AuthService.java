@@ -1,15 +1,5 @@
 package com.backend.stayEasy.sevice;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.SignInRequest;
 import com.backend.stayEasy.dto.SignInResponse;
@@ -20,10 +10,19 @@ import com.backend.stayEasy.enums.TokenType;
 import com.backend.stayEasy.repository.TokenRepository;
 import com.backend.stayEasy.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +36,11 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 
 	public SignInResponse register(SignUpRequest request) {
+		  // Lấy ngày hiện tại
+        LocalDate currentDate = LocalDate.now();
+     // Chuyển đổi từ LocalDate sang Date
+        Date date = Date.valueOf(currentDate);
+        
 		var user = User.builder()
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())
@@ -44,7 +48,7 @@ public class AuthService {
 				.password(passwordEncoder.encode(request.getPassword()))
 				.role(request.getRole())
 				.createdAt(LocalDateTime.now())
-				.updatedAt(LocalDateTime.now()) 
+				.updatedAt(LocalDateTime.now())
 				.build();
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);

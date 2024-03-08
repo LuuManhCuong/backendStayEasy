@@ -2,6 +2,7 @@ package com.backend.stayEasy.repository;
 
 import com.backend.stayEasy.entity.Booking;
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,12 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
             "WHERE b.property.propertyId = :propertyID AND (b.checkIn<= :checkOutDate) AND (b.checkOut >= :checkInDate)")
     List<Booking> findConflictingBookings(@Param("propertyID") UUID propertyID, @Param("checkInDate") Date checkInDate,
                                           @Param("checkOutDate") Date checkOutDate);
+    
+    
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.dateBooking BETWEEN :startDate AND :endDate")
+    Float getTotalRevenueBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);;
+    
+    
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.dateBooking BETWEEN :startDate AND :endDate")
+    long countBookingsBetween(Date startDate, Date endDate);
 }

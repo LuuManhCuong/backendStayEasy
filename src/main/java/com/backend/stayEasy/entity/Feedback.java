@@ -25,7 +25,7 @@ public class Feedback {
 	private UUID feedbackId;
 
 	
-	@Column(name="content",columnDefinition = "nvarchar(255)" )
+	@Column(name="content",columnDefinition = "TEXT" )
 	private String content;
 	
 	@Column(name = "createAt")
@@ -43,5 +43,7 @@ public class Feedback {
 	@Column(name = "property_id")
 	private UUID propertyId;
 	
+//	@ManyToOne
+//	private Property property;
 
 }
