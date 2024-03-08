@@ -32,7 +32,7 @@ public class PropertyDTO {
     private Float rating;
     private UserDTO owner;
     private List<ImagesDTO> imagesList;
-    private Set<CategoryDTO> categories;
+    private List<CategoryDTO> categories;
     private Set<FeedbackDTO> feedbackList;
     private Set<PropertyUtilitiesDTO> propertyUtilitis;
     private Set<LikeRequestDTO> likeList;
