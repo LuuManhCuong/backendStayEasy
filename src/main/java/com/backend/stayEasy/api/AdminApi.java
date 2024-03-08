@@ -21,6 +21,7 @@ import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
 import com.backend.stayEasy.entity.Statistics;
 import com.backend.stayEasy.repository.BookingRepository;
+import com.backend.stayEasy.repository.StatisticsRepository;
 import com.backend.stayEasy.sevice.StatisticSevice;
 
 @RestController
@@ -30,6 +31,10 @@ public class AdminApi {
 
 	@Autowired
 	private StatisticSevice statisticSevice;
+	
+	@Autowired
+	private StatisticsRepository statisticsRepository;
+	
 	@Autowired
 	private StatisticsConverter statisticsConverter;
 	
@@ -83,6 +88,16 @@ public class AdminApi {
 	     Date lastDayOfMonth = Date.valueOf(currentDate.withDayOfMonth(currentDate.lengthOfMonth()));
 
 	     return bookingRepository.countBookingAndCancelByDate(firstDayOfMonth, lastDayOfMonth);
+	 }
+	 
+	 
+	 @GetMapping("/statistics/monthly")
+	 public List<Statistics> getStatisticsMonthly() {
+		 LocalDate currentDate = LocalDate.now();
+	     Date firstDayOfYear= Date.valueOf(currentDate.withDayOfYear(1));
+	     Date todayDate = Date.valueOf(currentDate);
+
+	     return statisticsRepository.sumRevenueFromStartOfYearToDate(firstDayOfYear, todayDate);
 	 }
 	 
 

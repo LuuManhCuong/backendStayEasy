@@ -83,10 +83,7 @@ public class PropertyService implements IPropertyService {
 			 propertyDTO.setImagesList(imagesDTO);
 			 propertyDTOs.add(propertyDTO);
 		}
-		
 		return propertyDTOs;
-
-		
 	}
 
 	@Override
