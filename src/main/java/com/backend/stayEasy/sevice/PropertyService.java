@@ -72,6 +72,9 @@ public class PropertyService implements IPropertyService {
 
 	@Autowired
 	private LikeConverter likeConverter;
+	
+	@Autowired
+	private IPropertyCategoryRepository propertyCategoryRepository;
 
 	@Override
 	public List<PropertyDTO> findAll() {
@@ -95,9 +98,10 @@ public class PropertyService implements IPropertyService {
 	public PropertyDTO add(PropertyDTO propertyDTO) {
 		Property property = new Property();
 		List<Images> images = new ArrayList<>();
-		List<PropertyCategory> propertyCategory = new ArrayList<>();
+		Set<PropertyCategory> propertyCategory = new HashSet<>();
 
 		property = propertyConverter.toEntity(propertyDTO);
+		System.out.println(property);
 
 		for (ImagesDTO i : propertyDTO.getImagesList()) {
 			images.add(new Images(i.getUrl(), i.getDescription(), property));
@@ -127,13 +131,17 @@ public class PropertyService implements IPropertyService {
 	public PropertyDTO update(UUID propertyId, PropertyDTO updatePropertyDTO) {
 
 		Optional<Property> property = propertyRepository.findById(propertyId);
-		
+
 		List<Images> images = new ArrayList<>();
-		List<PropertyCategory> propertyCategory = new ArrayList<>();
+		Set<PropertyCategory> propertyCategory = new HashSet<>();
 
 		if (property.isPresent()) {
 			Property editProperty = property.get();
-			
+
+			for (Images image : editProperty.getImages()) {
+				imageRepository.delete(image);
+			}
+
 			editProperty = propertyConverter.toEntity(updatePropertyDTO);
 
 			editProperty.setPropertyName(updatePropertyDTO.getPropertyName());
@@ -142,29 +150,29 @@ public class PropertyService implements IPropertyService {
 			editProperty.setPrice(updatePropertyDTO.getPrice());
 			editProperty.setNumGuests(updatePropertyDTO.getNumGuests());
 			editProperty.setDiscount(updatePropertyDTO.getDiscount());
-			
+
 			for (ImagesDTO i : updatePropertyDTO.getImagesList()) {
 				images.add(new Images(i.getUrl(), i.getDescription(), editProperty));
 			}
-			
+
 			// Convert CategoryDTO to Category and associate with the property
-			for (CategoryDTO categoryDTO : updatePropertyDTO.getCategories()) {
-				PropertyCategory temp = new PropertyCategory();
-				temp.setProperty(editProperty);
-				Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
-				if (categoryOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
-					Category category = categoryOp.get(); // Trích xuất giá trị User từ Optional
-				    temp.setCategory(category); // Gán giá trị User cho property
+			if (updatePropertyDTO.getCategories() != null && !updatePropertyDTO.getCategories().isEmpty()) {
+				for (CategoryDTO categoryDTO : updatePropertyDTO.getCategories()) {
+					Category category = categoryRepository.findById(categoryDTO.getCategoryId()).orElse(null);
+					if (category != null) {
+						PropertyCategory temp = new PropertyCategory();
+						temp.setCategory(category);
+						temp.setProperty(editProperty);
+						propertyCategory.add(temp);
+					}
 				}
-				propertyCategory.add(temp);
 			}
-			
+
 			editProperty.setImages(images);
-			
-			editProperty.setPropertyCategories(propertyCategory);
-			
+
+			editProperty.setPropertyCategories(propertyCategory);;
+
 			Property result = propertyRepository.save(editProperty);
-			
 
 			return propertyConverter.toDTO(result);
 
@@ -186,16 +194,15 @@ public class PropertyService implements IPropertyService {
 		return null;
 	}
 
-//	@Override
-//	public List<Property> findByCategory(UUID categoryId) {
-//		
-//		List<PropertyCategory> propertyCategories = propertyCategoryRepository.findByCategoryCategoryId(categoryId);
-//		List<Property> properties = new ArrayList<>();
-//		for (PropertyCategory p : propertyCategories) {
-//			properties.add(p.getProperty());
-//		}
-//		
-//		return properties;
-//	}
+	@Override
+	public List<PropertyDTO> findByCategory(UUID categoryId) {
+		List<PropertyCategory> propertyCategories = propertyCategoryRepository.findByCategoryCategoryId(categoryId);
+		List<PropertyDTO> propertiesDTO = new ArrayList<>();
+		for (PropertyCategory p : propertyCategories) {
+			propertiesDTO.add(propertyConverter.toDTO(p.getProperty()));
+		}
+		
+		return propertiesDTO;
+	}
 
 }

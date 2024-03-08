@@ -38,7 +38,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-
 @Component
 public class PropertyConverter {
 
@@ -56,7 +55,6 @@ public class PropertyConverter {
 
 	@Autowired
 	private UserRepository userRepository;
-	
 
 	public PropertyDTO toDTO(Property property) {
 		List<ImagesDTO> listImages = new ArrayList<>();
@@ -98,26 +96,27 @@ public class PropertyConverter {
 		property.setAddress(propertyDTO.getAddress());
 		property.setDescription(propertyDTO.getDescription());
 		property.setDiscount(propertyDTO.getDiscount());
-		property.setNull(false);
 		property.setNumGuests(propertyDTO.getNumGuests());
 		property.setPrice(propertyDTO.getPrice());
 		property.setPropertyId(propertyDTO.getPropertyId());
 		property.setPropertyName(propertyDTO.getPropertyName());
 //		property.setRating(5.0);
 		property.setThumbnail(propertyDTO.getThumbnail());
-		
+
 		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());
-				if (optionalUser.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
-				    User user = optionalUser.get(); // Trích xuất giá trị User từ Optional
-				    property.setUser(user); // Gán giá trị User cho property
-				} else {
-				   property.setUser(null);
-				}
+		// Các xử lý tiếp theo...
+		if (optionalUser.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
+			User user = optionalUser.get();
+			System.out.println(user);// Trích xuất giá trị User từ Optional
+			property.setUser(user); // Gán giá trị User cho property
+		}
+
+//		System.out.println(property);
 		return property;
 
 	}
 
-//	no
+
 
 	public PropertyDTO toDTO(Property property, List<LikeRequestDTO> likeRequestDTOlist) {
 		PropertyDTO propertyDTO = new PropertyDTO();
