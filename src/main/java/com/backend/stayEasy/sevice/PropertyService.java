@@ -82,7 +82,11 @@ public class PropertyService implements IPropertyService {
 		List<PropertyDTO> result = new ArrayList<>();
 
 		for (Property p : propertyRepository.findAll()) {
-			result.add(propertyConverter.toDTO(p));
+			List<Like> likes = likeRepository.findByPropertyPropertyId(p.getPropertyId());
+			Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+			PropertyDTO temp = propertyConverter.toDTO(p);
+			temp.setLikeList(likeRequestDTOs);
+			result.add(temp);
 		}
 
 		return result;
@@ -235,7 +239,11 @@ public class PropertyService implements IPropertyService {
 		
 		for (PropertyCategory p : propertyCategory) {
 			Property temp = propertyRepository.findByPropertyId(p.getProperty().getPropertyId());
-			result.add(propertyConverter.toDTO(temp));
+			List<Like> likes = likeRepository.findByPropertyPropertyId(temp.getPropertyId());
+			Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+			PropertyDTO temp2 = propertyConverter.toDTO(temp);
+			temp2.setLikeList(likeRequestDTOs);
+			result.add(temp2);
 		}
 		return result;
 	}

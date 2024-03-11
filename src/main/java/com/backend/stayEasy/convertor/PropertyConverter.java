@@ -121,7 +121,7 @@ public class PropertyConverter {
 
 //	no
 
-	public PropertyDTO toDTO(Property property, List<LikeRequestDTO> likeRequestDTOlist) {
+	public PropertyDTO toDTO(Property property, Set<LikeRequestDTO> likeRequestDTOlist) {
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());
@@ -134,8 +134,7 @@ public class PropertyConverter {
 		propertyDTO.setRating(property.getRating());
 		propertyDTO.setThumbnail(property.getThumbnail());
 		propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
-		Set<LikeRequestDTO> likeSet = new HashSet<>(likeRequestDTOlist);
-		propertyDTO.setLikeList(likeSet);
+		propertyDTO.setLikeList(likeRequestDTOlist);
 		return propertyDTO;
 	}
 
