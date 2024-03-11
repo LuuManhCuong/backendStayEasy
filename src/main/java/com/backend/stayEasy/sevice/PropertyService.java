@@ -2,6 +2,7 @@ package com.backend.stayEasy.sevice;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -136,10 +137,8 @@ public class PropertyService implements IPropertyService {
 		 
 		    if (propertyOptional.isPresent()) {
 		        Property existingProperty = propertyOptional.get();
-		        Property updatedProperty = propertyConverter.toEntity(updatePropertyDTO); // Tạo một bản sao mới từ DTO đã được cập nhật
+		        Property updatedProperty = propertyConverter.toEntity(updatePropertyDTO);
 		        
-		     
-
 		        // Copy các thông tin từ updatedProperty vào existingProperty
 		        existingProperty.setPropertyName(updatedProperty.getPropertyName());
 		        existingProperty.setDescription(updatedProperty.getDescription());
@@ -147,34 +146,52 @@ public class PropertyService implements IPropertyService {
 		        existingProperty.setPrice(updatedProperty.getPrice());
 		        existingProperty.setNumGuests(updatedProperty.getNumGuests());
 		        existingProperty.setDiscount(updatedProperty.getDiscount());
+		        		        
+		        List<PropertyCategory> updatedPropertyCategories = new ArrayList<>();
+
+		     // Lưu category cần update
+		     for (CategoryDTO categoryDTO : updatePropertyDTO.getCategories()) {
+		         PropertyCategory temp = new PropertyCategory();
+		         temp.setProperty(existingProperty);
+		         Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
+		         if (categoryOp.isPresent()) { 
+		             Category category = categoryOp.get(); 
+		             temp.setCategory(category); 
+		         }
+		         updatedPropertyCategories.add(temp);
+		     }
+
+		     // Check category thừa
+		     Iterator<PropertyCategory> iterator = existingProperty.getPropertyCategories().iterator();
+		     while (iterator.hasNext()) {
+		         PropertyCategory propertyCategory = iterator.next();
+		         boolean categoryFound = false;
+		         for (PropertyCategory updatedCategory : updatedPropertyCategories) {
+		             if (propertyCategory.getCategory().getCategoryId() == updatedCategory.getCategory().getCategoryId()) {
+		                 categoryFound = true;
+		                 break;
+		             }
+		         }
+		         if (!categoryFound) {
+		             iterator.remove();
+		         }
+		     }
+
+		     // Check category mới add vô
+		     for (PropertyCategory updatedCategory : updatedPropertyCategories) {
+		    	    boolean categoryExists = false;
+		    	    for (PropertyCategory existingCategory : existingProperty.getPropertyCategories()) {
+		    	        if (existingCategory.getCategory().getCategoryId().equals(updatedCategory.getCategory().getCategoryId())) {
+		    	            categoryExists = true;
+		    	            break;
+		    	        }
+		    	    }
+		    	    if (!categoryExists) {
+		    	        existingProperty.getPropertyCategories().add(updatedCategory);
+		    	    }
+		    	}
 		        
-		        
-		        
-		        for (CategoryDTO categoryDTO : updatePropertyDTO.getCategories()) {
-				    PropertyCategory temp = new PropertyCategory();
-				    temp.setProperty(existingProperty);
-				    Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
-				    if (categoryOp.isPresent()) { 
-				        Category category = categoryOp.get(); 
-				        temp.setCategory(category); 
-				    }
-				    // Kiểm tra xem danh sách propertyCategory hiện tại của property đã có category này hay chưa
-				    // Nếu chưa có, thì thêm vào danh sách, nếu đã có thì không cần thêm
-				    for (PropertyCategory propertyCategory : existingProperty.getPropertyCategories()) {
-						if(!(propertyCategory.getCategory().getCategoryId()==temp.getCategory().getCategoryId())) {
-							existingProperty.getPropertyCategories().add(temp);
-						}
-					}
-				}
-		        
-//		        existingProperty.getImages().clear();
-//
-//		        // Thêm hình ảnh mới vào bất động sản
-//		        for (ImagesDTO imagesDTO : updatePropertyDTO.getImagesList()) {
-//		            Images newImage = new Images(imagesDTO.getUrl(), imagesDTO.getDescription(), existingProperty);
-//		            existingProperty.getImages().add(newImage);
-//		        }
-		        
+		     	// xoá image không update
 		        List<Images> imagesToRemove = new ArrayList<>();
 		        for (Images existingImage : existingProperty.getImages()) {
 		            boolean existsInUpdate = false;
@@ -192,7 +209,7 @@ public class PropertyService implements IPropertyService {
 		        }
 		        existingProperty.getImages().removeAll(imagesToRemove);
 
-		        // Thêm hình ảnh mới vào bất động sản
+		        // Check đã có images chưa
 		        for (ImagesDTO imagesDTO : updatePropertyDTO.getImagesList()) {
 		            boolean exists = false;
 		            for (Images existingImage : existingProperty.getImages()) {
@@ -201,17 +218,15 @@ public class PropertyService implements IPropertyService {
 		                    break;
 		                }
 		            }
+		            // chưa có add vô
 		            if (!exists) {
 		                Images newImage = new Images(imagesDTO.getUrl(), imagesDTO.getDescription(), existingProperty);
 		                existingProperty.getImages().add(newImage);
 		            }
 		        }
 		        
-
-		        // Lưu bản sao đã được cập nhật vào cơ sở dữ liệu
 		        Property result = propertyRepository.save(existingProperty);
 
-		        // Convert và trả về DTO của đối tượng đã được cập nhật
 		        return propertyConverter.toDTO(result);
 		    } else {
 		        throw new EntityNotFoundException("Property not found!");
