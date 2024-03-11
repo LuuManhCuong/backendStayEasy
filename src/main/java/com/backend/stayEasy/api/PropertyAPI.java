@@ -90,10 +90,11 @@ public class PropertyAPI {
 		return propertyService.delete(propertyId);
 	}
 	
-//	@GetMapping("/category/{category}")
-//	public List<Property> getPropertyByCategory(@PathVariable("category") UUID categoryId) {
-//		return propertyService.findByCategory(categoryId);
-//	}
+	@GetMapping("/category/{category}")
+	public List<PropertyDTO> getPropertyByCategory(@PathVariable("category") UUID categoryId) {
+		System.out.println(categoryId);
+		return propertyService.findByCategory(categoryId);
+	}
 
 	@GetMapping("/search/suggest")
 	public List<PropertyDTO> searchAddressSuggest(@RequestParam("address") String address) {

@@ -61,25 +61,17 @@ public class Property {
 	@ManyToOne
 	private User user;
 
-	@OneToMany(mappedBy = "property" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
 	private Set<Like> likes;
 
-//	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<Feedback> feedbacks;
-
-	@OneToMany(mappedBy = "property")
-	private Set<Images> images;
-
-//	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<BookingDetail> bookingDetails;
+	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Images> images;
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PropertyCategory> propertyCategories;
+	private List<PropertyCategory> propertyCategories;
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PropertyUilitis> propertyUilitis;
 
-	@ManyToMany
-	@JoinTable(name = "category_property", joinColumns = @JoinColumn(referencedColumnName = "property_id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "category_id"))
-	private Set<Category> categories = new HashSet<>();
 }

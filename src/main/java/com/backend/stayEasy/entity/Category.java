@@ -24,6 +24,6 @@ public class Category {
 	@OneToMany(mappedBy = "category")
 	private Set<PropertyCategory> propertyCategories;
 	
-	@ManyToMany(mappedBy = "categories")
-	private Set<Property> properties = new HashSet<>();
+//	@ManyToMany(mappedBy = "categories")
+//	private Set<Property> properties = new HashSet<>();
 }

@@ -30,10 +30,8 @@ public class PropertyDTO {
     private int discount;
     private Date createAt;
     private Float rating;
-    private UUID ownerId;
     private UserDTO owner;
-    private Set<ImagesDTO> imagesList;
-    private List<UUID> categoryIds;
+    private List<ImagesDTO> imagesList;
     private List<CategoryDTO> categories;
     private Set<FeedbackDTO> feedbackList;
     private Set<PropertyUtilitiesDTO> propertyUtilitis;
