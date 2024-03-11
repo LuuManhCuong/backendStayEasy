@@ -93,8 +93,10 @@ public class PropertyConverter {
 	}
 
 	public Property toEntity(PropertyDTO propertyDTO) {
-
 		Property property = new Property();
+		if(propertyDTO.getPropertyId()!=null) {
+			property.setPropertyId(propertyDTO.getPropertyId());
+		}
 		property.setAddress(propertyDTO.getAddress());
 		property.setDescription(propertyDTO.getDescription());
 		property.setDiscount(propertyDTO.getDiscount());
