@@ -61,7 +61,7 @@ public class Property {
 	@ManyToOne
 	private User user;
 
-	@OneToMany(mappedBy = "property")
+	@OneToMany(mappedBy = "property" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Like> likes;
 
 //	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
