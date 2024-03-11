@@ -23,8 +23,8 @@ public class BookingDetail {
 
 	@ManyToOne()
 	private Booking booking;
-
-	@ManyToOne
-	private Property property;
+//
+//	@ManyToOne
+//	private Property property;
 
 }

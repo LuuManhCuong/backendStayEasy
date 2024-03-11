@@ -1,7 +1,6 @@
 package com.backend.stayEasy.sevice;
 
 import com.backend.stayEasy.convertor.BookingConverter;
-
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.entity.Booking;
 import com.backend.stayEasy.repository.BookingRepository;
@@ -19,45 +18,49 @@ import java.util.stream.Collectors;
 public class BookingService {
 
     @Autowired
+    PropertyService propertyService;
+    @Autowired
     private BookingRepository bookingRepository;
     @Autowired
     private UserService userService;
     @Autowired
     private PropertyUilitisRepository propertyRepository;
-
     @Autowired
     private BookingConverter bookingConverter;
-
-    @Autowired PropertyService propertyService;
 
     public BookingDTO getBookingById(UUID id) {
         Booking booking;
         booking = bookingRepository.findById(id).get();
         return bookingConverter.toDTO(booking);
     }
+
     public Booking findById(UUID id) {
         Booking booking;
         booking = bookingRepository.findById(id).get();
-        return  booking;
+        return booking;
     }
+
     public List<BookingDTO> findAll() {
         return bookingRepository.findAll()
                 .stream()
                 .map(bookingConverter::toDTO)
                 .collect(Collectors.toList());
     }
+
     public List<BookingDTO> returnMyBookings(UUID id) {
         return bookingRepository.findAllByUser_IdOrderByDateBookingDesc(id)
                 .stream()
                 .map(bookingConverter::toDTO)
                 .collect(Collectors.toList());
     }
+
     public List<BookingDTO> returnListingBookings(UUID id) {
         return bookingRepository.findAllByPropertyPropertyIdOrderByDateBookingDesc(id)
                 .stream()
                 .map(bookingConverter::toDTO)
                 .collect(Collectors.toList());
     }
+
     public void updateBookingStatus(UUID bookingId, boolean status) {
         Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
         if (!bookingOptional.isPresent()) {
@@ -72,14 +75,16 @@ public class BookingService {
             // ...
         }
     }
+
     // create booking
     public BookingDTO crateBooking(Booking booking) {
         booking = bookingRepository.save(booking);
         System.out.println("Booking added or updated");
         return bookingConverter.toDTO(booking);
     }
+
     public BookingDTO newBooking(BookingDTO bookingDTO) {
-        BookingDTO bookingDto=new BookingDTO();
+        BookingDTO bookingDto = new BookingDTO();
         bookingDto.setPropertyId(bookingDTO.getPropertyId());
         bookingDto.setUserId(bookingDTO.getUserId());
         bookingDto.setTotal(bookingDTO.getPrice());
@@ -93,9 +98,9 @@ public class BookingService {
         return bookingDto;
     }
 
-    public boolean isRoomAvailable( UUID id , Date checkInDate, Date checkOutDate) {
+    public boolean isRoomAvailable(UUID id, Date checkInDate, Date checkOutDate) {
         // Logic to check room availability based on check-in and check-out dates
-        List<Booking> conflictingBookings = bookingRepository.findConflictingBookings(id , checkInDate, checkOutDate);
+        List<Booking> conflictingBookings = bookingRepository.findConflictingBookings(id, checkInDate, checkOutDate);
         return conflictingBookings.isEmpty();
     }
 

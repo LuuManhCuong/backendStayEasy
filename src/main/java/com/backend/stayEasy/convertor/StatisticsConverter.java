@@ -17,8 +17,8 @@ public class StatisticsConverter {
 		statisticsDTO.setTotalAccount(statistics.getTotalAccount());
 		statisticsDTO.setTotalBookings(statistics.getTotalBookings());
 		statisticsDTO.setTotalPost(statistics.getTotalPost());
-		statisticsDTO.setTotalCancelPost(statistics.getTotalCancelPost());
-		statisticsDTO.setVisitCount(statistics.getVisitCount());
+		statisticsDTO.setTotalCancelBooking(statistics.getTotalCancelBooking());
+//		statisticsDTO.setVisitCount(statistics.getVisitCount());
 		
 		return statisticsDTO;
 	}
