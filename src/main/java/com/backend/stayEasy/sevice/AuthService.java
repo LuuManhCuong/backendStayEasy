@@ -2,9 +2,12 @@ package com.backend.stayEasy.sevice;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,9 +43,14 @@ public class AuthService {
 	public ResponseEntity<?> register(SignUpRequest request) {
 		// Kiểm tra xem email đã tồn tại trong hệ thống chưa
         if (repository.existsByEmail(request.getEmail())) {
+        	Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Email " + request.getEmail() + " đã đăng ký!");
+            errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
             // Trả về thông báo lỗi khi email đã tồn tại
-        	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Email already exists: " + request.getEmail());
+        	return ResponseEntity
+        			.status(HttpStatus.BAD_REQUEST)
+        			.contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
         }
         
 		var user = User.builder()

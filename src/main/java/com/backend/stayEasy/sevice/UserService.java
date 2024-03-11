@@ -13,6 +13,7 @@ import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,7 +29,7 @@ public class UserService {
 	public List<UserDTO> getAllUser() {
 		List<UserDTO> result = new ArrayList<>();
 		for(User user: userRepository.findAll()) {
-			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),null,user.getRole().name()));
+			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),user.getPhone(),user.getAddress(), null, user.getRole().name()));
 		}
 		return result;
 	}
@@ -40,13 +41,20 @@ public class UserService {
 	public UserDTO getUserByEmail(String email) {
 		return userConverter.toDTO(userRepository.findByEmail(email).get());
 	}
+	
+	public UserDTO getUserByToken(String token) {
+		return userConverter.toDTO(userRepository.findByToken(token).get());
+	}
 
-	public User save(User newUser) {
-		if (newUser.getId() == null) {
-			newUser.setCreatedAt(LocalDateTime.now());
+	@Transactional
+	public UserDTO save(UserDTO userDTO) {
+		User user = new User();
+		if (userDTO.getId() != null) {
+			User oldUser = userRepository.findUserById(userDTO.getId()).get();
+			user = userConverter.toEntity(oldUser, userDTO);
+			user.setUpdatedAt(LocalDateTime.now());
 		}
-
-		newUser.setUpdatedAt(LocalDateTime.now());
-		return userRepository.save(newUser);
+		user.setUpdatedAt(LocalDateTime.now());
+		return userConverter.toDTO(userRepository.save(user));
 	}
 }

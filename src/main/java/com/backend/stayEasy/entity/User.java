@@ -50,8 +50,12 @@ public class User implements UserDetails {
 
 	@Column(name = "lastName")
 	String lastName;
-
+	
+	@Column(name = "phone")
 	String phone;
+	
+	@Column(name = "address")
+	String address;
 
 	String avatar;
 

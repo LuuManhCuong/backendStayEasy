@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.stayEasy.entity.Message;
 import com.backend.stayEasy.repository.IMessageRepository;
+import com.backend.stayEasy.sevice.impl.IMessageService;
 
 
 @Service

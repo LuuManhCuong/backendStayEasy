@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.dto.CategoryDTO;
-import com.backend.stayEasy.sevice.ICategoryService;
+import com.backend.stayEasy.sevice.impl.ICategoryService;
 
 @RestController
 @CrossOrigin

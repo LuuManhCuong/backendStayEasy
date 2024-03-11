@@ -12,7 +12,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 import com.backend.stayEasy.entity.Message;
-import com.backend.stayEasy.sevice.IMessageService;
+import com.backend.stayEasy.sevice.impl.IMessageService;
 
 
 

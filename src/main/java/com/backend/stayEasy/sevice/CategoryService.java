@@ -10,6 +10,7 @@ import com.backend.stayEasy.convertor.CategoryConverter;
 import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.entity.Category;
 import com.backend.stayEasy.repository.ICategoryRepository;
+import com.backend.stayEasy.sevice.impl.ICategoryService;
 
 @Service
 public class CategoryService implements ICategoryService{

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.sevice.IPropertyService;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
 
 
 @RestController
