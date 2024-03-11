@@ -66,6 +66,9 @@ public class PropertyService implements IPropertyService {
 	
 	@Autowired
 	private PropertyUilitisRepository propertyUtilitiesRepository;
+	
+	@Autowired
+	private IPropertyCategoryRepository propertyCategoryRepository;
 
 	@Autowired
 	private LikeRepository likeRepository;
@@ -227,20 +230,14 @@ public class PropertyService implements IPropertyService {
 
 	@Override
 	public List<PropertyDTO> findByCategory(UUID categoryId) {
-		// TODO Auto-generated method stub
-		return null;
+		List<PropertyDTO> result = new ArrayList<>();
+		List<PropertyCategory> propertyCategory = propertyCategoryRepository.findByCategoryCategoryId(categoryId);
+		
+		for (PropertyCategory p : propertyCategory) {
+			Property temp = propertyRepository.findByPropertyId(p.getProperty().getPropertyId());
+			result.add(propertyConverter.toDTO(temp));
+		}
+		return result;
 	}
-
-//	@Override
-//	public List<Property> findByCategory(UUID categoryId) {
-//		
-//		List<PropertyCategory> propertyCategories = propertyCategoryRepository.findByCategoryCategoryId(categoryId);
-//		List<Property> properties = new ArrayList<>();
-//		for (PropertyCategory p : propertyCategories) {
-//			properties.add(p.getProperty());
-//		}
-//		
-//		return properties;
-//	}
 
 }
