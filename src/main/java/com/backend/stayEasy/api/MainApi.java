@@ -4,7 +4,6 @@ package com.backend.stayEasy.api;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.dto.LikeRequestDTO;
-import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.repository.LikeRepository;
 
 import jakarta.transaction.Transactional;

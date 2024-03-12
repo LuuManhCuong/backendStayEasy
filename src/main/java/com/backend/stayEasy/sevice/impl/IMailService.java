@@ -1,4 +1,4 @@
-package com.backend.stayEasy.sevice;
+package com.backend.stayEasy.sevice.impl;
 
 
 import com.backend.stayEasy.dto.BookingDTO;

@@ -1,9 +1,7 @@
 package com.backend.stayEasy.config;
 
 
-import java.awt.print.Printable;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 import com.backend.stayEasy.entity.Message;
-import com.backend.stayEasy.sevice.IMessageService;
+import com.backend.stayEasy.sevice.impl.IMessageService;
 
 @Controller
 public class ChatAppController {

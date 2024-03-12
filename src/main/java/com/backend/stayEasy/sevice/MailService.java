@@ -10,7 +10,14 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+<<<<<<< HEAD
 import java.nio.charset.StandardCharsets;
+=======
+import com.backend.stayEasy.entity.Mail;
+import com.backend.stayEasy.sevice.impl.IMailService;
+
+import jakarta.mail.internet.MimeMessage;
+>>>>>>> origin/namhh-update-infor
 
 @Service
 public class MailService implements IMailService {

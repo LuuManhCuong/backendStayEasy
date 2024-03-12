@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+
 import java.time.LocalDate;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.backend.stayEasy.convertor.BookingConverter;
 import com.backend.stayEasy.convertor.StatisticsConverter;
+import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
 import com.backend.stayEasy.dto.UserDTO;
+import com.backend.stayEasy.entity.Booking;
 import com.backend.stayEasy.entity.Statistics;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.BookingRepository;
@@ -44,6 +50,9 @@ public class AdminApi {
 	
 	@Autowired
 	private BookingRepository bookingRepository;
+	
+	@Autowired
+	private BookingConverter bookingConverter;
 	
 	@Autowired
 	private UserService userService;
@@ -113,5 +122,18 @@ public class AdminApi {
 		 return userService.getAllUser();
 	 }
 	 
+	 
+	 @GetMapping("/booking")
+	 public List<BookingDTO> getBookingById(@RequestParam("propertyId") UUID propertyId){
+		 // Lấy ngày hiện tại
+	        LocalDate currentDate = LocalDate.now();
+	        Date todayDate = Date.valueOf(currentDate);
+	        System.out.println("go here: " + propertyId);
+		 return bookingRepository
+				 .findAllByProperty_PropertyIdAndCheckInAfter(propertyId, todayDate)
+				 .stream()
+				 .map(bookingConverter::toDTO)
+				 .collect(Collectors.toList());
+	 }
 
 }

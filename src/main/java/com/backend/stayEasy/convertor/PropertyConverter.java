@@ -13,11 +13,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+<<<<<<< HEAD
 import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
@@ -37,6 +37,11 @@ import com.backend.stayEasy.repository.UserRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+=======
+import com.backend.stayEasy.dto.LikeRequestDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Property;
+>>>>>>> origin/namhh-update-infor
 
 
 @Component

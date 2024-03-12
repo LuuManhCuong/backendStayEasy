@@ -28,7 +28,7 @@ import com.backend.stayEasy.dto.ChatRoomDTO;
 import com.backend.stayEasy.dto.HostDTO;
 import com.backend.stayEasy.entity.ChatRoom;
 import com.backend.stayEasy.entity.Message;
-import com.backend.stayEasy.sevice.IChatRoomService;
+import com.backend.stayEasy.sevice.impl.IChatRoomService;
 
 
 

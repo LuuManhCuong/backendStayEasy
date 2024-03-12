@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.entity.Mail;
-import com.backend.stayEasy.sevice.IMailService;
+import com.backend.stayEasy.sevice.impl.IMailService;
 
 
 @CrossOrigin

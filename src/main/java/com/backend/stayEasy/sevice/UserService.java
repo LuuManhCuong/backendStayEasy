@@ -16,6 +16,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+<<<<<<< HEAD
+=======
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.backend.stayEasy.convertor.UserConverter;
+import com.backend.stayEasy.dto.UserDTO;
+import com.backend.stayEasy.entity.User;
+import com.backend.stayEasy.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+>>>>>>> origin/namhh-update-infor
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -29,7 +43,7 @@ public class UserService {
 	public List<UserDTO> getAllUser() {
 		List<UserDTO> result = new ArrayList<>();
 		for(User user: userRepository.findAll()) {
-			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),null,user.getRole().name()));
+			result.add(new UserDTO(user.getId(),user.getEmail(),user.getFirstName(),user.getLastName(),user.getPhone(),user.getAddress(), null, user.getRole().name()));
 		}
 		return result;
 	}
@@ -40,7 +54,12 @@ public class UserService {
 	public UserDTO getUserByEmail(String email) {
 		return userConverter.toDTO(userRepository.findByEmail(email).get());
 	}
+	
+	public UserDTO getUserByToken(String token) {
+		return userConverter.toDTO(userRepository.findByToken(token).get());
+	}
 
+<<<<<<< HEAD
 	public User save(User newUser) {
 		 // Lấy ngày hiện tại
         LocalDate currentDate = LocalDate.now();
@@ -53,5 +72,17 @@ public class UserService {
 
 		newUser.setUpdatedAt(date);
 		return userRepository.save(newUser);
+=======
+	@Transactional
+	public UserDTO save(UserDTO userDTO) {
+		User user = new User();
+		if (userDTO.getId() != null) {
+			User oldUser = userRepository.findUserById(userDTO.getId()).get();
+			user = userConverter.toEntity(oldUser, userDTO);
+			user.setUpdatedAt(LocalDateTime.now());
+		}
+		user.setUpdatedAt(LocalDateTime.now());
+		return userConverter.toDTO(userRepository.save(user));
+>>>>>>> origin/namhh-update-infor
 	}
 }

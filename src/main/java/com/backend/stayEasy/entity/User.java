@@ -37,9 +37,16 @@ public class User implements UserDetails {
 
 	@Column(name = "lastName")
 	String lastName;
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> origin/namhh-update-infor
 	@Column(name = "phone")
 	String phone;
+	
+	@Column(name = "address")
+	String address;
 
 	@Column(name = "address")
 	String address;

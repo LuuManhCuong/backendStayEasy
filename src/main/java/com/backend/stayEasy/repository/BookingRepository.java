@@ -45,5 +45,5 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.cancel IS NOT NULL AND b.dateBooking BETWEEN :startDate AND :endDate")
     long countBookingWithCancelNotNull(Date startDate, Date endDate);
     
-    
+    List<Booking> findAllByProperty_PropertyIdAndCheckInAfter(UUID propertyId, Date checkInDate);
 }

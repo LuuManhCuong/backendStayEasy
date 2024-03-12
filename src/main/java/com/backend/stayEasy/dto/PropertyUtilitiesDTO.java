@@ -1,6 +1,5 @@
 package com.backend.stayEasy.dto;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;

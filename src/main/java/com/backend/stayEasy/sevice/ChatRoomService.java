@@ -16,6 +16,7 @@ import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.IChatRoomRepository;
 import com.backend.stayEasy.repository.IMessageRepository;
 import com.backend.stayEasy.repository.UserRepository;
+import com.backend.stayEasy.sevice.impl.IChatRoomService;
 
 @Service
 public class ChatRoomService implements IChatRoomService {

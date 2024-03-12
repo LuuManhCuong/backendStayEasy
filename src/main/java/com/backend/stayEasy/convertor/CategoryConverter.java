@@ -13,10 +13,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.backend.stayEasy.dto.CategoryDTO;
-import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.entity.Category;
+<<<<<<< HEAD
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Property;
+=======
+>>>>>>> origin/namhh-update-infor
 
 
 @Component

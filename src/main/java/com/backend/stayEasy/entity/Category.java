@@ -1,12 +1,21 @@
 package com.backend.stayEasy.entity;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+=======
+>>>>>>> origin/namhh-update-infor
 import java.util.Set;
 import java.util.UUID;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity

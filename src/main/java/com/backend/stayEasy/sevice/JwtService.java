@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.backend.stayEasy.entity.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,12 +28,16 @@ public class JwtService {
 		return claimsResolver.apply(claims);
 	}
 
-	public String generateToken(UserDetails userDetails) {
-		return generateToken(new HashMap<>(), userDetails);
+	public String generateToken(User user) {
+		return generateToken(new HashMap<>(), user);
 	}
 
-	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-		return buildToken(extraClaims, userDetails, 86400000);
+	public String generateToken(Map<String, Object> extraClaims, User user) {
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("email", user.getEmail());
+        claims.put("firstName", user.getFirstName());
+        claims.put("lastName", user.getLastName());
+		return buildToken(extraClaims, user, 86400000);
 	}
 
 	public String generateRefreshToken(UserDetails userDetails) {
@@ -49,6 +54,15 @@ public class JwtService {
 	public boolean isTokenValid(String token, UserDetails userDetails) {
 		final String username = extractUsername(token);
 		return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+	}
+	
+	public boolean isTokenValid(String token) {
+	    try {
+	        Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token);
+	        return true;
+	    } catch (Exception e) {
+	        return false;
+	    }
 	}
 
 	private boolean isTokenExpired(String token) {

@@ -1,5 +1,6 @@
 package com.backend.stayEasy.entity;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -8,6 +9,18 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.util.UUID;
+=======
+import java.util.Set;
+import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+>>>>>>> origin/namhh-update-infor
 
 @Entity
 @Getter
@@ -38,6 +51,7 @@ public class Booking {
 	@Column(name = "numNight")
 	private int numNight;
 	@Column(name = "total_price")
+<<<<<<< HEAD
     private Double totalPrice;
 	@Column(name = "status")
 	private Boolean status;
@@ -45,4 +59,11 @@ public class Booking {
 	private int numGuest;
 	@Column(name = "cancel")
 	private Boolean cancel;
+=======
+    private Float totalPrice;
+	
+	@Column(name = "status")
+    private boolean status;
+
+>>>>>>> origin/namhh-update-infor
 }

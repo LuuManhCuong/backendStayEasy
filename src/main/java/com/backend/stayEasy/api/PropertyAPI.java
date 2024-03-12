@@ -1,11 +1,14 @@
 package com.backend.stayEasy.api;
 
+<<<<<<< HEAD
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
+=======
+>>>>>>> origin/namhh-update-infor
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+<<<<<<< HEAD
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.dto.LikeRequestDTO;
@@ -36,6 +40,10 @@ import com.backend.stayEasy.repository.ExploreRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
 import com.backend.stayEasy.sevice.IPropertyService;
+=======
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
+>>>>>>> origin/namhh-update-infor
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -49,6 +57,7 @@ public class PropertyAPI {
 	@Autowired
 	private ExploreRepository exploreRepository;
 	
+<<<<<<< HEAD
 	@Autowired
 	private IPropertyRepository propertyRepository;
 	
@@ -64,6 +73,8 @@ public class PropertyAPI {
 	@Autowired
 	private LikeConverter likeConverter;
 	
+=======
+>>>>>>> origin/namhh-update-infor
 	@GetMapping
 	public List<PropertyDTO> getAllProperty() {
 		return propertyService.findAll();

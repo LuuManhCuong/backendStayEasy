@@ -34,6 +34,7 @@ import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
 import com.backend.stayEasy.repository.PropertyUilitisRepository;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
 
 import jakarta.persistence.EntityNotFoundException;
 

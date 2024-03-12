@@ -1,5 +1,22 @@
 package com.backend.stayEasy.sevice;
 
+<<<<<<< HEAD
+=======
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+>>>>>>> origin/namhh-update-infor
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.SignInRequest;
 import com.backend.stayEasy.dto.SignInResponse;
@@ -35,11 +52,26 @@ public class AuthService {
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
+<<<<<<< HEAD
 	public SignInResponse register(SignUpRequest request) {
 		  // Lấy ngày hiện tại
         LocalDate currentDate = LocalDate.now();
      // Chuyển đổi từ LocalDate sang Date
         Date date = Date.valueOf(currentDate);
+=======
+	public ResponseEntity<?> register(SignUpRequest request) {
+		// Kiểm tra xem email đã tồn tại trong hệ thống chưa
+        if (repository.existsByEmail(request.getEmail())) {
+        	Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Email " + request.getEmail() + " đã đăng ký!");
+            errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
+            // Trả về thông báo lỗi khi email đã tồn tại
+        	return ResponseEntity
+        			.status(HttpStatus.BAD_REQUEST)
+        			.contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
+        }
+>>>>>>> origin/namhh-update-infor
         
 		var user = User.builder()
 				.firstName(request.getFirstName())
@@ -47,18 +79,23 @@ public class AuthService {
 				.email(request.getEmail())
 				.password(passwordEncoder.encode(request.getPassword()))
 				.role(request.getRole())
+<<<<<<< HEAD
 				.createdAt(date)
 				.updatedAt(date)
+=======
+				.createdAt(LocalDateTime.now())
+				.updatedAt(LocalDateTime.now())
+>>>>>>> origin/namhh-update-infor
 				.build();
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
 		saveUserToken(savedUser, jwtToken);
-		return SignInResponse.builder()
+		return ResponseEntity.ok(SignInResponse.builder()
 				.accessToken(jwtToken)
 				.refreshToken(refreshToken)
 				.user(userConverter.toDTO(user))
-				.build();
+				.build());
 	}
 
 	public SignInResponse authenticate(SignInRequest request) {
