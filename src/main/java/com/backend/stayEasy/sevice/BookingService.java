@@ -1,7 +1,5 @@
 package com.backend.stayEasy.sevice;
 
-<<<<<<< HEAD
-=======
 import com.backend.stayEasy.convertor.BookingConverter;
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
@@ -12,7 +10,6 @@ import com.backend.stayEasy.repository.PropertyUilitisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
->>>>>>> origin/loc-check-booking
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,23 +17,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.backend.stayEasy.convertor.BookingConverter;
-import com.backend.stayEasy.dto.BookingDTO;
-import com.backend.stayEasy.entity.Booking;
-import com.backend.stayEasy.repository.BookingRepository;
-
 @Service
 public class BookingService {
-<<<<<<< HEAD
 
 	@Autowired
 	PropertyService propertyService;
-=======
-    @Autowired
-    PropertyService propertyService;
     @Autowired
     private BookingRepository bookingRepository;
     @Autowired
@@ -45,13 +30,7 @@ public class BookingService {
     private PropertyUilitisRepository propertyRepository;
     @Autowired
     private BookingConverter bookingConverter;
->>>>>>> origin/loc-check-booking
 
-	@Autowired
-	private BookingRepository bookingRepository;
-
-	@Autowired
-	private BookingConverter bookingConverter;
 
 	public BookingDTO getBookingById(UUID id) {
 		Booking booking;
@@ -59,7 +38,6 @@ public class BookingService {
 		return bookingConverter.toDTO(booking);
 	}
 
-<<<<<<< HEAD
 	public Booking findById(UUID id) {
 		Booking booking;
 		booking = bookingRepository.findById(id).get();
@@ -70,38 +48,19 @@ public class BookingService {
 		return bookingRepository.findAll().stream().map(bookingConverter::toDTO).collect(Collectors.toList());
 	}
 
-	public List<BookingDTO> returnMyBookings(UUID id) {
-		return bookingRepository.findAllByUser_IdOrderByDateBookingDesc(id).stream().map(bookingConverter::toDTO)
-				.collect(Collectors.toList());
-	}
-=======
+
     public List<BookingDTO> returnMyBookings(UUID userId) {
         return bookingRepository.findAllByUser_IdOrderByDateBookingDesc(userId)
                 .stream()
                 .map(bookingConverter::toDTO)
                 .collect(Collectors.toList());
     }
-    public void updateBookingStatus(UUID bookingId, boolean status) {
-        Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
-        if (!bookingOptional.isPresent()) {
-            // Handle booking not found (e.g., throw an exception, log an error, etc.)
-            throw new RuntimeException("Booking with ID " + bookingId + " not found.");
-        }
-        Booking booking = bookingOptional.get();
-        if (booking.getStatus() != status) {
-            booking.setStatus(status);
-            bookingRepository.save(booking);
-            // Send notification (optional)
-        }
-    }
->>>>>>> origin/loc-check-booking
 
 	public List<BookingDTO> returnListingBookings(UUID id) {
 		return bookingRepository.findAllByPropertyPropertyIdOrderByDateBookingDesc(id).stream()
 				.map(bookingConverter::toDTO).collect(Collectors.toList());
 	}
 
-<<<<<<< HEAD
 	public void updateBookingStatus(UUID bookingId, boolean status) {
 		Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
 		if (!bookingOptional.isPresent()) {
@@ -113,6 +72,7 @@ public class BookingService {
 			booking.setStatus(status);
 			bookingRepository.save(booking);
 			// Send notification (optional)
+            // send Email
 			// ...
 		}
 	}
@@ -123,32 +83,6 @@ public class BookingService {
 		System.out.println("Booking added or updated");
 		return bookingConverter.toDTO(booking);
 	}
-
-	public BookingDTO newBooking(BookingDTO bookingDTO) {
-		BookingDTO bookingDto = new BookingDTO();
-		bookingDto.setPropertyId(bookingDTO.getPropertyId());
-		bookingDto.setUserId(bookingDTO.getUserId());
-		bookingDto.setTotal(bookingDTO.getPrice());
-		bookingDto.setNumOfGuest(bookingDTO.getNumOfGuest());
-		bookingDto.setDateBooking(Date.valueOf(java.time.LocalDate.now()));
-		bookingDto.setCheckIn(bookingDTO.getCheckIn());
-		bookingDto.setCheckOut(bookingDTO.getCheckOut());
-		bookingDto.setNumberNight(bookingDTO.getNumberNight());
-		bookingDto.setStatus(false);
-		// đoạn này set dữ liệu payment
-		return bookingDto;
-	}
-
-	public boolean isRoomAvailable(UUID id, Date checkInDate, Date checkOutDate) {
-		// Logic to check room availability based on check-in and check-out dates
-		List<Booking> conflictingBookings = bookingRepository.findConflictingBookings(id, checkInDate, checkOutDate);
-		return conflictingBookings.isEmpty();
-	}
-
-	public void deleteBooking(UUID id) {
-		bookingRepository.deleteById(id);
-	}
-=======
     public BookingDTO newBooking(BookingDTO bookingDTO) {
         BookingDTO bookingDto = new BookingDTO();
         bookingDto.setPropertyId(bookingDTO.getPropertyId());
@@ -180,7 +114,7 @@ public class BookingService {
             throw new RuntimeException("Booking with ID " + bookingId + " not found.");
         }
     }
->>>>>>> origin/loc-check-booking
+
 
     // Service for host
     public List<BookingDTO> returnAllBookingOfHost(UUID hostId, String filter) {
@@ -219,12 +153,5 @@ public class BookingService {
             throw new IllegalArgumentException("Invalid status value: " + status);
         }
     }
-//    public List<BookingDTO> returnListingBookings(UUID id) {
-//        return bookingRepository.findAllByPropertyPropertyIdOrderByDateBookingDesc(Collections.singletonList(id))
-//                .stream()
-//                .map(bookingConverter::toDTO)
-//                .collect(Collectors.toList());
-//        }
-
 
 }

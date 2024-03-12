@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,16 +42,12 @@ public class Property {
 
 	private Set<Like> likes;
 
-<<<<<<< HEAD
+
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Images> images;
-=======
+
 //	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //	private Set<Feedback> feedbacks;
-
-	@OneToMany(mappedBy = "property")
-	private Set<Images> images;
->>>>>>> origin/loc-check-booking
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyCategory> propertyCategories;

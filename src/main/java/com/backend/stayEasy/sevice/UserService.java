@@ -1,32 +1,20 @@
 package com.backend.stayEasy.sevice;
 
-<<<<<<< HEAD
-=======
+
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
->>>>>>> origin/loc-check-booking
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.backend.stayEasy.convertor.UserConverter;
-import com.backend.stayEasy.dto.UserDTO;
-import com.backend.stayEasy.entity.User;
-import com.backend.stayEasy.repository.UserRepository;
-
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

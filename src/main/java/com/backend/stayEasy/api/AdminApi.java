@@ -1,34 +1,11 @@
 package com.backend.stayEasy.api;
 
-<<<<<<< HEAD
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDate;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.backend.stayEasy.convertor.BookingConverter;
-=======
->>>>>>> origin/loc-check-booking
 import com.backend.stayEasy.convertor.StatisticsConverter;
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
 import com.backend.stayEasy.dto.UserDTO;
-import com.backend.stayEasy.entity.Booking;
 import com.backend.stayEasy.entity.Statistics;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.StatisticsRepository;
@@ -39,10 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin

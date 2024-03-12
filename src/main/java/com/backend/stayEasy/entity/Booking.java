@@ -1,28 +1,13 @@
 package com.backend.stayEasy.entity;
 
-<<<<<<< HEAD
-import java.sql.Date;
-
-import java.util.UUID;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-=======
 import com.backend.stayEasy.enums.Confirmation;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
->>>>>>> origin/loc-check-booking
 import lombok.Getter;
 import lombok.Setter;
+
+import java.sql.Date;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -50,10 +35,6 @@ public class Booking {
 	
 	@Column(name = "date-booking")
 	private Date dateBooking;
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/loc-check-booking
 	@Column(name = "numNight")
 	private int numNight;
 	

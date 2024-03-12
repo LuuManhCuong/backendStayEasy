@@ -18,12 +18,12 @@ public interface IPropertyService {
 
 	Property delete(UUID propertyId);
 
-<<<<<<< HEAD:src/main/java/com/backend/stayEasy/sevice/impl/IPropertyService.java
+
 	List<PropertyDTO> findByCategory(UUID categoryId);
-=======
+
     List<PropertyDTO> findAllPropertiesByHostId(UUID hostId);
 
 //	List<Property> findByCategory(UUID categoryId);
->>>>>>> origin/loc-check-booking:src/main/java/com/backend/stayEasy/sevice/IPropertyService.java
+
 	
 }
