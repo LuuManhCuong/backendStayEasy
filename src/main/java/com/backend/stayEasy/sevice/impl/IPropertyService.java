@@ -1,10 +1,10 @@
 package com.backend.stayEasy.sevice.impl;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Property;
+
+import java.util.List;
+import java.util.UUID;
 
 public interface IPropertyService {
 	
@@ -18,6 +18,12 @@ public interface IPropertyService {
 
 	Property delete(UUID propertyId);
 
+<<<<<<< HEAD:src/main/java/com/backend/stayEasy/sevice/impl/IPropertyService.java
 	List<PropertyDTO> findByCategory(UUID categoryId);
+=======
+    List<PropertyDTO> findAllPropertiesByHostId(UUID hostId);
+
+//	List<Property> findByCategory(UUID categoryId);
+>>>>>>> origin/loc-check-booking:src/main/java/com/backend/stayEasy/sevice/IPropertyService.java
 	
 }

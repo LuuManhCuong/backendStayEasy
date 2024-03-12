@@ -1,5 +1,6 @@
 package com.backend.stayEasy.convertor;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +17,24 @@ import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.entity.PropertyCategory;
 import com.backend.stayEasy.entity.User;
+=======
+import com.backend.stayEasy.dto.ImagesDTO;
+import com.backend.stayEasy.dto.LikeRequestDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Category;
+import com.backend.stayEasy.entity.Images;
+import com.backend.stayEasy.entity.Property;
+import com.backend.stayEasy.repository.ICategoryRepository;
+>>>>>>> origin/loc-check-booking
 import com.backend.stayEasy.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+<<<<<<< HEAD
+=======
+import java.util.*;
+
+>>>>>>> origin/loc-check-booking
 
 @Component
 public class PropertyConverter {
