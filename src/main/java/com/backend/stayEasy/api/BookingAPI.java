@@ -1,14 +1,13 @@
 package com.backend.stayEasy.api;
 
 import com.backend.stayEasy.convertor.BookingConverter;
-
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.PaymentDTO;
 import com.backend.stayEasy.entity.Mail;
 import com.backend.stayEasy.sevice.BookingService;
-import com.backend.stayEasy.sevice.impl.IMailService;
 import com.backend.stayEasy.sevice.PaymentBillService;
 import com.backend.stayEasy.sevice.PaypalService;
+import com.backend.stayEasy.sevice.impl.IMailService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paypal.api.payments.Links;
@@ -19,10 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -107,7 +108,6 @@ public class BookingAPI {
                     return link.getHref();
                 }
             }
-
         } catch (PayPalRESTException e) {
             e.printStackTrace();
         }
@@ -119,13 +119,16 @@ public class BookingAPI {
     public ResponseEntity<List<PaymentDTO>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId)  {
         try {
             Payment payment = service.executePayment(paymentId, payerId);
+            String data = payment.toJSON();
             if ("approved".equals(payment.getState())) {
                 // tranh null exception
                 bookingService.updateBookingStatus(bookingId, true);
                 paymentService.savePayment(payment, bookingId);
+                System.out.println(data);
                 // Lưu thông tin payment
                 return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
             }
+
         } catch (PayPalRESTException e) {
             sendEmailBooking(); // Send email notification about the cancellation
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -174,8 +177,76 @@ public class BookingAPI {
         return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
     }
 
-    // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
+    @GetMapping("/payment/captures/{capture_id}")
+    public ResponseEntity<String> lookupCaptures(@PathVariable("capture_id") String captureId) {
+        // Ideally, fetch your token from a secure place
+        String response;
+        HttpURLConnection httpConn = null;
+        System.out.println("Start");
+        try {
+            URL url = new URL("https://api-m.sandbox.paypal.com/v2/payments/captures/" + captureId);
 
+            httpConn = (HttpURLConnection) url.openConnection();
+            httpConn.setRequestMethod("GET");
+            httpConn.setRequestProperty("Content-Type", "application/json");
+            httpConn.setRequestProperty("Authorization", "Bearer A21AAI6vLeTkQlNKRhgVxYk_0FPurpCC58Ed7RmX2Xmf7JBH-lU2H1ZLsLrdNaw6XdrojnRnozQgrlUIPm7DRkbzXiQ0LJJEQ");
+            System.out.println(url);
+            try (InputStream responseStream = httpConn.getResponseCode() / 100 == 2 ? httpConn.getInputStream() : httpConn.getErrorStream();
+                 Scanner scanner = new Scanner(responseStream).useDelimiter("\\A")) {
+                System.out.println(scanner.next());
+                response = scanner.hasNext() ? scanner.next() : "";
+            }
+        } catch (IOException e) {
+            System.out.println("Lỗi rồi");
+            return ResponseEntity.internalServerError().body("An error occurred while making the request: " + e.getMessage());
+        } finally {
+            if (httpConn != null) {
+                System.out.println("End");
+                httpConn.disconnect();
+            }
+        }
+
+        return ResponseEntity.ok(response);
+    }
+    // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
+    @PostMapping("/payment/{capture_id}/refund")
+    public ResponseEntity<String> refundTransaction(@PathVariable("capture_id") String captureId) throws IOException {
+        URL url = new URL("https://api-m.sandbox.paypal.com/v2/payments/captures/" + captureId + "/refund");
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setRequestMethod("POST");
+        httpConn.setRequestProperty("Content-Type", "application/json");
+        httpConn.setRequestProperty("Authorization", "Bearer A21AAI6vLeTkQlNKRhgVxYk_0FPurpCC58Ed7RmX2Xmf7JBH-lU2H1ZLsLrdNaw6XdrojnRnozQgrlUIPm7DRkbzXiQ0LJJEQ");
+
+        // Set optional headers if needed
+        httpConn.setRequestProperty("PayPal-Request-Id", "7dc122d5-7da4-4627-a8ee-a7ae5b65acef");
+        httpConn.setRequestProperty("Prefer", "return=representation");
+
+        httpConn.setDoOutput(true);
+
+        // Construct the request body for the refund
+        String requestBody = "{"
+                + "\"amount\": { \"value\": \"9.00\", \"currency_code\": \"USD\" },"
+                + "\"invoice_id\": \"INVOICE-123\","
+                + "\"note_to_payer\": \"DefectiveProduct\""
+                + "}";
+
+        try (OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream())) {
+            writer.write(requestBody);
+        }
+
+        // Handle response
+        InputStream responseStream = httpConn.getResponseCode() / 100 == 2
+                ? httpConn.getInputStream()
+                : httpConn.getErrorStream();
+
+        try (Scanner scanner = new Scanner(responseStream).useDelimiter("\\A")) {
+            String response = scanner.hasNext() ? scanner.next() : "";
+            System.out.println(response);
+            return ResponseEntity.ok(response);
+        } finally {
+            httpConn.disconnect();
+        }
+    }
 }
 
 

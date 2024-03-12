@@ -1,13 +1,5 @@
 package com.backend.stayEasy.sevice;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.backend.stayEasy.convertor.PaymentConverter;
 import com.backend.stayEasy.dto.PaymentDTO;
 import com.backend.stayEasy.entity.Booking;
@@ -15,6 +7,13 @@ import com.backend.stayEasy.entity.PaymentBill;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.PaymentRepository;
 import com.paypal.api.payments.Payment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentBillService {
@@ -38,6 +37,7 @@ public class PaymentBillService {
 		paymentDTO.setAmount(Float.parseFloat(paymentParams.getTransactions().get(0).getAmount().getTotal()));
 		// Assuming first transaction holds relevant amount
 		paymentDTO.setPaymentId(paymentParams.getId());
+		paymentDTO.setCapturesId(paymentParams.getCart());
 		paymentDTO.setBookingId(booking.get().getBookingId());
 		PaymentBill paymentBill = paymentConverter.toEntity(paymentDTO);
 		PaymentRepo.save(paymentBill);

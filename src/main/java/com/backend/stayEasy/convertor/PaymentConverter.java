@@ -19,11 +19,11 @@ public class PaymentConverter {
 		PaymentDTO paymentDTO = new PaymentDTO();
 		paymentDTO.setPaymentBillId(paymentBill.getPaymentBillId());
 		paymentDTO.setAmount(paymentBill.getAmount());
-		paymentDTO.setBookingDTO(
-				bookingConverter.toDTO(bookingRepository.findById(paymentBill.getBooking().getBookingId()).get()));
+		paymentDTO.setBookingDTO(bookingConverter.toDTO(bookingRepository.findById(paymentBill.getBooking().getBookingId()).get()));
 		paymentDTO.setAccountType(paymentBill.getAccountType());
 		paymentDTO.setPaymentId(paymentBill.getPaymentId());
 		paymentDTO.setMethod(paymentBill.getMethod());
+		paymentDTO.setCapturesId(paymentDTO.getCapturesId());
 		paymentDTO.setCreateTime(paymentBill.getCreateTime());
 		paymentDTO.setStatus(paymentBill.getStatus());
 		return paymentDTO;
