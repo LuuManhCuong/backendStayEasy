@@ -1,6 +1,7 @@
 package com.backend.stayEasy.entity;
 
 import java.sql.Date;
+
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

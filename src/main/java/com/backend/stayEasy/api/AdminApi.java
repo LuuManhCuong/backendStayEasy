@@ -59,6 +59,7 @@ public class AdminApi {
 	
 	@GetMapping("/revenue")
 	public List<StatisticsDTO> getRevenueByMonth() {
+		System.out.println("revenue here");
 		List<StatisticsDTO> statisticsDTOs = new ArrayList<>();
 		List<Statistics> statisticsList = statisticSevice.calculateRevenueForCurrentAndPreviousMonth();
 		for (Statistics statisticsItem : statisticsList) {
@@ -66,6 +67,8 @@ public class AdminApi {
 		}
 		return statisticsDTOs;
 	}
+	
+
 	
 
 	 @GetMapping("/revenue/daily")
@@ -97,6 +100,7 @@ public class AdminApi {
 
 	        return result;
 	    }
+	 
 	 @GetMapping("/booking/daily")
 	 public List<Object[]> getBookingDaily() {
 	     LocalDate currentDate = LocalDate.now();

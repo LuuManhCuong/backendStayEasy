@@ -36,44 +36,50 @@ public class StatisticSevice {
 	
 	  @Transactional
 //	  trả về dữ liệu của tháng này và tháng trước
-	    public List<Statistics> calculateRevenueForCurrentAndPreviousMonth() {
-	        List<Statistics> result = new ArrayList<>();
-	        
-	        // Lấy ngày hiện tại
-	        LocalDate currentDate = LocalDate.now();
-	        
-	        Date todayDate = Date.valueOf(currentDate);
-	        
-	        // Lấy tháng hiện tại
-	        int currentMonth = currentDate.getMonthValue();
-	        
-	        // Lấy tháng trước đó
-	        int previousMonth = currentMonth - 1;
-	        int previousYear = currentDate.getYear();
-	        if (previousMonth == 0) {
-	            // Nếu tháng hiện tại là tháng 1, tháng trước sẽ là tháng 12 của năm trước
-	            previousMonth = 12;
-	            previousYear -= 1;
-	        }
-	        
-	        // Lấy ngày đầu của tháng hiện tại
-	        LocalDate firstDayOfCurrentMonth = LocalDate.of(currentDate.getYear(), currentMonth, 1);
-	        Date firstDateOfCurrentMonth = Date.valueOf(firstDayOfCurrentMonth);
-	        
-	        // Lấy ngày đầu của tháng trước đó
-	        LocalDate firstDayOfPreviousMonth = LocalDate.of(previousYear, previousMonth, 1);
-	        Date firstDateOfPreviousMonth = Date.valueOf(firstDayOfPreviousMonth);
-	        
-	        // Tính và lưu thống kê cho tháng hiện tại
-	        Statistics currentMonthStatistics = calculateRevenueForMonth(firstDateOfCurrentMonth, todayDate);
-	        result.add(currentMonthStatistics);
-	        
-	        // Tính và lưu thống kê cho tháng trước đó
-	        Statistics previousMonthStatistics = calculateRevenueForMonth(firstDateOfPreviousMonth, Date.valueOf(firstDayOfCurrentMonth.minusDays(1)));
-	        result.add(previousMonthStatistics);
-	        
-	        return result;
-	    }
+	  public List<Statistics> calculateRevenueForCurrentAndPreviousMonth() {
+		    List<Statistics> result = new ArrayList<>();
+		    
+		    // Lấy ngày hiện tại
+		    LocalDate currentDate = LocalDate.now();
+		    
+		    // Chuyển đổi ngày hiện tại sang kiểu java.sql.Date
+		    Date todayDate = Date.valueOf(currentDate);
+		    
+		    // Lấy tháng hiện tại
+		    int currentMonth = currentDate.getMonthValue();
+		    
+		    // Lấy tháng trước đó
+		    int previousMonth = currentMonth - 1;
+		    int previousYear = currentDate.getYear();
+		    if (previousMonth == 0) {
+		        // Nếu tháng hiện tại là tháng 1, tháng trước sẽ là tháng 12 của năm trước
+		        previousMonth = 12;
+		        previousYear -= 1;
+		    }
+		    
+		    // Lấy ngày đầu của tháng hiện tại
+		    LocalDate firstDayOfCurrentMonth = LocalDate.of(currentDate.getYear(), currentMonth, 1);
+		    Date firstDateOfCurrentMonth = Date.valueOf(firstDayOfCurrentMonth);
+		    
+		    // Lấy ngày đầu của tháng trước đó
+		    LocalDate firstDayOfPreviousMonth = LocalDate.of(previousYear, previousMonth, 1);
+		    Date firstDateOfPreviousMonth = Date.valueOf(firstDayOfPreviousMonth);
+		    
+		    // Tính và lưu thống kê cho tháng hiện tại
+		    System.out.println("cacule: " + firstDateOfCurrentMonth + " " + todayDate );
+		    Statistics currentMonthStatistics = calculateRevenueForMonth(firstDateOfCurrentMonth, todayDate);
+		    result.add(currentMonthStatistics);
+		    
+		    // Lấy ngày cuối của tháng trước đó
+		    Date lastDayOfLastMonthDate = Date.valueOf(firstDayOfCurrentMonth.minusDays(1));
+
+		    // Tính và lưu thống kê cho tháng trước đó
+		    Statistics previousMonthStatistics = calculateRevenueForMonth(firstDateOfPreviousMonth, lastDayOfLastMonthDate);
+		    result.add(previousMonthStatistics);
+		    
+		    return result;
+		}
+
 	  
 		// Chạy vào ngày cuối cùng của tháng lúc 11:50:00 PM
 		@Scheduled(cron = "0 50 23 L * ?")
@@ -100,6 +106,7 @@ public class StatisticSevice {
 	    
 
 	  public Statistics calculateRevenueForMonth(Date startDate, Date endDate) {
+		 System.out.println("detat: " + startDate  + " " + endDate);
 	        Statistics statistics = new Statistics();
 	        
 	        // Thiết lập date cho đối tượng statistics
