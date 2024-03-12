@@ -137,8 +137,9 @@ public class PropertyConverter {
 		propertyDTO.setLikeList(likeRequestDTOlist);
 		return propertyDTO;
 	}
+	
 
-	public List<PropertyDTO> arrayToDTO(List<Property> propertyList, List<LikeRequestDTO> likeRequestDTOlist) {
+	public List<PropertyDTO> arrayToDTO(List<Property> propertyList) {
 		List<PropertyDTO> propertyDTOList = new ArrayList<>();
 		for (Property property : propertyList) {
 			propertyDTOList.add(toDTO(property));

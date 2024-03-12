@@ -263,4 +263,10 @@ public class PropertyService implements IPropertyService {
 		return result;
 	}
 
+	@Override
+	public List<PropertyDTO> findByPropertyNameOrAddressContainingIgnoreCase(String keySearch) {
+		List<Property> propertyList = propertyRepository.findByPropertyNameOrAddressContainingIgnoreCase(keySearch);
+		return propertyConverter.arrayToDTO(propertyList);
+	}
+
 }

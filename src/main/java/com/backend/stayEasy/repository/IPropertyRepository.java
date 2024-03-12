@@ -21,6 +21,8 @@ public interface IPropertyRepository extends JpaRepository<Property, UUID>{
 
 	Property findByPropertyId(UUID propertyId);
 	
+	@Query(value = "SELECT * FROM property WHERE (property_name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch% OR address COLLATE SQL_Latin1_General_CP1_CI_AI LIKE %:keySearch%)", nativeQuery = true)
+	List<Property> findByPropertyNameOrAddressContainingIgnoreCase(String keySearch);
 	
 	@Query("SELECT p FROM Property p WHERE p.propertyId NOT IN ( " +
 	           "SELECT DISTINCT b.property.propertyId FROM Booking b " +
