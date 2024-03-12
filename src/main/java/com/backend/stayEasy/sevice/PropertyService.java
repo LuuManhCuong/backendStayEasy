@@ -97,7 +97,7 @@ public class PropertyService implements IPropertyService {
 			images.add(new Images(i.getUrl(), i.getDescription(), property));
 		}
 
-		// Convert CategoryDTO to Category and associate with the property
+		// Convert CategoryDTO to Category
 		if (propertyDTO.getCategoryIds() != null && !propertyDTO.getCategoryIds().isEmpty()) {
 			for (UUID categoryId : propertyDTO.getCategoryIds()) {
 				Category category = categoryRepository.findById(categoryId).orElse(null);
@@ -106,7 +106,6 @@ public class PropertyService implements IPropertyService {
 				}
 			}
 		}
-
 		property.setImages(images);
 		property.setCategories(categories);
 
@@ -119,26 +118,30 @@ public class PropertyService implements IPropertyService {
 	public PropertyDTO update(UUID propertyId, PropertyDTO updatePropertyDTO) {
 
 		Optional<Property> property = propertyRepository.findById(propertyId);
-		
+
 		List<Images> images = new ArrayList<>();
 		Set<Category> categories = new HashSet<>();
 
 		if (property.isPresent()) {
 			Property editProperty = property.get();
-			
-			editProperty = propertyConverter.toEntity(updatePropertyDTO);
 
-			editProperty.setPropertyName(updatePropertyDTO.getPropertyName());
-			editProperty.setDescription(updatePropertyDTO.getDescription());
-			editProperty.setThumbnail(updatePropertyDTO.getThumbnail());
-			editProperty.setPrice(updatePropertyDTO.getPrice());
-			editProperty.setNumGuests(updatePropertyDTO.getNumGuests());
-			editProperty.setDiscount(updatePropertyDTO.getDiscount());
-			
+			for (Images image : editProperty.getImages()) {
+				imageRepository.delete(image);
+			}
+
+			Property editProperty2 = propertyConverter.toEntity(updatePropertyDTO);
+
+			editProperty.setPropertyName(editProperty2.getPropertyName());
+			editProperty.setDescription(editProperty2.getDescription());
+			editProperty.setThumbnail(editProperty2.getThumbnail());
+			editProperty.setPrice(editProperty2.getPrice());
+			editProperty.setNumGuests(editProperty2.getNumGuests());
+			editProperty.setDiscount(editProperty2.getDiscount());
+
 			for (ImagesDTO i : updatePropertyDTO.getImagesList()) {
 				images.add(new Images(i.getUrl(), i.getDescription(), editProperty));
 			}
-			
+
 			// Convert CategoryDTO to Category and associate with the property
 			if (updatePropertyDTO.getCategoryIds() != null && !updatePropertyDTO.getCategoryIds().isEmpty()) {
 				for (UUID categoryId : updatePropertyDTO.getCategoryIds()) {
@@ -148,13 +151,12 @@ public class PropertyService implements IPropertyService {
 					}
 				}
 			}
-			
+
 			editProperty.setImages(images);
-			
+
 			editProperty.setCategories(categories);
-			
+
 			Property result = propertyRepository.save(editProperty);
-			
 
 			return propertyConverter.toDTO(result);
 

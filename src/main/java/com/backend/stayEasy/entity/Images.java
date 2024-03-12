@@ -20,6 +20,8 @@ public class Images {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID imageId;
+	
+	@Column(name = "url", length = Integer.MAX_VALUE)
 	private String url;
 	private String description;
 	

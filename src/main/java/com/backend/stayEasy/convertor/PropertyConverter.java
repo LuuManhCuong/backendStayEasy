@@ -77,17 +77,20 @@ public class PropertyConverter {
 		propertyDTO.setCategoryIds(categoryIds);
 
 		propertyDTO.setThumbnail(property.getThumbnail());
+		
 		if (!property.getImages().isEmpty()) {
 			for (Images i : property.getImages()) {
 				listImages.add(imagesConventer.toDTO(i));
 			}
 		}
 		propertyDTO.setImagesList(listImages);
+		
 		propertyDTO.setOwnerId(property.getUser().getId());
 
 		if (property.getUser() != null) {
 			propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
 		}
+		
 		return propertyDTO;
 	}
 

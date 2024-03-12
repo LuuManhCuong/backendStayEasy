@@ -89,11 +89,6 @@ public class PropertyAPI {
 	public Property delete(@PathVariable("id") UUID propertyId) {
 		return propertyService.delete(propertyId);
 	}
-	
-//	@GetMapping("/category/{category}")
-//	public List<Property> getPropertyByCategory(@PathVariable("category") UUID categoryId) {
-//		return propertyService.findByCategory(categoryId);
-//	}
 
 	@GetMapping("/search/suggest")
 	public List<PropertyDTO> searchAddressSuggest(@RequestParam("address") String address) {
