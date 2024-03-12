@@ -1,16 +1,23 @@
 package com.backend.stayEasy.sevice;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +38,31 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements UserDetailsService  {
 
-	private final UserRepository repository;
-	private final UserConverter userConverter;
-	private final TokenRepository tokenRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final JwtService jwtService;
-	private final AuthenticationManager authenticationManager;
+	@Autowired
+	private UserRepository repository;
+	
+	@Autowired
+	private UserConverter userConverter;
+	
+	@Autowired
+	private TokenRepository tokenRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private JwtService jwtService;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bcryptEncoder;
 
 
 	public ResponseEntity<?> register(SignUpRequest request) {
@@ -60,8 +84,8 @@ public class AuthService {
 				.email(request.getEmail())
 				.password(passwordEncoder.encode(request.getPassword()))
 				.role(request.getRole())
-				.createdAt(LocalDateTime.now())
-				.updatedAt(LocalDateTime.now())
+				.createdAt(Date.valueOf(LocalDate.now()))
+				.updatedAt(Date.valueOf(LocalDate.now()))
 				.build();
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);
@@ -126,4 +150,29 @@ public class AuthService {
 			}
 		}
 	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username).orElseThrow();
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                new ArrayList<>());
+    }
+
+    public SignInResponse changePassword(String username, String newPassword) {
+        User user = userRepository.findByEmail(username).orElseThrow();
+        user.setPassword(bcryptEncoder.encode(newPassword));
+        userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+		var refreshToken = jwtService.generateRefreshToken(user);
+		revokeAllUserTokens(user);
+		saveUserToken(user, jwtToken);
+        return SignInResponse.builder()
+				.accessToken(jwtToken)
+				.refreshToken(refreshToken)
+				.user(userConverter.toDTO(user))
+				.build();
+    }
 }

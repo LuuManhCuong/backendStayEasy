@@ -84,9 +84,10 @@ public class UserAPI {
 
 	@PutMapping("/update")
 	public ResponseEntity<?> update(@RequestBody UserDTO userDTO, HttpServletRequest request) {
-		// Get người dùng đang đăng nhập hiện tại
-		UUID currentUserId = applicationAuditAware.getCurrentAuditor().get();
+		final String token = request.getHeader("Authorization").substring(7); // Lấy token từ Header
 
+        final UUID currentUserId = userService.getUserByToken(token).getId();
+        
 		// Kiểm tra xem người dùng hiện tại có được phép thay đổi thông tin không?
 		if (!currentUserId.equals(userDTO.getId())) {
 			Map<String, Object> errorResponse = new HashMap<>();
