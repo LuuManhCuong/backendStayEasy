@@ -22,12 +22,15 @@ import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
+import com.backend.stayEasy.dto.RulesDTO;
 import com.backend.stayEasy.entity.Category;
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.entity.PropertyCategory;
+import com.backend.stayEasy.entity.PropertyRules;
 import com.backend.stayEasy.entity.PropertyUilitis;
+import com.backend.stayEasy.entity.Rules;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.ICategoryRepository;
 import com.backend.stayEasy.repository.IImageRepository;
@@ -35,6 +38,7 @@ import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
 import com.backend.stayEasy.repository.PropertyUilitisRepository;
+import com.backend.stayEasy.repository.RulesRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -76,7 +80,11 @@ public class PropertyService implements IPropertyService {
 
 	@Autowired
 	private LikeConverter likeConverter;
-
+	
+	@Autowired 
+	private RulesRepository rulesRepository;
+	
+	
 	@Override
 	public List<PropertyDTO> findAll() {
 
@@ -104,6 +112,7 @@ public class PropertyService implements IPropertyService {
 		Property property = new Property();
 		List<Images> images = new ArrayList<>();
 		List<PropertyCategory> propertyCategory = new ArrayList<>();
+		List<PropertyRules> propertyRules = new ArrayList<>();
 
 		property = propertyConverter.toEntity(propertyDTO);
 
@@ -121,10 +130,21 @@ public class PropertyService implements IPropertyService {
 			}
 			propertyCategory.add(temp);
 		}
-
+		
+		for (RulesDTO rulesDTO : propertyDTO.getRulesList()) {
+			PropertyRules temp = new PropertyRules();
+			temp.setProperty(property);
+			Optional<Rules> rulesOp = rulesRepository.findById(rulesDTO.getRulesId());
+			if (rulesOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
+				Rules rules = rulesOp.get(); // Trích xuất giá trị User từ Optional
+			    temp.setRules(rules); // Gán giá trị User cho property
+			}
+			propertyRules.add(temp);
+		}
 
 		property.setImages(images);
 		property.setPropertyCategories(propertyCategory);
+		property.setPropertyRules(propertyRules);
 
 		propertyRepository.save(property);
 
@@ -224,6 +244,51 @@ public class PropertyService implements IPropertyService {
 		                existingProperty.getImages().add(newImage);
 		            }
 		        }
+		        
+		        List<PropertyRules> updatedPropertyRules = new ArrayList<>();
+		        
+		        for (RulesDTO rulesDTO : updatePropertyDTO.getRulesList()) {
+			         PropertyRules temp = new PropertyRules();
+			         temp.setProperty(existingProperty);
+			         Optional<Rules> rulesOp = rulesRepository.findById(rulesDTO.getRulesId());
+			         if (rulesOp.isPresent()) { 
+			             Rules rules = rulesOp.get(); 
+			             temp.setRules(rules); 
+			         }
+			         updatedPropertyRules.add(temp);
+			     }
+		        
+
+			     // Check rules thừa
+			     Iterator<PropertyRules> iteratorRules = existingProperty.getPropertyRules().iterator();
+			     while (iteratorRules.hasNext()) {
+			    	 PropertyRules propertyRules = iteratorRules.next();
+			         boolean rulesFound = false;
+			         for (PropertyRules updatedRules : updatedPropertyRules) {
+			             if (propertyRules.getRules().getRulesId() == updatedRules.getRules().getRulesId()) {
+			            	 rulesFound = true;
+			                 break;
+			             }
+			         }
+			         if (!rulesFound) {
+			        	 iteratorRules.remove();
+			         }
+			     }
+
+			     // Check rules mới add vô
+			     for (PropertyRules updatedRules : updatedPropertyRules) {
+			    	    boolean rulesExists = false;
+			    	    for (PropertyRules existingRules : existingProperty.getPropertyRules()) {
+			    	        if (existingRules.getRules().getRulesId().equals(updatedRules.getRules().getRulesId())) {
+			    	        	rulesExists = true;
+			    	            break;
+			    	        }
+			    	    }
+			    	    if (!rulesExists) {
+			    	        existingProperty.getPropertyRules().add(updatedRules);
+			    	    }
+			    	}
+		        
 		        
 		        Property result = propertyRepository.save(existingProperty);
 

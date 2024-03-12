@@ -73,5 +73,8 @@ public class Property {
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PropertyUilitis> propertyUilitis;
+	
+	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<PropertyRules> propertyRules;
 
 }

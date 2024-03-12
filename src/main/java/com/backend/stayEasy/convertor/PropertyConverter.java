@@ -4,6 +4,7 @@ import java.awt.Image;
 
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.dto.RulesDTO;
 import com.backend.stayEasy.entity.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.entity.PropertyCategory;
+import com.backend.stayEasy.entity.PropertyRules;
 import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.ICategoryRepository;
@@ -57,10 +59,14 @@ public class PropertyConverter {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private RulesConverter rulesConverter;
+	
 
 	public PropertyDTO toDTO(Property property) {
 		List<ImagesDTO> listImages = new ArrayList<>();
 		List<CategoryDTO> listCategory = new ArrayList<>();
+		List<RulesDTO> listRules = new ArrayList<>();
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());
@@ -85,7 +91,13 @@ public class PropertyConverter {
 		}
 		propertyDTO.setImagesList(listImages);
 //		propertyDTO.setOwnerId(property.getUser().getId());
-
+		if (!property.getPropertyRules().isEmpty()) {
+			for (PropertyRules c : property.getPropertyRules()) {
+				listRules.add(rulesConverter.toDTO(c.getRules()));
+			}
+		}
+		propertyDTO.setRulesList(listRules);
+		
 		if (property.getUser() != null) {
 			propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
 		}

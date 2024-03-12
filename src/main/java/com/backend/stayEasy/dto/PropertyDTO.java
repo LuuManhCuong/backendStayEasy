@@ -36,4 +36,5 @@ public class PropertyDTO {
     private Set<FeedbackDTO> feedbackList;
     private Set<PropertyUtilitiesDTO> propertyUtilitis;
     private Set<LikeRequestDTO> likeList;
+    private List<RulesDTO> rulesList;
 }
