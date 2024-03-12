@@ -1,7 +1,6 @@
 package com.backend.stayEasy.sevice;
 
 import com.backend.stayEasy.convertor.UserConverter;
-
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.UserRepository;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,4 +52,6 @@ public class UserService {
 		newUser.setUpdatedAt(date);
 		return userRepository.save(newUser);
 	}
+
+
 }

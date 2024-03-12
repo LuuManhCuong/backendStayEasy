@@ -1,7 +1,7 @@
 package com.backend.stayEasy.entity;
 
+import com.backend.stayEasy.enums.Confirmation;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +30,6 @@ public class Booking {
 	private Date checkOut;
 	@Column(name = "date-booking")
 	private Date dateBooking;
-//	@OneToMany(mappedBy = "booking")
-//	private Set<BookingGuest> bookingGuests;
-	
-//	@OneToMany(mappedBy = "booking")
-//	private Set<BookingDetail> bookingDetails;
 	@Column(name = "numNight")
 	private int numNight;
 	@Column(name = "total_price")
@@ -45,4 +40,7 @@ public class Booking {
 	private int numGuest;
 	@Column(name = "cancel")
 	private Boolean cancel;
+	@Enumerated(EnumType.STRING)
+	private Confirmation confirmation;
+
 }

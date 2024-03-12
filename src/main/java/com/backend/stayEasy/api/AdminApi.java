@@ -1,41 +1,30 @@
 package com.backend.stayEasy.api;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import java.time.LocalDate;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-
 import com.backend.stayEasy.convertor.StatisticsConverter;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.Statistics;
-import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.StatisticsRepository;
-import com.backend.stayEasy.repository.UserRepository;
 import com.backend.stayEasy.sevice.StatisticSevice;
 import com.backend.stayEasy.sevice.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/stayeasy/admin")
 public class AdminApi {
-
 	@Autowired
 	private StatisticSevice statisticSevice;
-	
 	@Autowired
 	private StatisticsRepository statisticsRepository;
 	

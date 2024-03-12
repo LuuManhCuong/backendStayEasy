@@ -3,6 +3,7 @@ package com.backend.stayEasy.convertor;
 import com.backend.stayEasy.dto.BookingDTO;
 
 import com.backend.stayEasy.entity.Booking;
+import com.backend.stayEasy.enums.Confirmation;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class BookingConverter {
         bookingDTO.setNumOfGuest(booking.getNumGuest());
         bookingDTO.setTotal(booking.getTotalPrice());
         bookingDTO.setStatus(booking.getStatus());
+        bookingDTO.setConfirmation(booking.getConfirmation().name());
 //        bookingDTO.setPropertyName(listingServiceStatic.findById(booking.getProperty().getId()).getPropertyName());
         return  bookingDTO;
     }
@@ -48,6 +50,7 @@ public class BookingConverter {
         booking.setProperty(propertyRepository.findById(bookingDto.getPropertyId()).get());
         booking.setUser(userRepository.findById(bookingDto.getUserId()).get());
         booking.setStatus(bookingDto.getStatus());
+        booking.setConfirmation(Confirmation.valueOf(bookingDto.getConfirmation()));
         return  booking;
     }
 }
