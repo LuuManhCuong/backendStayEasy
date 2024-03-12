@@ -1,7 +1,5 @@
 package com.backend.stayEasy.sevice;
 
-<<<<<<< HEAD
-=======
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -16,7 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
->>>>>>> origin/namhh-update-infor
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.SignInRequest;
 import com.backend.stayEasy.dto.SignInResponse;
@@ -27,19 +24,10 @@ import com.backend.stayEasy.enums.TokenType;
 import com.backend.stayEasy.repository.TokenRepository;
 import com.backend.stayEasy.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -52,13 +40,7 @@ public class AuthService {
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
-<<<<<<< HEAD
-	public SignInResponse register(SignUpRequest request) {
-		  // Lấy ngày hiện tại
-        LocalDate currentDate = LocalDate.now();
-     // Chuyển đổi từ LocalDate sang Date
-        Date date = Date.valueOf(currentDate);
-=======
+
 	public ResponseEntity<?> register(SignUpRequest request) {
 		// Kiểm tra xem email đã tồn tại trong hệ thống chưa
         if (repository.existsByEmail(request.getEmail())) {
@@ -71,7 +53,6 @@ public class AuthService {
         			.contentType(MediaType.APPLICATION_JSON)
                     .body(errorResponse);
         }
->>>>>>> origin/namhh-update-infor
         
 		var user = User.builder()
 				.firstName(request.getFirstName())
@@ -79,13 +60,8 @@ public class AuthService {
 				.email(request.getEmail())
 				.password(passwordEncoder.encode(request.getPassword()))
 				.role(request.getRole())
-<<<<<<< HEAD
-				.createdAt(date)
-				.updatedAt(date)
-=======
 				.createdAt(LocalDateTime.now())
 				.updatedAt(LocalDateTime.now())
->>>>>>> origin/namhh-update-infor
 				.build();
 		var savedUser = repository.save(user);
 		var jwtToken = jwtService.generateToken(user);

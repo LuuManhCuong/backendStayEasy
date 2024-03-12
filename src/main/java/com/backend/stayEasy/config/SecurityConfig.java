@@ -1,9 +1,19 @@
 package com.backend.stayEasy.config;
 
-import com.backend.stayEasy.filter.JwtAuthenticationFilter;
+import static com.backend.stayEasy.enums.Permission.ADMIN_CREATE;
+import static com.backend.stayEasy.enums.Permission.ADMIN_DELETE;
+import static com.backend.stayEasy.enums.Permission.ADMIN_READ;
+import static com.backend.stayEasy.enums.Permission.ADMIN_UPDATE;
+import static com.backend.stayEasy.enums.Permission.OWNER_READ;
+import static com.backend.stayEasy.enums.Role.ADMIN;
+import static com.backend.stayEasy.enums.Role.OWNER;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 
-import com.backend.stayEasy.sevice.LogoutService;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,19 +30,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
-import java.util.Arrays;
-
 import com.backend.stayEasy.exception.AccessDeniedExceptionHandler;
 import com.backend.stayEasy.exception.JwtAuthenticationExceptionHandler;
 import com.backend.stayEasy.filter.JwtAuthenticationFilter;
 import com.backend.stayEasy.sevice.LogoutService;
 
-
-import static com.backend.stayEasy.enums.Permission.*;
-import static com.backend.stayEasy.enums.Role.ADMIN;
-import static com.backend.stayEasy.enums.Role.OWNER;
-import static org.springframework.http.HttpMethod.*;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity

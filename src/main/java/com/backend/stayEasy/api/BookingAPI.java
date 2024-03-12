@@ -6,7 +6,7 @@ import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.PaymentDTO;
 import com.backend.stayEasy.entity.Mail;
 import com.backend.stayEasy.sevice.BookingService;
-import com.backend.stayEasy.sevice.IMailService;
+import com.backend.stayEasy.sevice.impl.IMailService;
 import com.backend.stayEasy.sevice.PaymentBillService;
 import com.backend.stayEasy.sevice.PaypalService;
 import com.fasterxml.jackson.core.JsonProcessingException;

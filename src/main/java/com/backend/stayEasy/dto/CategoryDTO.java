@@ -1,10 +1,5 @@
 package com.backend.stayEasy.dto;
 
-<<<<<<< HEAD
-import java.util.List;
-import java.util.Set;
-=======
->>>>>>> origin/namhh-update-infor
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;

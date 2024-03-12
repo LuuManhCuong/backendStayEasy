@@ -1,11 +1,5 @@
 package com.backend.stayEasy.entity;
 
-<<<<<<< HEAD
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-=======
->>>>>>> origin/namhh-update-infor
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,7 +26,4 @@ public class Category {
 	
 	@OneToMany(mappedBy = "category")
 	private Set<PropertyCategory> propertyCategories;
-	
-//	@ManyToMany(mappedBy = "categories")
-//	private Set<Property> properties = new HashSet<>();
 }

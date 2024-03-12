@@ -1,7 +1,5 @@
 package com.backend.stayEasy.api;
 
-<<<<<<< HEAD
-=======
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
->>>>>>> origin/namhh-update-infor
 import com.backend.stayEasy.dto.SignInRequest;
 import com.backend.stayEasy.dto.SignInResponse;
 import com.backend.stayEasy.dto.SignUpRequest;
 import com.backend.stayEasy.dto.TokenDTO;
 import com.backend.stayEasy.sevice.AuthService;
-<<<<<<< HEAD
-=======
 import com.backend.stayEasy.sevice.JwtService;
-
->>>>>>> origin/namhh-update-infor
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

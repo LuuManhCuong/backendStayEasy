@@ -1,10 +1,8 @@
 package com.backend.stayEasy.sevice;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.backend.stayEasy.entity.Statistics;
 import com.backend.stayEasy.repository.StatisticsRepository;
 
 @Component
