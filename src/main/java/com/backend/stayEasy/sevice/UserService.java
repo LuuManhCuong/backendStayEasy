@@ -45,7 +45,7 @@ public class UserService {
 	}
 
 	public UserDTO getUserByToken(String token) {
-		return userConverter.toDTO(userRepository.findByToken(token).get());
+		return userConverter.toDTO(userRepository.findByToken(token).orElseThrow());
 	}
 
 	@Transactional

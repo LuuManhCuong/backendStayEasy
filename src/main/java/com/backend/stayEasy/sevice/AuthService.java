@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -65,6 +66,7 @@ public class AuthService implements UserDetailsService  {
     private BCryptPasswordEncoder bcryptEncoder;
 
 
+    @Transactional
 	public ResponseEntity<?> register(SignUpRequest request) {
 		// Kiểm tra xem email đã tồn tại trong hệ thống chưa
         if (repository.existsByEmail(request.getEmail())) {
@@ -113,6 +115,7 @@ public class AuthService implements UserDetailsService  {
 				.build();
 	}
 
+	@Transactional
 	private void saveUserToken(User user, String jwtToken) {
 		var token = Token.builder().user(user).token(jwtToken).tokenType(TokenType.BEARER).expired(false).revoked(false)
 				.build();

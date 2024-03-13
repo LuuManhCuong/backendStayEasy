@@ -23,6 +23,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	@Query("SELECT COUNT(u) FROM User u WHERE u.createdAt BETWEEN :startDate AND :endDate")
 	long countUsersCreatedBetween(Date startDate, Date endDate);
 
-	@Query("SELECT u FROM User u JOIN Token t ON u.id = t.user.id WHERE t.token = :token")
+	@Query("SELECT u FROM User u JOIN Token t ON u.id = t.user.id WHERE t.token = :token AND t.expired = false")
 	Optional<User> findByToken(String token);
 }

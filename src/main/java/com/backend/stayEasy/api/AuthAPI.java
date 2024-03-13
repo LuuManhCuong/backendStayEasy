@@ -89,7 +89,7 @@ public class AuthAPI {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, changePasswordRequest.getOldPassword()));
 
         // Cập nhật mật khẩu
-//        service.changePassword(username, changePasswordRequest.getNewPassword());
+        service.changePassword(username, changePasswordRequest.getNewPassword());
 
         return ResponseEntity.ok(service.changePassword(username, changePasswordRequest.getNewPassword()));
     }

@@ -25,7 +25,7 @@ public class AccessDeniedExceptionHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("message", "Bạn không có quyền truy cập vào tài nguyên này!");
+        errorResponse.put("message", "Không có quyền truy cập!");
         errorResponse.put("status", HttpStatus.FORBIDDEN.value());
         
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

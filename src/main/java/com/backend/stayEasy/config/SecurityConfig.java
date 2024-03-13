@@ -31,7 +31,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.backend.stayEasy.exception.AccessDeniedExceptionHandler;
-import com.backend.stayEasy.exception.JwtAuthenticationExceptionHandler;
+import com.backend.stayEasy.exception.AuthenticationExceptionHandler;
 import com.backend.stayEasy.filter.JwtAuthenticationFilter;
 import com.backend.stayEasy.sevice.LogoutService;
 
@@ -47,7 +47,7 @@ public class SecurityConfig {
 	@Autowired
 	private LogoutService logoutService;
 
-	private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**", "/api/v1/stayeasy/**"};
+	private static final String[] WHITE_LIST_URL = {"/**", "/api/v1/auth/**", "/api/v1/stayeasy/**"};
 	private static final String[] ADMIN_LIST_URL = {"/api/v1/user/**", "/api/v1/token/**"};
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final AuthenticationProvider authenticationProvider;
@@ -66,7 +66,8 @@ public class SecurityConfig {
 						.anyRequest().authenticated())
 				.exceptionHandling(configurer -> configurer
 				        .accessDeniedHandler(new AccessDeniedExceptionHandler())
-				        .authenticationEntryPoint(new JwtAuthenticationExceptionHandler()))
+				        .authenticationEntryPoint(new AuthenticationExceptionHandler())
+				        )
 				.authenticationProvider(authenticationProvider)
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 				.logout(logout -> logout.logoutUrl("/api/v1/auth/logout")

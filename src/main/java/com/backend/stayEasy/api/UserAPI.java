@@ -19,18 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.stayEasy.config.ApplicationAuditAware;
 import com.backend.stayEasy.dto.SignUpRequest;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.sevice.AuthService;
 import com.backend.stayEasy.sevice.JwtService;
 import com.backend.stayEasy.sevice.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -48,10 +41,8 @@ public class UserAPI {
 	@Autowired
 	private JwtService jwtService;
 
-	@Autowired
-	private ApplicationAuditAware applicationAuditAware;
-
 	@GetMapping
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<List<UserDTO>> getAllUser() {
 		return ResponseEntity.ok(userService.getAllUser());
 	}

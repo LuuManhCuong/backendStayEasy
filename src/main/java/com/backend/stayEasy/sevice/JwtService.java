@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,17 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
+
+	@Value("${token.secret.key}")
+	String jwtSecretKey;
+
+	@Value("${token.expiration}")
+	Long jwtExpirationMs;
+	
+	@Value("${refresh.token.expiration}")
+	Long jwtRefreshExpirationMs;
+
+
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
 	}
@@ -35,13 +47,13 @@ public class JwtService {
 	public String generateToken(Map<String, Object> extraClaims, User user) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("email", user.getEmail());
-        claims.put("firstName", user.getFirstName());
-        claims.put("lastName", user.getLastName());
-		return buildToken(extraClaims, user, 86400000);
+		claims.put("firstName", user.getFirstName());
+		claims.put("lastName", user.getLastName());
+		return buildToken(extraClaims, user, jwtExpirationMs);
 	}
 
 	public String generateRefreshToken(UserDetails userDetails) {
-		return buildToken(new HashMap<>(), userDetails, 3600000);
+		return buildToken(new HashMap<>(), userDetails, jwtRefreshExpirationMs);
 	}
 
 	private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
@@ -55,14 +67,14 @@ public class JwtService {
 		final String username = extractUsername(token);
 		return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
 	}
-	
+
 	public boolean isTokenValid(String token) {
-	    try {
-	        Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token);
-	        return true;
-	    } catch (Exception e) {
-	        return false;
-	    }
+		try {
+			Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	private boolean isTokenExpired(String token) {
@@ -78,7 +90,7 @@ public class JwtService {
 	}
 
 	private Key getSignInKey() {
-		byte[] keyBytes = Decoders.BASE64.decode("404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970");
+		byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }
