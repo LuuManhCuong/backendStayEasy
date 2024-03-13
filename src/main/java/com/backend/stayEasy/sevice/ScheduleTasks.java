@@ -15,10 +15,5 @@ public class ScheduleTasks {
 	@Autowired
 	private StatisticsRepository statisticsRepository;
 
-    // Chạy mỗi tháng vào ngày đầu tiên của tháng lúc 12:00 AM
-    @Scheduled(cron = "0 0 0 1 * *")
-    public void calculateAndSaveMonthlyStatistics() {
-        Statistics statistics = statisticSevice.calculateRevenueForCurrentMonth();
-        statisticsRepository.save(statistics);
-    }
+
 }

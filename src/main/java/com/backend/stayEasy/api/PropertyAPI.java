@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -45,25 +44,24 @@ public class PropertyAPI {
 	@Autowired
 	private IPropertyService propertyService;
 
-	
 	@Autowired
 	private ExploreRepository exploreRepository;
-	
+
 	@Autowired
 	private IPropertyRepository propertyRepository;
-	
+
 	@Autowired
 	private PropertyConverter propertyConverter;
-	
+
 //	@Autowired
 //	private BookingRepository bookingRepository;
-	
+
 	@Autowired
 	private LikeRepository likeRepository;
-	
+
 	@Autowired
 	private LikeConverter likeConverter;
-	
+
 	@GetMapping
 	public List<PropertyDTO> getAllProperty() {
 		return propertyService.findAll();
@@ -76,6 +74,7 @@ public class PropertyAPI {
 
 	@PostMapping("/add")
 	public PropertyDTO addProperty(@Validated @RequestBody PropertyDTO propertyDTO) {
+
 		return propertyService.add(propertyDTO);
 	}
 
@@ -84,10 +83,16 @@ public class PropertyAPI {
 			@Validated @RequestBody PropertyDTO updaPropertyDTO) {
 		return propertyService.update(propertyId, updaPropertyDTO);
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
 	public Property delete(@PathVariable("id") UUID propertyId) {
 		return propertyService.delete(propertyId);
+	}
+
+	@GetMapping("/category/{category}")
+	public List<PropertyDTO> getPropertyByCategory(@PathVariable("category") UUID categoryId) {
+		System.out.println(categoryId);
+		return propertyService.findByCategory(categoryId);
 	}
 
 	@GetMapping("/search/suggest")
@@ -98,40 +103,38 @@ public class PropertyAPI {
 		for (Property property : searchResults) {
 			propertyDTOs.add(propertyConverter.toDTO(property));
 		}
-        return propertyDTOs;
+		return propertyDTOs;
 	}
-	
-	
-	 @GetMapping("/search")
-	    public List<PropertyDTO> searchPropertyByAddressAndDate(
-	            @RequestParam("address") String address, 
-	            @RequestParam("checkin") String checkin, 
-	            @RequestParam("checkout") String checkout) {
-	        
-	        // Định dạng chuỗi ngày thành đối tượng Date
-	        SimpleDateFormat formatter = new SimpleDateFormat("yy-MM-dd");
-	        Date checkinDate = null;
-	        Date checkoutDate = null;
-	        try {
-	            checkinDate = new Date(formatter.parse(checkin).getTime());
-	            checkoutDate = new Date(formatter.parse(checkout).getTime());
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        List<PropertyDTO> propertyDTOs = new ArrayList<>();		
-	    	List<Property> properties =  propertyRepository.findAvailableProperties(checkinDate, checkoutDate, address);
-	    	for (Property property : properties) {
-	    		PropertyDTO propertyDTO = propertyConverter.toDTO(property);
-	    		List<Like> likes = likeRepository.findByPropertyPropertyId(property.getPropertyId()); // get like tương ứng mỗi property
-	    		Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
-	    		propertyDTO.setLikeList(likeRequestDTOs);
-	    		propertyDTOs.add(propertyDTO);
-	    	}
-	        
-	        System.out.println("address: " + address);
-	        System.out.println("checkin: " + checkinDate);
-	        System.out.println("checkout: " + checkoutDate);
-	        
-	        return propertyDTOs;
-	    }
+
+	@GetMapping("/search")
+	public List<PropertyDTO> searchPropertyByAddressAndDate(@RequestParam("address") String address,
+			@RequestParam("checkin") String checkin, @RequestParam("checkout") String checkout) {
+
+		// Định dạng chuỗi ngày thành đối tượng Date
+		SimpleDateFormat formatter = new SimpleDateFormat("yy-MM-dd");
+		Date checkinDate = null;
+		Date checkoutDate = null;
+		try {
+			checkinDate = new Date(formatter.parse(checkin).getTime());
+			checkoutDate = new Date(formatter.parse(checkout).getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		List<PropertyDTO> propertyDTOs = new ArrayList<>();
+		List<Property> properties = propertyRepository.findAvailableProperties(checkinDate, checkoutDate, address);
+		for (Property property : properties) {
+			PropertyDTO propertyDTO = propertyConverter.toDTO(property);
+			List<Like> likes = likeRepository.findByPropertyPropertyId(property.getPropertyId()); // get like tương ứng
+																									// mỗi property
+			Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+			propertyDTO.setLikeList(likeRequestDTOs);
+			propertyDTOs.add(propertyDTO);
+		}
+
+//	        System.out.println("address: " + address);
+//	        System.out.println("checkin: " + checkinDate);
+//	        System.out.println("checkout: " + checkoutDate);
+
+		return propertyDTOs;
+	}
 }

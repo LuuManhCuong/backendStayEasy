@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -55,10 +56,11 @@ public class PropertyConverter {
 
 	@Autowired
 	private UserRepository userRepository;
+	
 
 	public PropertyDTO toDTO(Property property) {
 		List<ImagesDTO> listImages = new ArrayList<>();
-		List<UUID> categoryIds = new ArrayList<>();
+		List<CategoryDTO> listCategory = new ArrayList<>();
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());
@@ -69,13 +71,13 @@ public class PropertyConverter {
 		propertyDTO.setPropertyId(property.getPropertyId());
 		propertyDTO.setPropertyName(property.getPropertyName());
 //		propertyDTO.setRating(property.getRating());
-		if (!property.getCategories().isEmpty()) {
-			for (Category c : property.getCategories()) {
-				categoryIds.add(c.getCategoryId());
+		if (!property.getPropertyCategories().isEmpty()) {
+			for (PropertyCategory c : property.getPropertyCategories()) {
+				listCategory.add(categoryConverter.toDTO(c.getCategory()));
 			}
 		}
-		propertyDTO.setCategoryIds(categoryIds);
-
+		propertyDTO.setCategories(listCategory);
+		
 		propertyDTO.setThumbnail(property.getThumbnail());
 		
 		if (!property.getImages().isEmpty()) {
@@ -85,7 +87,8 @@ public class PropertyConverter {
 		}
 		propertyDTO.setImagesList(listImages);
 		
-		propertyDTO.setOwnerId(property.getUser().getId());
+//		propertyDTO.setOwnerId(property.getUser().getId());
+////		propertyDTO.setOwnerId(property.getUser().getId());
 
 		if (property.getUser() != null) {
 			propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
@@ -95,27 +98,35 @@ public class PropertyConverter {
 	}
 
 	public Property toEntity(PropertyDTO propertyDTO) {
-
 		Property property = new Property();
+		if(propertyDTO.getPropertyId()!=null) {
+			property.setPropertyId(propertyDTO.getPropertyId());
+		}
 		property.setAddress(propertyDTO.getAddress());
 		property.setDescription(propertyDTO.getDescription());
 		property.setDiscount(propertyDTO.getDiscount());
-//		property.setNull(propertyDTO.isNull());
+		property.setNull(false);
 		property.setNumGuests(propertyDTO.getNumGuests());
 		property.setPrice(propertyDTO.getPrice());
 		property.setPropertyId(propertyDTO.getPropertyId());
 		property.setPropertyName(propertyDTO.getPropertyName());
-//		property.setRating(propertyDTO.getRating());
+//		property.setRating(5.0);
 		property.setThumbnail(propertyDTO.getThumbnail());
-		property.setUser(userRepository.findById(propertyDTO.getOwnerId()).get());
-
+		
+		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());
+				if (optionalUser.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
+				    User user = optionalUser.get(); // Trích xuất giá trị User từ Optional
+				    property.setUser(user); // Gán giá trị User cho property
+				} else {
+				   property.setUser(null);
+				}
 		return property;
 
 	}
 
 //	no
 
-	public PropertyDTO toDTO(Property property, List<LikeRequestDTO> likeRequestDTOlist) {
+	public PropertyDTO toDTO(Property property, Set<LikeRequestDTO> likeRequestDTOlist) {
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());
@@ -128,15 +139,14 @@ public class PropertyConverter {
 		propertyDTO.setRating(property.getRating());
 		propertyDTO.setThumbnail(property.getThumbnail());
 		propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
-		Set<LikeRequestDTO> likeSet = new HashSet<>(likeRequestDTOlist);
-		propertyDTO.setLikeList(likeSet);
+		propertyDTO.setLikeList(likeRequestDTOlist);
 		return propertyDTO;
 	}
 
 	public List<PropertyDTO> arrayToDTO(List<Property> propertyList, List<LikeRequestDTO> likeRequestDTOlist) {
 		List<PropertyDTO> propertyDTOList = new ArrayList<>();
 		for (Property property : propertyList) {
-			propertyDTOList.add(toDTO(property, likeRequestDTOlist));
+			propertyDTOList.add(toDTO(property));
 		}
 		return propertyDTOList;
 	}

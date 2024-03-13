@@ -2,6 +2,7 @@ package com.backend.stayEasy.sevice;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -10,11 +11,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.stayEasy.convertor.CategoryConverter;
 import com.backend.stayEasy.convertor.FeedbackConverter;
 import com.backend.stayEasy.convertor.ImagesConventer;
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.convertor.PropertyUtilitiesConverter;
+import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
@@ -25,6 +28,7 @@ import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.entity.PropertyCategory;
 import com.backend.stayEasy.entity.PropertyUilitis;
+import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.ICategoryRepository;
 import com.backend.stayEasy.repository.IImageRepository;
 import com.backend.stayEasy.repository.IPropertyCategoryRepository;
@@ -53,6 +57,9 @@ public class PropertyService implements IPropertyService {
 	private FeedbackConverter feedbackConverter;
 
 	@Autowired
+	private CategoryConverter categoryConverter;
+
+	@Autowired
 	private PropertyUtilitiesConverter propertyUtilitiesConverter;
 
 	@Autowired
@@ -60,6 +67,9 @@ public class PropertyService implements IPropertyService {
 
 	@Autowired
 	private PropertyUilitisRepository propertyUtilitiesRepository;
+
+	@Autowired
+	private IPropertyCategoryRepository propertyCategoryRepository;
 
 	@Autowired
 	private LikeRepository likeRepository;
@@ -73,7 +83,11 @@ public class PropertyService implements IPropertyService {
 		List<PropertyDTO> result = new ArrayList<>();
 
 		for (Property p : propertyRepository.findAll()) {
-			result.add(propertyConverter.toDTO(p));
+			List<Like> likes = likeRepository.findByPropertyPropertyId(p.getPropertyId());
+			Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+			PropertyDTO temp = propertyConverter.toDTO(p);
+			temp.setLikeList(likeRequestDTOs);
+			result.add(temp);
 		}
 
 		return result;
@@ -89,25 +103,25 @@ public class PropertyService implements IPropertyService {
 	public PropertyDTO add(PropertyDTO propertyDTO) {
 		Property property = new Property();
 		List<Images> images = new ArrayList<>();
-		Set<Category> categories = new HashSet<>();
+		List<PropertyCategory> propertyCategory = new ArrayList<>();
 
 		property = propertyConverter.toEntity(propertyDTO);
 
 		for (ImagesDTO i : propertyDTO.getImagesList()) {
 			images.add(new Images(i.getUrl(), i.getDescription(), property));
 		}
-
-		// Convert CategoryDTO to Category
-		if (propertyDTO.getCategoryIds() != null && !propertyDTO.getCategoryIds().isEmpty()) {
-			for (UUID categoryId : propertyDTO.getCategoryIds()) {
-				Category category = categoryRepository.findById(categoryId).orElse(null);
-				if (category != null) {
-					categories.add(category);
-				}
+		for (CategoryDTO categoryDTO : propertyDTO.getCategories()) {
+			PropertyCategory temp = new PropertyCategory();
+			temp.setProperty(property);
+			Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
+			if (categoryOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
+				Category category = categoryOp.get(); // Trích xuất giá trị User từ Optional
+				temp.setCategory(category);
 			}
+			propertyCategory.add(temp);
 		}
 		property.setImages(images);
-		property.setCategories(categories);
+		property.setPropertyCategories(propertyCategory);
 
 		propertyRepository.save(property);
 
@@ -116,50 +130,103 @@ public class PropertyService implements IPropertyService {
 
 	@Override
 	public PropertyDTO update(UUID propertyId, PropertyDTO updatePropertyDTO) {
+		Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
 
-		Optional<Property> property = propertyRepository.findById(propertyId);
+		if (propertyOptional.isPresent()) {
+			Property existingProperty = propertyOptional.get();
+			Property updatedProperty = propertyConverter.toEntity(updatePropertyDTO);
 
-		List<Images> images = new ArrayList<>();
-		Set<Category> categories = new HashSet<>();
+			// Copy các thông tin từ updatedProperty vào existingProperty
+			existingProperty.setPropertyName(updatedProperty.getPropertyName());
+			existingProperty.setDescription(updatedProperty.getDescription());
+			existingProperty.setThumbnail(updatedProperty.getThumbnail());
+			existingProperty.setPrice(updatedProperty.getPrice());
+			existingProperty.setNumGuests(updatedProperty.getNumGuests());
+			existingProperty.setDiscount(updatedProperty.getDiscount());
 
-		if (property.isPresent()) {
-			Property editProperty = property.get();
+			List<PropertyCategory> updatedPropertyCategories = new ArrayList<>();
 
-			for (Images image : editProperty.getImages()) {
-				imageRepository.delete(image);
+			// Lưu category cần update
+			for (CategoryDTO categoryDTO : updatePropertyDTO.getCategories()) {
+				PropertyCategory temp = new PropertyCategory();
+				temp.setProperty(existingProperty);
+				Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
+				if (categoryOp.isPresent()) {
+					Category category = categoryOp.get();
+					temp.setCategory(category);
+				}
+				updatedPropertyCategories.add(temp);
 			}
 
-			Property editProperty2 = propertyConverter.toEntity(updatePropertyDTO);
-
-			editProperty.setPropertyName(editProperty2.getPropertyName());
-			editProperty.setDescription(editProperty2.getDescription());
-			editProperty.setThumbnail(editProperty2.getThumbnail());
-			editProperty.setPrice(editProperty2.getPrice());
-			editProperty.setNumGuests(editProperty2.getNumGuests());
-			editProperty.setDiscount(editProperty2.getDiscount());
-
-			for (ImagesDTO i : updatePropertyDTO.getImagesList()) {
-				images.add(new Images(i.getUrl(), i.getDescription(), editProperty));
-			}
-
-			// Convert CategoryDTO to Category and associate with the property
-			if (updatePropertyDTO.getCategoryIds() != null && !updatePropertyDTO.getCategoryIds().isEmpty()) {
-				for (UUID categoryId : updatePropertyDTO.getCategoryIds()) {
-					Category category = categoryRepository.findById(categoryId).orElse(null);
-					if (category != null) {
-						categories.add(category);
+			// Check category thừa
+			Iterator<PropertyCategory> iterator = existingProperty.getPropertyCategories().iterator();
+			while (iterator.hasNext()) {
+				PropertyCategory propertyCategory = iterator.next();
+				boolean categoryFound = false;
+				for (PropertyCategory updatedCategory : updatedPropertyCategories) {
+					if (propertyCategory.getCategory().getCategoryId() == updatedCategory.getCategory()
+							.getCategoryId()) {
+						categoryFound = true;
+						break;
 					}
+				}
+				if (!categoryFound) {
+					iterator.remove();
 				}
 			}
 
-			editProperty.setImages(images);
+			// Check category mới add vô
+			for (PropertyCategory updatedCategory : updatedPropertyCategories) {
+				boolean categoryExists = false;
+				for (PropertyCategory existingCategory : existingProperty.getPropertyCategories()) {
+					if (existingCategory.getCategory().getCategoryId()
+							.equals(updatedCategory.getCategory().getCategoryId())) {
+						categoryExists = true;
+						break;
+					}
+				}
+				if (!categoryExists) {
+					existingProperty.getPropertyCategories().add(updatedCategory);
+				}
+			}
 
-			editProperty.setCategories(categories);
+			// xoá image không update
+			List<Images> imagesToRemove = new ArrayList<>();
+			for (Images existingImage : existingProperty.getImages()) {
+				boolean existsInUpdate = false;
+				for (ImagesDTO imagesDTO : updatePropertyDTO.getImagesList()) {
+					if (existingImage.getUrl().equals(imagesDTO.getUrl())) {
+						existsInUpdate = true;
+						break;
+					}
+				}
+				if (!existsInUpdate) {
+					// Xóa ảnh từ cơ sở dữ liệu
+					imageRepository.delete(existingImage);
+					imagesToRemove.add(existingImage);
+				}
+			}
+			existingProperty.getImages().removeAll(imagesToRemove);
 
-			Property result = propertyRepository.save(editProperty);
+			// Check đã có images chưa
+			for (ImagesDTO imagesDTO : updatePropertyDTO.getImagesList()) {
+				boolean exists = false;
+				for (Images existingImage : existingProperty.getImages()) {
+					if (existingImage.getUrl().equals(imagesDTO.getUrl())) {
+						exists = true;
+						break;
+					}
+				}
+				// chưa có add vô
+				if (!exists) {
+					Images newImage = new Images(imagesDTO.getUrl(), imagesDTO.getDescription(), existingProperty);
+					existingProperty.getImages().add(newImage);
+				}
+			}
+
+			Property result = propertyRepository.save(existingProperty);
 
 			return propertyConverter.toDTO(result);
-
 		} else {
 			throw new EntityNotFoundException("Property not found!");
 		}
@@ -178,16 +245,20 @@ public class PropertyService implements IPropertyService {
 		return null;
 	}
 
-//	@Override
-//	public List<Property> findByCategory(UUID categoryId) {
-//		
-//		List<PropertyCategory> propertyCategories = propertyCategoryRepository.findByCategoryCategoryId(categoryId);
-//		List<Property> properties = new ArrayList<>();
-//		for (PropertyCategory p : propertyCategories) {
-//			properties.add(p.getProperty());
-//		}
-//		
-//		return properties;
-//	}
+	@Override
+	public List<PropertyDTO> findByCategory(UUID categoryId) {
+		List<PropertyDTO> result = new ArrayList<>();
+		List<PropertyCategory> propertyCategory = propertyCategoryRepository.findByCategoryCategoryId(categoryId);
+
+		for (PropertyCategory p : propertyCategory) {
+			Property temp = propertyRepository.findByPropertyId(p.getProperty().getPropertyId());
+			List<Like> likes = likeRepository.findByPropertyPropertyId(temp.getPropertyId());
+			Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+			PropertyDTO temp2 = propertyConverter.toDTO(temp);
+			temp2.setLikeList(likeRequestDTOs);
+			result.add(temp2);
+		}
+		return result;
+	}
 
 }

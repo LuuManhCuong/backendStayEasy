@@ -24,9 +24,9 @@ public class PropertyUilitis {
 
     private int quantity;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne()
     private Property property;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne()
     private Utilities utilities;
 }

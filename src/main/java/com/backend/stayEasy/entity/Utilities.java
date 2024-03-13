@@ -23,8 +23,14 @@ public class Utilities {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID utilitiId;
 	
-	@Column(name = "utilities_name", columnDefinition = "nvarchar(255)")
+	@Column(name = "utilities_name", columnDefinition = "text")
 	private String utilitiesName;
+	
+	@Column(name = "fee")
+	private int fee;
+	
+	@Column(name="extend", columnDefinition = "nvarchar(255)")
+	private boolean extend;
 	
 	@OneToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PropertyUilitis> propertyUilitis;

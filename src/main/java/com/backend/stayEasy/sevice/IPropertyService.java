@@ -18,6 +18,6 @@ public interface IPropertyService {
 
 	Property delete(UUID propertyId);
 
-//	List<Property> findByCategory(UUID categoryId);
+	List<PropertyDTO> findByCategory(UUID categoryId);
 	
 }

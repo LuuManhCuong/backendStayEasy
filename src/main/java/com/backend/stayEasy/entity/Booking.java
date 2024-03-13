@@ -43,4 +43,6 @@ public class Booking {
 	private Boolean status;
 	@Column(name = "num-guest")
 	private int numGuest;
+	@Column(name = "cancel")
+	private Boolean cancel;
 }
