@@ -1,5 +1,6 @@
 package com.backend.stayEasy.entity;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -59,9 +60,9 @@ public class User implements UserDetails {
 
 	String avatar;
 
-	LocalDateTime createdAt;
+	Date createdAt;
 
-	LocalDateTime updatedAt;
+	Date updatedAt;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;

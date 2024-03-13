@@ -55,22 +55,11 @@ public class BookingAPI {
         return ResponseEntity.ok().body(bookingService.returnMyBookings(id));
     }
 
-    // get danh sach booking cho tung listing
-    @GetMapping("/listing/{id}")
-    public ResponseEntity<List<BookingDTO>> getBookingOfListing(@PathVariable("id") UUID id) {
-        return ResponseEntity.ok().body(bookingService.returnListingBookings(id));
-    }
-    /*  @PutMapping("/changer-booking/{id}")
-        public Booking updateBooking(@PathVariable("id") UUID id, @RequestBody Booking booking) {
-           return bookingService.updateBooking(id, booking);
-       } */
-
-
     // huy booking (check ngay truoc checkin 1 ngay  , return payment ,them vao bang paymnet bill , cap nhat trang thai vot  booking)
     // refund payment (lay stk cua user da thanh toan va refund)
-    @DeleteMapping("/traveler-cancel/{id}")
-    public void deleteBooking(@PathVariable("id") UUID id) {
-        bookingService.deleteBooking(id);
+    @DeleteMapping("/traveler-cancel/{bookingId}")
+    public void cancelBooking(@PathVariable("bookingId") UUID bookingId) {
+        bookingService.deleteBooking(bookingId);
     }
 
     // create payment and update booking (check id  user isn't host )
@@ -137,34 +126,36 @@ public class BookingAPI {
 
     // return when cancel payment
     @GetMapping(value = CANCEL_URL)
-    public ResponseEntity<String> cancelPay()  {
+    public ResponseEntity<Map<String, Object>> cancelPay()  {
+        Map<String, Object> response = new HashMap<>();
         if (!emailSent) {
-            // Gửi email nhắc thanh toán
+            // Gửi email nhắc thanh toán chỉ 1 lần
             sendEmailBooking();
             emailSent = true;
             String message = "Đã hủy thanh toán và gửi email nhắc thanh toán thành công.";
-            return ResponseEntity.ok(message);
-        } else {
-            String message = "Email đã được gửi đi trước đó.";
-            return ResponseEntity.ok(message);
+            BookingDTO bookingDTO = bookingService.getBookingById(bookingId);
+            String paymentLinkTemplate = "http://localhost:3000/booking/%s?checkin=%s&checkout=%s&numGuest=%d";
+            String paymentLink = String.format(paymentLinkTemplate, bookingDTO.getPropertyDTOS().getPropertyId(), bookingDTO.getCheckIn(), bookingDTO.getCheckOut(), bookingDTO.getNumOfGuest());
+            response.put("message", message);
+            response.put("bookingDTO", bookingDTO);
+            response.put("paymentLink", paymentLink);
         }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // can code in booking service
     private void sendEmailBooking() {
         BookingDTO bookingDTO = bookingService.getBookingById(bookingId);
         String paymentLinkTemplate = "http://localhost:3000/booking/%s?checkin=%s&checkout=%s&numGuest=%d";
-        System.out.println(bookingDTO.getNumOfGuest());
         String paymentLink = String.format(paymentLinkTemplate, bookingDTO.getPropertyDTOS().getPropertyId(), bookingDTO.getCheckIn(), bookingDTO.getCheckOut(), bookingDTO.getNumOfGuest());
         String subject = "Nhắc nhở thanh toán đặt phòng của bạn tại " + bookingDTO.getPropertyName();
-        String content = "test mail";
+        String content = "Payment mail";
         // set new mail
         Mail mail = new Mail();
         mail.setRecipient(bookingDTO.getUserDTOS().getEmail());
         mail.setSubject(subject);
         mail.setContent(content);
         mailService.sendEmailPayment(mail, bookingDTO, paymentLink);
-//        mailService.sendBook(mail);
     }
 
     // get transaction detail
@@ -173,7 +164,6 @@ public class BookingAPI {
         System.out.println("running");
         return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
     }
-
     // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
 
 }

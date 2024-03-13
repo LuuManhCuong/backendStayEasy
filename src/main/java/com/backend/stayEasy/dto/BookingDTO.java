@@ -1,7 +1,6 @@
 package com.backend.stayEasy.dto;
 
 import lombok.AllArgsConstructor;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +16,7 @@ public class BookingDTO {
     private UUID userId;
     private  PropertyDTO propertyDTOS;
     private Date checkIn;
+    private String confirmation;
     // TO CREATE BOOKING AND PAYMENT
     private UUID bookingId ;
     private UUID propertyId;
