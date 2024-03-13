@@ -4,6 +4,7 @@ import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
 import com.backend.stayEasy.dto.RulesDTO;
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Property;
@@ -60,11 +61,15 @@ public class PropertyConverter {
 	@Autowired
 	private RulesConverter rulesConverter;
 	
+	@Autowired
+	private PropertyUtilitiesConverter propertyUtilitiesConverter;
+	
 
 	public PropertyDTO toDTO(Property property) {
 		List<ImagesDTO> listImages = new ArrayList<>();
 		List<CategoryDTO> listCategory = new ArrayList<>();
 		List<RulesDTO> listRules = new ArrayList<>();
+		List<PropertyUtilitiesDTO> listUtilities = new ArrayList<>();
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());
@@ -96,6 +101,12 @@ public class PropertyConverter {
 		}
 		propertyDTO.setRulesList(listRules);
 		
+		if (!property.getPropertyUilitis().isEmpty()) {
+			for (PropertyUilitis c : property.getPropertyUilitis()) {
+				listUtilities.add(propertyUtilitiesConverter.toDTO(c));
+			}
+		}
+		propertyDTO.setPropertyUtilitis(listUtilities);
 		if (property.getUser() != null) {
 			propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
 		}

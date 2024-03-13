@@ -1,6 +1,7 @@
 package com.backend.stayEasy.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,5 +28,5 @@ public class Utilities {
 	private String utilitiesName;
 	
 	@OneToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PropertyUilitis> propertyUilitis;
+	private List<PropertyUilitis> propertyUilitis;
 }

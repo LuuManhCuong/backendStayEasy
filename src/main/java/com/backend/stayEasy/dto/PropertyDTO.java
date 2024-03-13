@@ -28,7 +28,7 @@ public class PropertyDTO {
     private List<ImagesDTO> imagesList;
     private List<CategoryDTO> categories;
     private Set<FeedbackDTO> feedbackList;
-    private Set<PropertyUtilitiesDTO> propertyUtilitis;
+    private List<PropertyUtilitiesDTO> propertyUtilitis;
     private Set<LikeRequestDTO> likeList;
     private List<RulesDTO> rulesList;
 }

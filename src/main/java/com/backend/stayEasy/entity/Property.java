@@ -53,7 +53,7 @@ public class Property {
 	private List<PropertyCategory> propertyCategories;
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PropertyUilitis> propertyUilitis;
+	private List<PropertyUilitis> propertyUilitis;
 	
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyRules> propertyRules;
