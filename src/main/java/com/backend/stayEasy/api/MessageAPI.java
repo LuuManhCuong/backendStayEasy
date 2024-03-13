@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.stayEasy.entity.Message;
 import com.backend.stayEasy.sevice.impl.IMessageService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @CrossOrigin
 @RestController
@@ -64,5 +66,10 @@ public class MessageAPI {
 	@DeleteMapping("/delete/{id}")
 	public void deleteMessage(@PathVariable("id") UUID id) {
 		messageService.deleteMessage(id);
+	}
+
+	@GetMapping("/get-first/{roomId}")
+	public Optional<Message> firtMessage(@PathVariable("roomId") UUID roomId, HttpServletRequest request) {
+		return messageService.firtMessage(request.getHeader("Authorization"),roomId);
 	}
 }
