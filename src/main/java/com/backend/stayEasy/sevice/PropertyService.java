@@ -16,7 +16,6 @@ import com.backend.stayEasy.convertor.FeedbackConverter;
 import com.backend.stayEasy.convertor.ImagesConventer;
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
-import com.backend.stayEasy.convertor.PropertyUtilitiesConverter;
 import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
@@ -32,15 +31,21 @@ import com.backend.stayEasy.entity.PropertyRules;
 import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.entity.Rules;
 import com.backend.stayEasy.entity.User;
-import com.backend.stayEasy.repository.ICategoryRepository;
+import com.backend.stayEasy.repository.CategoryRepository;
 import com.backend.stayEasy.repository.IImageRepository;
 import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
 import com.backend.stayEasy.repository.PropertyUilitisRepository;
 import com.backend.stayEasy.repository.RulesRepository;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PropertyService implements IPropertyService {
@@ -49,29 +54,14 @@ public class PropertyService implements IPropertyService {
 	private IPropertyRepository propertyRepository;
 
 	@Autowired
-	private ICategoryRepository categoryRepository;
+	private CategoryRepository categoryRepository;
 
 	@Autowired
 	private PropertyConverter propertyConverter;
 
 	@Autowired
-	private ImagesConventer imagesConverter;
-
-	@Autowired
-	private FeedbackConverter feedbackConverter;
-	
-	@Autowired
-	private CategoryConverter categoryConverter;
-
-	@Autowired
-	private PropertyUtilitiesConverter propertyUtilitiesConverter;
-
-	@Autowired
 	private IImageRepository imageRepository;
-	
-	@Autowired
-	private PropertyUilitisRepository propertyUtilitiesRepository;
-	
+
 	@Autowired
 	private IPropertyCategoryRepository propertyCategoryRepository;
 
@@ -119,14 +109,14 @@ public class PropertyService implements IPropertyService {
 		for (ImagesDTO i : propertyDTO.getImagesList()) {
 			images.add(new Images(i.getUrl(), i.getDescription(), property));
 		}
-		
+
 		for (CategoryDTO categoryDTO : propertyDTO.getCategories()) {
 			PropertyCategory temp = new PropertyCategory();
 			temp.setProperty(property);
 			Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
 			if (categoryOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
 				Category category = categoryOp.get(); // Trích xuất giá trị User từ Optional
-			    temp.setCategory(category); // Gán giá trị User cho property
+				temp.setCategory(category); // Gán giá trị User cho property
 			}
 			propertyCategory.add(temp);
 		}
@@ -297,7 +287,6 @@ public class PropertyService implements IPropertyService {
 		        throw new EntityNotFoundException("Property not found!");
 		    }
 
-
 	}
 
 	@Override
@@ -311,12 +300,11 @@ public class PropertyService implements IPropertyService {
 
 		return null;
 	}
-
 	@Override
 	public List<PropertyDTO> findByCategory(UUID categoryId) {
 		List<PropertyDTO> result = new ArrayList<>();
 		List<PropertyCategory> propertyCategory = propertyCategoryRepository.findByCategoryCategoryId(categoryId);
-		
+
 		for (PropertyCategory p : propertyCategory) {
 			Property temp = propertyRepository.findByPropertyId(p.getProperty().getPropertyId());
 			List<Like> likes = likeRepository.findByPropertyPropertyId(temp.getPropertyId());
@@ -327,7 +315,17 @@ public class PropertyService implements IPropertyService {
 		}
 		return result;
 	}
+	public List<PropertyDTO> findAllPropertiesByHostId(UUID hostId) {
+		// Truy vấn cơ sở dữ liệu để lấy danh sách các property có userId giống với hostId
+		List<Property> properties = propertyRepository.findAllByUserId(hostId);
 
+		// Chuyển đổi danh sách các property sang danh sách PropertyDTO
+		return properties.stream()
+				.map(propertyConverter::toDTO)
+				.collect(Collectors.toList());
+	}
+	
+	
 	@Override
 	public List<PropertyDTO> findByPropertyNameOrAddressContainingIgnoreCase(String keySearch) {
 		List<Property> propertyList = propertyRepository.findByPropertyNameOrAddressContainingIgnoreCase(keySearch);

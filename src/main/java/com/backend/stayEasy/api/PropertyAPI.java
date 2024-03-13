@@ -1,19 +1,14 @@
 package com.backend.stayEasy.api;
 
 import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,11 +26,10 @@ import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
-
 import com.backend.stayEasy.repository.ExploreRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
-import com.backend.stayEasy.sevice.IPropertyService;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -44,19 +38,15 @@ public class PropertyAPI {
 
 	@Autowired
 	private IPropertyService propertyService;
-
 	
 	@Autowired
 	private ExploreRepository exploreRepository;
 	
 	@Autowired
-	private IPropertyRepository propertyRepository;
-	
-	@Autowired
 	private PropertyConverter propertyConverter;
 	
-//	@Autowired
-//	private BookingRepository bookingRepository;
+	@Autowired
+	private IPropertyRepository propertyRepository;
 	
 	@Autowired
 	private LikeRepository likeRepository;
@@ -134,9 +124,6 @@ public class PropertyAPI {
 	    		propertyDTOs.add(propertyDTO);
 	    	}
 	        
-//	        System.out.println("address: " + address);
-//	        System.out.println("checkin: " + checkinDate);
-//	        System.out.println("checkout: " + checkoutDate);
 	        
 	        return propertyDTOs;
 	    }

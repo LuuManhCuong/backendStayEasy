@@ -1,8 +1,7 @@
 package com.backend.stayEasy.sevice;
 
-import com.backend.stayEasy.dto.BookingDTO;
-import com.backend.stayEasy.entity.Mail;
-import jakarta.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -10,7 +9,11 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.nio.charset.StandardCharsets;
+import com.backend.stayEasy.dto.BookingDTO;
+import com.backend.stayEasy.entity.Mail;
+import com.backend.stayEasy.sevice.impl.IMailService;
+
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class MailService implements IMailService {

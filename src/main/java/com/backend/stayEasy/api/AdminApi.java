@@ -1,43 +1,35 @@
 package com.backend.stayEasy.api;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import java.time.LocalDate;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-
+import com.backend.stayEasy.convertor.BookingConverter;
 import com.backend.stayEasy.convertor.StatisticsConverter;
+import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.Statistics;
-import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.StatisticsRepository;
 import com.backend.stayEasy.repository.UserRepository;
-import com.backend.stayEasy.sevice.IPropertyService;
+
 import com.backend.stayEasy.sevice.StatisticSevice;
 import com.backend.stayEasy.sevice.UserService;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/stayeasy/admin")
 public class AdminApi {
-
 	@Autowired
 	private StatisticSevice statisticSevice;
-	
 	@Autowired
 	private StatisticsRepository statisticsRepository;
 	
@@ -48,6 +40,9 @@ public class AdminApi {
 	private BookingRepository bookingRepository;
 	
 	@Autowired
+	private BookingConverter bookingConverter;
+	
+	@Autowired
 	private UserService userService;
 	
 	@Autowired
@@ -55,6 +50,7 @@ public class AdminApi {
 	
 	@GetMapping("/revenue")
 	public List<StatisticsDTO> getRevenueByMonth() {
+		System.out.println("revenue here");
 		List<StatisticsDTO> statisticsDTOs = new ArrayList<>();
 		List<Statistics> statisticsList = statisticSevice.calculateRevenueForCurrentAndPreviousMonth();
 		for (Statistics statisticsItem : statisticsList) {
@@ -62,6 +58,8 @@ public class AdminApi {
 		}
 		return statisticsDTOs;
 	}
+	
+
 	
 
 	 @GetMapping("/revenue/daily")
@@ -93,6 +91,7 @@ public class AdminApi {
 
 	        return result;
 	    }
+	 
 	 @GetMapping("/booking/daily")
 	 public List<Object[]> getBookingDaily() {
 	     LocalDate currentDate = LocalDate.now();
@@ -121,6 +120,19 @@ public class AdminApi {
 	 @GetMapping("/property/search")
 	 public List<PropertyDTO> searchProperty(@RequestParam("keySearch") String keySearch){
 		 return propertyService.findByPropertyNameOrAddressContainingIgnoreCase(keySearch);
+	 }
+	 
+	 @GetMapping("/booking")
+	 public List<BookingDTO> getBookingById(@RequestParam("propertyId") UUID propertyId){
+		 // Lấy ngày hiện tại
+	        LocalDate currentDate = LocalDate.now();
+	        Date todayDate = Date.valueOf(currentDate);
+	        System.out.println("go here: " + propertyId);
+		 return bookingRepository
+				 .findAllByProperty_PropertyIdAndCheckInAfter(propertyId, todayDate)
+				 .stream()
+				 .map(bookingConverter::toDTO)
+				 .collect(Collectors.toList());
 	 }
 
 }

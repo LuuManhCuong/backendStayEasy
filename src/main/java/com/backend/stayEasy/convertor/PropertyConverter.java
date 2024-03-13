@@ -1,16 +1,19 @@
 package com.backend.stayEasy.convertor;
 
-import java.awt.Image;
-
+import com.backend.stayEasy.dto.CategoryDTO;
+import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.dto.RulesDTO;
+import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Property;
+import com.backend.stayEasy.entity.PropertyCategory;
+import com.backend.stayEasy.entity.User;
+import com.backend.stayEasy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +26,6 @@ import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.entity.BookingDetail;
 import com.backend.stayEasy.entity.Category;
 import com.backend.stayEasy.entity.Feedback;
 import com.backend.stayEasy.entity.Images;
@@ -33,7 +35,6 @@ import com.backend.stayEasy.entity.PropertyCategory;
 import com.backend.stayEasy.entity.PropertyRules;
 import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.entity.User;
-import com.backend.stayEasy.repository.ICategoryRepository;
 import com.backend.stayEasy.repository.UserRepository;
 
 import jakarta.persistence.Column;
@@ -49,9 +50,6 @@ public class PropertyConverter {
 
 	@Autowired
 	private CategoryConverter categoryConverter;
-
-	@Autowired
-	private ICategoryRepository categoryRepository;
 
 	@Autowired
 	private UserConverter userConverter;
@@ -119,7 +117,7 @@ public class PropertyConverter {
 		property.setPropertyName(propertyDTO.getPropertyName());
 //		property.setRating(5.0);
 		property.setThumbnail(propertyDTO.getThumbnail());
-		
+
 		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());
 				if (optionalUser.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
 				    User user = optionalUser.get(); // Trích xuất giá trị User từ Optional
