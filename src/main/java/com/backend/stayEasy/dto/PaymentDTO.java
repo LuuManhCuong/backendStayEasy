@@ -10,6 +10,8 @@ public class PaymentDTO {
     private  String paymentId;
     private BookingDTO bookingDTO ;
     private  UUID bookingId;
+    private  String capturesId;
+    private String refundStatus;
     private  float amount;
     private String method;
     private String accountType;
