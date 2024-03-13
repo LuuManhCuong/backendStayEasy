@@ -1,10 +1,10 @@
-package com.backend.stayEasy.sevice;
-
-import java.util.List;
-import java.util.UUID;
+package com.backend.stayEasy.sevice.impl;
 
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Property;
+
+import java.util.List;
+import java.util.UUID;
 
 public interface IPropertyService {
 	
@@ -18,6 +18,12 @@ public interface IPropertyService {
 
 	Property delete(UUID propertyId);
 
+
 	List<PropertyDTO> findByCategory(UUID categoryId);
+
+    List<PropertyDTO> findAllPropertiesByHostId(UUID hostId);
+
+//	List<Property> findByCategory(UUID categoryId);
+
 	
 }

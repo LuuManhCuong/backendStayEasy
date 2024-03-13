@@ -1,17 +1,13 @@
 package com.backend.stayEasy.entity;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
-
-import com.backend.stayEasy.dto.UserDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -43,7 +39,5 @@ public class Feedback {
 	@Column(name = "property_id")
 	private UUID propertyId;
 	
-//	@ManyToOne
-//	private Property property;
 
 }

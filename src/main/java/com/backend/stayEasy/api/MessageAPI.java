@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.entity.Message;
-import com.backend.stayEasy.sevice.IMessageService;
+import com.backend.stayEasy.sevice.impl.IMessageService;
 
 
 @CrossOrigin
