@@ -1,29 +1,15 @@
 package com.backend.stayEasy.entity;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-
+import com.backend.stayEasy.enums.Role;
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.backend.stayEasy.enums.Role;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.sql.Date;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -59,9 +45,9 @@ public class User implements UserDetails {
 
 	String avatar;
 
-	LocalDateTime createdAt;
+	Date createdAt;
 
-	LocalDateTime updatedAt;
+	Date updatedAt;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;

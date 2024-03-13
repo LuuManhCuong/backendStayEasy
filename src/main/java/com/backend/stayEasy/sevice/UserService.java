@@ -1,20 +1,20 @@
 package com.backend.stayEasy.sevice;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.UserRepository;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -50,12 +50,20 @@ public class UserService {
 	@Transactional
 	public UserDTO save(UserDTO userDTO) {
 		User user = new User();
+		  // Lấy ngày hiện tại
+	    LocalDate currentDate = LocalDate.now();
+	    
+	    // Chuyển đổi ngày hiện tại sang kiểu java.sql.Date
+	    Date todayDate = Date.valueOf(currentDate);
 		if (userDTO.getId() != null) {
 			User oldUser = userRepository.findUserById(userDTO.getId()).get();
 			user = userConverter.toEntity(oldUser, userDTO);
-			user.setUpdatedAt(LocalDateTime.now());
+			
+			user.setUpdatedAt(todayDate);
 		}
-		user.setUpdatedAt(LocalDateTime.now());
+		user.setUpdatedAt(todayDate);
 		return userConverter.toDTO(userRepository.save(user));
 	}
+
+
 }

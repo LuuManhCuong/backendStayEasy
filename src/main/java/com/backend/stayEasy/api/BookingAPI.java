@@ -1,8 +1,7 @@
 package com.backend.stayEasy.api;
 
 import com.backend.stayEasy.convertor.BookingConverter;
-import com.backend.stayEasy.dto.BookingDTO;
-import com.backend.stayEasy.dto.PaymentDTO;
+import com.backend.stayEasy.dto.*;
 import com.backend.stayEasy.entity.Mail;
 import com.backend.stayEasy.sevice.BookingService;
 import com.backend.stayEasy.sevice.PaymentBillService;
@@ -10,6 +9,8 @@ import com.backend.stayEasy.sevice.PaypalService;
 import com.backend.stayEasy.sevice.impl.IMailService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
@@ -41,6 +42,7 @@ public class BookingAPI {
     private IMailService mailService;
     @Autowired
     private BookingConverter bookingConverter;
+    @Autowired PaypalService paypalService;
     private UUID bookingId;
     private boolean emailSent = false;
 
@@ -55,23 +57,16 @@ public class BookingAPI {
     public ResponseEntity<List<BookingDTO>> getBookingById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok().body(bookingService.returnMyBookings(id));
     }
-
-    // get danh sach booking cho tung listing
     @GetMapping("/listing/{id}")
-    public ResponseEntity<List<BookingDTO>> getBookingOfListing(@PathVariable("id") UUID id) {
+    public ResponseEntity<List<BookingDTO>> returnListingBookings(@PathVariable("id") UUID id) {
         return ResponseEntity.ok().body(bookingService.returnListingBookings(id));
     }
-    /*  @PutMapping("/changer-booking/{id}")
-        public Booking updateBooking(@PathVariable("id") UUID id, @RequestBody Booking booking) {
-           return bookingService.updateBooking(id, booking);
-       } */
-
 
     // huy booking (check ngay truoc checkin 1 ngay  , return payment ,them vao bang paymnet bill , cap nhat trang thai vot  booking)
     // refund payment (lay stk cua user da thanh toan va refund)
-    @DeleteMapping("/traveler-cancel/{id}")
-    public void deleteBooking(@PathVariable("id") UUID id) {
-        bookingService.deleteBooking(id);
+    @DeleteMapping("/traveler-cancel/{bookingId}")
+    public void cancelBooking(@PathVariable("bookingId") UUID bookingId) {
+        bookingService.deleteBooking(bookingId);
     }
 
     // create payment and update booking (check id  user isn't host )
@@ -140,34 +135,36 @@ public class BookingAPI {
 
     // return when cancel payment
     @GetMapping(value = CANCEL_URL)
-    public ResponseEntity<String> cancelPay()  {
+    public ResponseEntity<Map<String, Object>> cancelPay()  {
+        Map<String, Object> response = new HashMap<>();
         if (!emailSent) {
-            // Gửi email nhắc thanh toán
+            // Gửi email nhắc thanh toán chỉ 1 lần
             sendEmailBooking();
             emailSent = true;
             String message = "Đã hủy thanh toán và gửi email nhắc thanh toán thành công.";
-            return ResponseEntity.ok(message);
-        } else {
-            String message = "Email đã được gửi đi trước đó.";
-            return ResponseEntity.ok(message);
+            BookingDTO bookingDTO = bookingService.getBookingById(bookingId);
+            String paymentLinkTemplate = "http://localhost:3000/booking/%s?checkin=%s&checkout=%s&numGuest=%d";
+            String paymentLink = String.format(paymentLinkTemplate, bookingDTO.getPropertyDTOS().getPropertyId(), bookingDTO.getCheckIn(), bookingDTO.getCheckOut(), bookingDTO.getNumOfGuest());
+            response.put("message", message);
+            response.put("bookingDTO", bookingDTO);
+            response.put("paymentLink", paymentLink);
         }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // can code in booking service
     private void sendEmailBooking() {
         BookingDTO bookingDTO = bookingService.getBookingById(bookingId);
         String paymentLinkTemplate = "http://localhost:3000/booking/%s?checkin=%s&checkout=%s&numGuest=%d";
-        System.out.println(bookingDTO.getNumOfGuest());
         String paymentLink = String.format(paymentLinkTemplate, bookingDTO.getPropertyDTOS().getPropertyId(), bookingDTO.getCheckIn(), bookingDTO.getCheckOut(), bookingDTO.getNumOfGuest());
         String subject = "Nhắc nhở thanh toán đặt phòng của bạn tại " + bookingDTO.getPropertyName();
-        String content = "test mail";
+        String content = "Payment mail";
         // set new mail
         Mail mail = new Mail();
         mail.setRecipient(bookingDTO.getUserDTOS().getEmail());
         mail.setSubject(subject);
         mail.setContent(content);
         mailService.sendEmailPayment(mail, bookingDTO, paymentLink);
-//        mailService.sendBook(mail);
     }
 
     // get transaction detail
@@ -175,77 +172,6 @@ public class BookingAPI {
     public ResponseEntity<List<PaymentDTO>> LookupTrans(@RequestParam("paymentId") String paymentId) {
         System.out.println("running");
         return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
-    }
-
-    @GetMapping("/payment/captures/{capture_id}")
-    public ResponseEntity<String> lookupCaptures(@PathVariable("capture_id") String captureId) {
-        // Ideally, fetch your token from a secure place
-        String response;
-        HttpURLConnection httpConn = null;
-        System.out.println("Start");
-        try {
-            URL url = new URL("https://api-m.sandbox.paypal.com/v2/payments/captures/" + captureId);
-
-            httpConn = (HttpURLConnection) url.openConnection();
-            httpConn.setRequestMethod("GET");
-            httpConn.setRequestProperty("Content-Type", "application/json");
-            httpConn.setRequestProperty("Authorization", "Bearer A21AAI6vLeTkQlNKRhgVxYk_0FPurpCC58Ed7RmX2Xmf7JBH-lU2H1ZLsLrdNaw6XdrojnRnozQgrlUIPm7DRkbzXiQ0LJJEQ");
-            System.out.println(url);
-            try (InputStream responseStream = httpConn.getResponseCode() / 100 == 2 ? httpConn.getInputStream() : httpConn.getErrorStream();
-                 Scanner scanner = new Scanner(responseStream).useDelimiter("\\A")) {
-                System.out.println(scanner.next());
-                response = scanner.hasNext() ? scanner.next() : "";
-            }
-        } catch (IOException e) {
-            System.out.println("Lỗi rồi");
-            return ResponseEntity.internalServerError().body("An error occurred while making the request: " + e.getMessage());
-        } finally {
-            if (httpConn != null) {
-                System.out.println("End");
-                httpConn.disconnect();
-            }
-        }
-
-        return ResponseEntity.ok(response);
-    }
-    // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
-    @PostMapping("/payment/{capture_id}/refund")
-    public ResponseEntity<String> refundTransaction(@PathVariable("capture_id") String captureId) throws IOException {
-        URL url = new URL("https://api-m.sandbox.paypal.com/v2/payments/captures/" + captureId + "/refund");
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        httpConn.setRequestMethod("POST");
-        httpConn.setRequestProperty("Content-Type", "application/json");
-        httpConn.setRequestProperty("Authorization", "Bearer A21AAI6vLeTkQlNKRhgVxYk_0FPurpCC58Ed7RmX2Xmf7JBH-lU2H1ZLsLrdNaw6XdrojnRnozQgrlUIPm7DRkbzXiQ0LJJEQ");
-
-        // Set optional headers if needed
-        httpConn.setRequestProperty("PayPal-Request-Id", "7dc122d5-7da4-4627-a8ee-a7ae5b65acef");
-        httpConn.setRequestProperty("Prefer", "return=representation");
-
-        httpConn.setDoOutput(true);
-
-        // Construct the request body for the refund
-        String requestBody = "{"
-                + "\"amount\": { \"value\": \"9.00\", \"currency_code\": \"USD\" },"
-                + "\"invoice_id\": \"INVOICE-123\","
-                + "\"note_to_payer\": \"DefectiveProduct\""
-                + "}";
-
-        try (OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream())) {
-            writer.write(requestBody);
-        }
-
-        // Handle response
-        InputStream responseStream = httpConn.getResponseCode() / 100 == 2
-                ? httpConn.getInputStream()
-                : httpConn.getErrorStream();
-
-        try (Scanner scanner = new Scanner(responseStream).useDelimiter("\\A")) {
-            String response = scanner.hasNext() ? scanner.next() : "";
-            System.out.println(response);
-            return ResponseEntity.ok(response);
-        } finally {
-            httpConn.disconnect();
-        }
     }
 }
 

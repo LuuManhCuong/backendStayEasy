@@ -23,7 +23,8 @@ public class PaymentConverter {
 		paymentDTO.setAccountType(paymentBill.getAccountType());
 		paymentDTO.setPaymentId(paymentBill.getPaymentId());
 		paymentDTO.setMethod(paymentBill.getMethod());
-		paymentDTO.setCapturesId(paymentDTO.getCapturesId());
+		paymentDTO.setCapturesId(paymentBill.getCaptures());
+		paymentDTO.setRefundStatus(paymentBill.getRefundStatus());
 		paymentDTO.setCreateTime(paymentBill.getCreateTime());
 		paymentDTO.setStatus(paymentBill.getStatus());
 		return paymentDTO;
@@ -39,6 +40,8 @@ public class PaymentConverter {
 		paymentBill.setCreateTime(paymentDTO.getCreateTime());
 		paymentBill.setPaymentId(paymentDTO.getPaymentId());
 		paymentBill.setStatus(paymentDTO.getStatus());
+		paymentBill.setCaptures(paymentDTO.getCapturesId());
+		paymentBill.setRefundStatus(paymentDTO.getRefundStatus());
 		return paymentBill;
 	}
 }

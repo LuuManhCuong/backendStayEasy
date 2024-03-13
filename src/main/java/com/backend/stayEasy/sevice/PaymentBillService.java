@@ -25,7 +25,6 @@ public class PaymentBillService {
 	private PaymentConverter paymentConverter;
 
 	public PaymentDTO savePayment(Payment paymentParams, UUID bookingId) {
-
 		// Nhận json tư Payment Paypal sau đó set dữ liệu trong database
 		Optional<Booking> booking;
 		booking = bookingRepository.findById(bookingId);
@@ -37,7 +36,8 @@ public class PaymentBillService {
 		paymentDTO.setAmount(Float.parseFloat(paymentParams.getTransactions().get(0).getAmount().getTotal()));
 		// Assuming first transaction holds relevant amount
 		paymentDTO.setPaymentId(paymentParams.getId());
-		paymentDTO.setCapturesId(paymentParams.getCart());
+		paymentDTO.setCapturesId(paymentParams.getTransactions().get(0).getRelatedResources().get(0).getSale().getId());
+		paymentDTO.setRefundStatus("NO");
 		paymentDTO.setBookingId(booking.get().getBookingId());
 		PaymentBill paymentBill = paymentConverter.toEntity(paymentDTO);
 		PaymentRepo.save(paymentBill);
@@ -48,22 +48,20 @@ public class PaymentBillService {
 		return PaymentRepo.findByPaymentId(paymentId).stream().map(paymentConverter::toDTO)
 				.collect(Collectors.toList());
 	}
-
-	private PaymentDTO extractPaymentDetails(Payment paymentParams) {
-		PaymentDTO paymentDTO = new PaymentDTO();
-		paymentDTO.setMethod(paymentParams.getPayer().getPaymentMethod());
-		paymentDTO.setStatus(paymentParams.getState());
-		paymentDTO.setCreateTime(paymentParams.getCreateTime());
-		paymentDTO.setAccountType(paymentParams.getPayer().getPayerInfo().getPayerId());
-		paymentDTO.setAmount(Float.parseFloat(paymentParams.getTransactions().get(0).getAmount().getTotal())); // Assuming
-																												// first
-																												// transaction
-																												// holds
-																												// relevant
-																												// amount
-		paymentDTO.setPaymentId(paymentParams.getId());
-		return paymentDTO;
+	public void updateBillWhenRefund(UUID paymentId, String status) {
+		Optional<PaymentBill> paymentBillOptional = PaymentRepo.findById(paymentId);
+		if (paymentBillOptional.isEmpty()) {
+			// Handle booking not found (e.g., throw an exception, log an error, etc.)
+			throw new RuntimeException("Booking with ID " + paymentId + " not found.");
+		}
+		PaymentBill paymentBill = paymentBillOptional.get();
+		if (!status.equals(paymentBill.getRefundStatus())) {
+			paymentBill.setRefundStatus(status);
+			PaymentRepo.save(paymentBill);
+			// send Email
+		}
 	}
+
 
 	private void logPaymentDetails(PaymentBill paymentBill) {
 		// Implement logging mechanism here (e.g., using a logger)

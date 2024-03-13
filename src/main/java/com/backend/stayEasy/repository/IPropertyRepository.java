@@ -1,18 +1,14 @@
 package com.backend.stayEasy.repository;
 
 
-
-import java.sql.Date;
-
-import java.util.List;
-import java.util.UUID;
-
-
 import com.backend.stayEasy.entity.Property;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Date;
+import java.util.List;
+import java.util.UUID;
 
 
 
@@ -31,4 +27,6 @@ public interface IPropertyRepository extends JpaRepository<Property, UUID>{
 	
 	 @Query("SELECT COUNT(p) FROM Property p WHERE p.createAt BETWEEN :startDate AND :endDate")
 	    long countPropertiesBetween(Date startDate, Date endDate);
+	 // Get Properties of host
+	List<Property> findAllByUserId(UUID userId);
 }
