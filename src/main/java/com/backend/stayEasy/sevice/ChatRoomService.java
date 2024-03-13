@@ -63,8 +63,6 @@ public class ChatRoomService implements IChatRoomService {
 
 	@Override
 	public ResponseEntity<List<Message>> getAllMessageChatRoom(UUID id, String token) {
-		System.out.println(token);
-		System.out.println(id);
 		String[] headerParts = token.split(" ");
 		String t = headerParts.length == 2 ? headerParts[1] : null;
 		Optional<Token> data = tokenRepository.findByToken(t);
