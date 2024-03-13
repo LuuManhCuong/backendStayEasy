@@ -26,4 +26,5 @@ public interface IPropertyService {
 //	List<Property> findByCategory(UUID categoryId);
 
 	
+	List<PropertyDTO> findByPropertyNameOrAddressContainingIgnoreCase(String keySearch);
 }

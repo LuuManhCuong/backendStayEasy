@@ -4,13 +4,18 @@ import com.backend.stayEasy.convertor.BookingConverter;
 import com.backend.stayEasy.convertor.StatisticsConverter;
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.Statistics;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.StatisticsRepository;
+import com.backend.stayEasy.repository.UserRepository;
+
 import com.backend.stayEasy.sevice.StatisticSevice;
 import com.backend.stayEasy.sevice.UserService;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +44,9 @@ public class AdminApi {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private IPropertyService propertyService;
 	
 	@GetMapping("/revenue")
 	public List<StatisticsDTO> getRevenueByMonth() {
@@ -109,6 +117,10 @@ public class AdminApi {
 		 return userService.getAllUser();
 	 }
 	 
+	 @GetMapping("/property/search")
+	 public List<PropertyDTO> searchProperty(@RequestParam("keySearch") String keySearch){
+		 return propertyService.findByPropertyNameOrAddressContainingIgnoreCase(keySearch);
+	 }
 	 
 	 @GetMapping("/booking")
 	 public List<BookingDTO> getBookingById(@RequestParam("propertyId") UUID propertyId){

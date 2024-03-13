@@ -1,12 +1,9 @@
 package com.backend.stayEasy.entity;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,17 +13,16 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="property_uilitis")
-public class PropertyUilitis {
+@Table(name="property_rules")
+public class PropertyRules {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID propertyUtilitiesId;
-
-    private int quantity;
-    
-    @ManyToOne()
-    private Property property;
-    
-    @ManyToOne()
-    private Utilities utilities;
+	@Column(name = "property_rules_id")
+	private UUID propertyRulesId;
+	
+	@ManyToOne()
+	private Property property;
+	
+	@ManyToOne()
+	private Rules rules;
 }
