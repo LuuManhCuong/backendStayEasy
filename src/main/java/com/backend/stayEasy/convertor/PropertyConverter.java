@@ -142,7 +142,7 @@ public class PropertyConverter {
 
 //	no
 
-	public PropertyDTO toDTO(Property property, Set<LikeRequestDTO> likeRequestDTOlist) {
+	public PropertyDTO toDTO(Property property, List<LikeRequestDTO> likeRequestDTOlist) {
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());

@@ -40,8 +40,10 @@ public class Property {
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 
-	private Set<Like> likes;
+	private List<Like> likes;
 
+	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Booking> booking;
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Images> images;

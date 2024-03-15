@@ -29,6 +29,6 @@ public class PropertyDTO {
     private List<CategoryDTO> categories;
     private Set<FeedbackDTO> feedbackList;
     private List<PropertyUtilitiesDTO> propertyUtilitis;
-    private Set<LikeRequestDTO> likeList;
+    private List<LikeRequestDTO> likeList;
     private List<RulesDTO> rulesList;
 }
