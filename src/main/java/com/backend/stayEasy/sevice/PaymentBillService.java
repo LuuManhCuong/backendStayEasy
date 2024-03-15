@@ -2,6 +2,7 @@ package com.backend.stayEasy.sevice;
 
 import com.backend.stayEasy.convertor.PaymentConverter;
 import com.backend.stayEasy.dto.PaymentDTO;
+import com.backend.stayEasy.dto.RefundDTO;
 import com.backend.stayEasy.entity.Booking;
 import com.backend.stayEasy.entity.PaymentBill;
 import com.backend.stayEasy.repository.BookingRepository;
@@ -23,6 +24,7 @@ public class PaymentBillService {
 	private BookingRepository bookingRepository;
 	@Autowired
 	private PaymentConverter paymentConverter;
+	@Autowired BookingService bookingService;
 
 	public PaymentDTO savePayment(Payment paymentParams, UUID bookingId) {
 		// Nhận json tư Payment Paypal sau đó set dữ liệu trong database
@@ -71,6 +73,28 @@ public class PaymentBillService {
 	private void notifyBookingConfirmation(Booking booking) {
 		// Implement notification logic here (e.g., email or SMS)
 		System.out.println("Booking confirmation sent for booking: " + booking);
+	}
+
+	// find bill for return
+    public List<PaymentDTO> findWithBookingId(UUID invoiceId) {
+		return PaymentRepo.findByBookingBookingId(invoiceId).stream().map(paymentConverter::toDTO)
+				.collect(Collectors.toList());
+    }
+	public RefundDTO createBillToRefund(RefundDTO refundDTO){
+		List<PaymentDTO> paymentDTOs = findWithBookingId(refundDTO.getInvoiceId());
+		Optional<PaymentDTO> firstPaymentDTO = paymentDTOs.stream().findFirst();
+		if(firstPaymentDTO.isPresent() ){
+			PaymentDTO firstPayment = firstPaymentDTO.get();
+			refundDTO.setCaptureId(firstPayment.getCapturesId());
+			refundDTO.setRefundAmount(refundDTO.getRefundAmount());
+			refundDTO.setCurrencyCode("USD");
+			refundDTO.setNoteToPayer(refundDTO.getNoteToPayer());
+			refundDTO.setPaypalRequestId(firstPayment.getPaymentBillId());
+			refundDTO.setInvoiceId(refundDTO.getInvoiceId());
+		}
+		System.out.println(refundDTO.toString());
+		return refundDTO ;
+
 	}
 
 }

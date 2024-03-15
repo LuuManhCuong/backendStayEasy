@@ -58,7 +58,9 @@ public class BookingService {
 
 	public List<BookingDTO> returnListingBookings(UUID id) {
 		return bookingRepository.findAllByPropertyPropertyIdOrderByDateBookingDesc(id).stream()
-				.map(bookingConverter::toDTO).collect(Collectors.toList());
+                .filter(Booking::getStatus)
+                .map(bookingConverter::toDTO)
+                .collect(Collectors.toList());
 	}
 
 	public void updateBookingStatus(UUID bookingId, boolean status) {
@@ -76,7 +78,7 @@ public class BookingService {
 			// ...
 		}
 	}
-    public void updateBookingCancel(UUID bookingId, boolean status) {
+    public void updateBookingCancel(UUID bookingId, boolean status, boolean CancelBooking) {
         Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
         if (bookingOptional.isEmpty()) {
             // Handle booking not found (e.g., throw an exception, log an error, etc.)
@@ -84,6 +86,8 @@ public class BookingService {
         }
             Booking booking = bookingOptional.get();
             booking.setCancel(status);
+            booking.setStatus(CancelBooking);
+            booking.setConfirmation(Confirmation.valueOf(Confirmation.REJECTED.name()));
             bookingRepository.save(booking);
             // Send notification (optional)
             // send Email
