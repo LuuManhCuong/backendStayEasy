@@ -59,7 +59,17 @@ public class AdminApi {
 		return statisticsDTOs;
 	}
 	
-
+//	  trả về dữ liệu của tháng này và tháng trước theo từng property	
+	@GetMapping("/statistics")
+	public List<StatisticsDTO> getRevenueByMonthAndPropertyId(@RequestParam("propertyId") UUID propertyId) {
+		System.out.println("get statistic id: " + propertyId);
+		List<StatisticsDTO> statisticsDTOs = new ArrayList<>();
+		List<Statistics> statisticsList = statisticSevice.calculateRevenueForCurrentAndPreviousMonthByPropertyId(propertyId);
+		for (Statistics statisticsItem : statisticsList) {
+			statisticsDTOs.add(statisticsConverter.toDTO(statisticsItem));
+		}
+		return statisticsDTOs;
+	}
 	
 
 	 @GetMapping("/revenue/daily")

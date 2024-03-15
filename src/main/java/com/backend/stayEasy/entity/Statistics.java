@@ -23,8 +23,7 @@ public class Statistics {
 		private long totalBookings;
 		private long totalPost;
 		private long totalCancelBooking;
-//		private long visitCount;
-		
-	
+		@Column(name = "total_like", columnDefinition = "bigint default 0")
+		private long totalLike;
 
 }

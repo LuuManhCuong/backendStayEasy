@@ -26,11 +26,23 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     
     
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.dateBooking BETWEEN :startDate AND :endDate AND b.cancel IS NULL")
-    Float getTotalRevenueBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);;
+    Float getTotalRevenueBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
     
+    
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b "
+    		+ "WHERE b.property.propertyId = :propertyId "
+    		+ "AND b.dateBooking BETWEEN :startDate "
+    		+ "AND :endDate "
+    		+ "AND b.cancel IS NULL")
+    Float getTotalRevenueBetweenAndByPropertyId(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("propertyId") UUID propertyId);
     
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.dateBooking BETWEEN :startDate AND :endDate")
     long countBookingsBetween(Date startDate, Date endDate);
+    
+    @Query("SELECT COUNT(b) FROM Booking b WHERE "
+    		+ "b.property.propertyId = :propertyId AND"
+    		+ " b.dateBooking BETWEEN :startDate AND :endDate")
+    long countBookingsBetweenAndByPropertyId(Date startDate, Date endDate, UUID propertyId);
     
     @Query("SELECT NEW com.backend.stayEasy.dto.DailyRevenueDTO(b.dateBooking, COALESCE(SUM(b.totalPrice), 0.0)) " +
     	       "FROM Booking b " +
@@ -46,6 +58,13 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.cancel IS NOT NULL AND b.dateBooking BETWEEN :startDate AND :endDate")
     long countBookingWithCancelNotNull(Date startDate, Date endDate);
 
+    @Query("SELECT COUNT(b) FROM Booking b WHERE"
+    		+ " b.property.propertyId = :propertyId "
+    		+ "AND b.cancel IS NOT NULL "
+    		+ "AND b.dateBooking BETWEEN :startDate AND :endDate")
+    long countBookingWithCancelNotNullByPropertyId(Date startDate, Date endDate, UUID propertyId);
+
+    
     List<Booking> findAllByProperty_PropertyIdAndCheckInAfter(UUID propertyId, Date checkInDate);
 
     List<Booking> findAllByPropertyPropertyIdAndConfirmationOrderByDateBookingDesc(UUID property_propertyId, Confirmation confirmation);
