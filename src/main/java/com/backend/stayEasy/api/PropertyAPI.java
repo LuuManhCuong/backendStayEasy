@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
+import com.backend.stayEasy.dto.DataPropertyExploreDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Like;
@@ -55,10 +59,11 @@ public class PropertyAPI {
 	private LikeConverter likeConverter;
 	
 	@GetMapping
-	public List<PropertyDTO> getAllProperty() {
-		return propertyService.findAll();
+	public DataPropertyExploreDTO getAllProperty(@RequestParam("page") int page, @RequestParam("size") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return propertyService.findAll(pageable);
 	}
-
+	
 	@GetMapping("/{id}")
 	public PropertyDTO getPropertyById(@PathVariable("id") UUID id) {
 		return propertyService.findById(id);

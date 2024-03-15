@@ -79,7 +79,7 @@ public class PropertyConverter {
 		propertyDTO.setPrice(property.getPrice());
 		propertyDTO.setPropertyId(property.getPropertyId());
 		propertyDTO.setPropertyName(property.getPropertyName());
-//		propertyDTO.setRating(property.getRating());
+		propertyDTO.setRating(property.getRating());
 		if (!property.getPropertyCategories().isEmpty()) {
 			for (PropertyCategory c : property.getPropertyCategories()) {
 				listCategory.add(categoryConverter.toDTO(c.getCategory()));
@@ -126,7 +126,7 @@ public class PropertyConverter {
 		property.setPrice(propertyDTO.getPrice());
 		property.setPropertyId(propertyDTO.getPropertyId());
 		property.setPropertyName(propertyDTO.getPropertyName());
-//		property.setRating(5.0);
+		property.setRating(propertyDTO.getRating());
 		property.setThumbnail(propertyDTO.getThumbnail());
 
 		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());

@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.backend.stayEasy.convertor.CategoryConverter;
@@ -17,12 +19,14 @@ import com.backend.stayEasy.convertor.ImagesConventer;
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.dto.CategoryDTO;
+import com.backend.stayEasy.dto.DataPropertyExploreDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
 import com.backend.stayEasy.dto.RulesDTO;
 import com.backend.stayEasy.entity.Category;
+import com.backend.stayEasy.entity.Feedback;
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
@@ -33,6 +37,7 @@ import com.backend.stayEasy.entity.Rules;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.entity.Utilities;
 import com.backend.stayEasy.repository.CategoryRepository;
+import com.backend.stayEasy.repository.FeedbackRepository;
 import com.backend.stayEasy.repository.IImageRepository;
 import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
@@ -85,26 +90,36 @@ public class PropertyService implements IPropertyService {
 
 	@Autowired
 	private PropertyUilitisRepository propertyUilitisRepository;
+	
+	@Autowired
+	private FeedbackRepository feedbackRepository;
 
 	@Override
-	public List<PropertyDTO> findAll() {
-
+	public DataPropertyExploreDTO findAll(Pageable pageable) {
+		Page<Property> tempList = propertyRepository.findAll(pageable);
+		long totalCount = propertyRepository.count();
 		List<PropertyDTO> result = new ArrayList<>();
 
 		for (Property p : propertyRepository.findAll()) {
 			List<Like> likes = likeRepository.findByPropertyPropertyId(p.getPropertyId());
 			List<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
 			PropertyDTO temp = propertyConverter.toDTO(p);
+			float rating = getRatingProperty(p.getPropertyId());
 			temp.setLikeList(likeRequestDTOs);
+			temp.setRating(rating);
 			result.add(temp);
 		}
-
-		return result;
+		DataPropertyExploreDTO newData = new DataPropertyExploreDTO();
+		newData.setProperties(result);
+		newData.setTotalCount(totalCount);
+		return newData;
 	}
 
 	@Override
 	public PropertyDTO findById(UUID id) {
 		Property property = propertyRepository.findByPropertyId(id);
+		float rating = getRatingProperty(id);
+		property.setRating(rating);
 		return propertyConverter.toDTO(property);
 	}
 
@@ -390,6 +405,19 @@ public class PropertyService implements IPropertyService {
 			}
 		}
 
+	}
+	
+	public float getRatingProperty(UUID propertyId) {
+	    List<Feedback> feedbackList = feedbackRepository.findByPropertyId(propertyId);
+	    float total = 0;
+	    for (Feedback feedback : feedbackList) {
+	        total += feedback.getRating();
+	    }
+	    if (feedbackList.size() > 0) {
+	        return total / feedbackList.size(); 
+	    } else {
+	        return 0;
+	    }
 	}
 
 }
