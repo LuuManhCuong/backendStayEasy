@@ -199,18 +199,18 @@ public class StatisticSevice {
 		        
 		        // Tính tổng doanh thu từ ngày đầu tháng đến ngày hiện tại
 		        Float totalRevenue = bookingRepository.getTotalRevenueBetweenAndByPropertyId(startDate, endDate, propertyId);
-		        statistics.setRevenue(totalRevenue);
+		        statistics.setRevenue(totalRevenue != null?  totalRevenue: 0);
 		        
 		        // Đếm số lượng booking từ ngày đầu tháng cho đến ngày hiện tại
 		        long totalBookings = bookingRepository.countBookingsBetweenAndByPropertyId(startDate, endDate, propertyId);
-		        statistics.setTotalBookings(totalBookings);
+		        statistics.setTotalBookings(totalBookings != -1 ? totalBookings : 0);
 		        
 		        // Đếm số lượng cancel booking từ ngày đầu tháng cho đến ngày hiện tại
 		        long totalCancelPost = bookingRepository.countBookingWithCancelNotNullByPropertyId(startDate, endDate, propertyId);
-		        statistics.setTotalCancelBooking(totalCancelPost);
+		        statistics.setTotalCancelBooking(totalCancelPost != 0 ? totalCancelPost : 0);
 		        
 		        long totalLike = likeRepository.countByPropertyId(propertyId);
-		        statistics.setTotalLike(totalLike);
+		        statistics.setTotalLike(totalLike != 0 ? totalLike : 0);
 		        
 		        return statistics;
 		    } 

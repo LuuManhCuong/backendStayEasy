@@ -40,8 +40,9 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     long countBookingsBetween(Date startDate, Date endDate);
     
     @Query("SELECT COUNT(b) FROM Booking b WHERE "
-    		+ "b.property.propertyId = :propertyId AND"
-    		+ " b.dateBooking BETWEEN :startDate AND :endDate")
+    		+ "b.property.propertyId = :propertyId AND "
+    		+ " b.dateBooking BETWEEN :startDate AND :endDate "
+    		+ "AND b.cancel IS NULL ")
     long countBookingsBetweenAndByPropertyId(Date startDate, Date endDate, UUID propertyId);
     
     @Query("SELECT NEW com.backend.stayEasy.dto.DailyRevenueDTO(b.dateBooking, COALESCE(SUM(b.totalPrice), 0.0)) " +
@@ -65,8 +66,9 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     long countBookingWithCancelNotNullByPropertyId(Date startDate, Date endDate, UUID propertyId);
 
     
-    List<Booking> findAllByProperty_PropertyIdAndCheckInAfter(UUID propertyId, Date checkInDate);
-
+    @Query("SELECT b FROM Booking b WHERE b.property.propertyId = :propertyId AND b.dateBooking >= :firstDateOfCurrentMonth AND b.cancel IS NULL")
+    List<Booking> findAllByPropertyIdAndDateBookingAfterAndCancelIsNull(@Param("propertyId") UUID propertyId, @Param("firstDateOfCurrentMonth") Date firstDateOfCurrentMonth);
+    
     List<Booking> findAllByPropertyPropertyIdAndConfirmationOrderByDateBookingDesc(UUID property_propertyId, Confirmation confirmation);
 
 }

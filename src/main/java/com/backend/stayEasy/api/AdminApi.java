@@ -113,12 +113,18 @@ public class AdminApi {
 	 
 	 
 	 @GetMapping("/statistics/monthly")
-	 public List<Statistics> getStatisticsMonthly() {
+	 public List<StatisticsDTO> getStatisticsMonthly() {
 		 LocalDate currentDate = LocalDate.now();
 	     Date firstDayOfYear= Date.valueOf(currentDate.withDayOfYear(1));
 	     Date todayDate = Date.valueOf(currentDate);
 
-	     return statisticsRepository.sumRevenueFromStartOfYearToDate(firstDayOfYear, todayDate);
+	     List<StatisticsDTO> statistics =  statisticsRepository
+	    		 .sumRevenueFromStartOfYearToDate(firstDayOfYear, todayDate)
+	    		 .stream()
+				 .map(statisticsConverter::toDTO)
+				 .collect(Collectors.toList());
+	     return statistics;
+	     
 	 }
 	 
 	 
@@ -134,12 +140,18 @@ public class AdminApi {
 	 
 	 @GetMapping("/booking")
 	 public List<BookingDTO> getBookingById(@RequestParam("propertyId") UUID propertyId){
-		 // Lấy ngày hiện tại
+	        // Lấy ngày hiện tại
 	        LocalDate currentDate = LocalDate.now();
 	        Date todayDate = Date.valueOf(currentDate);
-	        System.out.println("go here: " + propertyId);
+	        
+	        // Lấy tháng hiện tại
+	        int currentMonth = currentDate.getMonthValue();
+	        
+	        // Lấy ngày đầu của tháng hiện tại
+	        LocalDate firstDayOfCurrentMonth = LocalDate.of(currentDate.getYear(), currentMonth, 1);
+	        Date firstDateOfCurrentMonth = Date.valueOf(firstDayOfCurrentMonth);
 		 return bookingRepository
-				 .findAllByProperty_PropertyIdAndCheckInAfter(propertyId, todayDate)
+				 .findAllByPropertyIdAndDateBookingAfterAndCancelIsNull(propertyId, firstDateOfCurrentMonth)
 				 .stream()
 				 .map(bookingConverter::toDTO)
 				 .collect(Collectors.toList());

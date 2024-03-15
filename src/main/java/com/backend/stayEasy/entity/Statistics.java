@@ -19,11 +19,13 @@ public class Statistics {
 		private UUID statisticsId;
 		private Date date;
 		private float revenue;
-		private long totalAccount;
-		private long totalBookings;
-		private long totalPost;
-		private long totalCancelBooking;
+		private Long totalAccount;
+		private Long totalBookings;
+		private Long totalPost;
+		private Long totalCancelBooking;
 		@Column(name = "total_like", columnDefinition = "bigint default 0")
-		private long totalLike;
+		private Long totalLike;
+		
+		
 
 }
