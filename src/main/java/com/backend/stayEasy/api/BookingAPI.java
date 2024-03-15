@@ -1,16 +1,16 @@
 package com.backend.stayEasy.api;
 
 import com.backend.stayEasy.convertor.BookingConverter;
-
-import com.backend.stayEasy.dto.BookingDTO;
-import com.backend.stayEasy.dto.PaymentDTO;
+import com.backend.stayEasy.dto.*;
 import com.backend.stayEasy.entity.Mail;
 import com.backend.stayEasy.sevice.BookingService;
-import com.backend.stayEasy.sevice.impl.IMailService;
 import com.backend.stayEasy.sevice.PaymentBillService;
 import com.backend.stayEasy.sevice.PaypalService;
+import com.backend.stayEasy.sevice.impl.IMailService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
@@ -19,10 +19,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -40,6 +42,7 @@ public class BookingAPI {
     private IMailService mailService;
     @Autowired
     private BookingConverter bookingConverter;
+    @Autowired PaypalService paypalService;
     private UUID bookingId;
     private boolean emailSent = false;
 
@@ -53,6 +56,10 @@ public class BookingAPI {
     @GetMapping("/traveler/{id}")
     public ResponseEntity<List<BookingDTO>> getBookingById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok().body(bookingService.returnMyBookings(id));
+    }
+    @GetMapping("/listing/{id}")
+    public ResponseEntity<List<BookingDTO>> returnListingBookings(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok().body(bookingService.returnListingBookings(id));
     }
 
     // huy booking (check ngay truoc checkin 1 ngay  , return payment ,them vao bang paymnet bill , cap nhat trang thai vot  booking)
@@ -96,7 +103,6 @@ public class BookingAPI {
                     return link.getHref();
                 }
             }
-
         } catch (PayPalRESTException e) {
             e.printStackTrace();
         }
@@ -108,13 +114,16 @@ public class BookingAPI {
     public ResponseEntity<List<PaymentDTO>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId)  {
         try {
             Payment payment = service.executePayment(paymentId, payerId);
+            String data = payment.toJSON();
             if ("approved".equals(payment.getState())) {
                 // tranh null exception
                 bookingService.updateBookingStatus(bookingId, true);
                 paymentService.savePayment(payment, bookingId);
+                System.out.println(data);
                 // Lưu thông tin payment
                 return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
             }
+
         } catch (PayPalRESTException e) {
             sendEmailBooking(); // Send email notification about the cancellation
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -164,8 +173,6 @@ public class BookingAPI {
         System.out.println("running");
         return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
     }
-    // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
-
 }
 
 

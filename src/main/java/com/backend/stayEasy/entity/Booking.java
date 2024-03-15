@@ -50,6 +50,7 @@ public class Booking {
 	@Column(name = "cancel")
 	private Boolean cancel;
 	@Enumerated(EnumType.STRING)
-	private Confirmation confirmation;
-
+	private Confirmation confirmation = Confirmation.PENDING;
+	
+	
 }

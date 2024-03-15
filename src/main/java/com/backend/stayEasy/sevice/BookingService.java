@@ -76,6 +76,19 @@ public class BookingService {
 			// ...
 		}
 	}
+    public void updateBookingCancel(UUID bookingId, boolean status) {
+        Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
+        if (bookingOptional.isEmpty()) {
+            // Handle booking not found (e.g., throw an exception, log an error, etc.)
+            throw new RuntimeException("Booking with ID " + bookingId + " not found.");
+        }
+            Booking booking = bookingOptional.get();
+            booking.setCancel(status);
+            bookingRepository.save(booking);
+            // Send notification (optional)
+            // send Email
+            // ...
+    }
 
 	// create booking
 	public BookingDTO crateBooking(Booking booking) {

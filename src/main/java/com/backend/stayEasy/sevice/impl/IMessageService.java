@@ -12,4 +12,6 @@ public interface IMessageService {
 	Optional<Message> findMessageById(UUID id);
 	Message saveMessage(Message message);
 	void deleteMessage(UUID id);
+	Optional<Message> firtMessage(String token,UUID roomId);
+
 }
