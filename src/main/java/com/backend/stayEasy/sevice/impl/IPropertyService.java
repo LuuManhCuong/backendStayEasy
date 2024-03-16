@@ -7,7 +7,7 @@ import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Property;
 
 public interface IPropertyService {
-	
+
 	List<PropertyDTO> findAll();
 
 	PropertyDTO findById(UUID id);
@@ -19,5 +19,5 @@ public interface IPropertyService {
 	Property delete(UUID propertyId);
 
 	List<PropertyDTO> findByCategory(UUID categoryId);
-	
+
 }

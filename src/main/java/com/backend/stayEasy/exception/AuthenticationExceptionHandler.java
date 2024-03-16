@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +50,7 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 	public void handleBadCredentialsException(HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse, Exception ex)
 			throws IOException, ServletException, DatabindException, IOException {
-		errorResponse.put("message", "Mật khẩu cũ không đúng!");
+		errorResponse.put("message", "Mật khẩu không đúng!");
 		errorResponse.put("status", HttpStatus.FORBIDDEN.value());
 
 		httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -91,6 +94,16 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 		return ResponseEntity.status(403).body("Tài khoản của bạn đã bị khóa");
 	}
 
+	@ExceptionHandler(InternalServerError.class)
+	public ResponseEntity<?> handleDisabledException(InternalServerError ex) {
+		return ResponseEntity.status(500).body("Lỗi 5 xị");
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<?> handleDisabledException(DataIntegrityViolationException ex) {
+		return ResponseEntity.status(500).body("Lỗi ");
+	}
+	
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
 		// Xử lý khi không tìm thấy người dùng
@@ -102,10 +115,10 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Đường dẫn không tồn tại.");
 	}
 
-//	@ExceptionHandler(NoResourceFoundException.class)
-//	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
-//		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy đường dẫn này.");
-//	}
+	@ExceptionHandler(NoResourceFoundException.class)
+	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy đường dẫn này.");
+	}
 
 	@ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<String> handleMethodNotAllowedException(

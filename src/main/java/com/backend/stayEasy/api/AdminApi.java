@@ -1,6 +1,7 @@
 package com.backend.stayEasy.api;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +10,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDate;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +22,9 @@ import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
 import com.backend.stayEasy.dto.UserDTO;
-import com.backend.stayEasy.entity.Booking;
 import com.backend.stayEasy.entity.Statistics;
-import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.StatisticsRepository;
-import com.backend.stayEasy.repository.UserRepository;
 import com.backend.stayEasy.sevice.StatisticSevice;
 import com.backend.stayEasy.sevice.UserService;
 

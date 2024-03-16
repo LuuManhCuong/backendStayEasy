@@ -1,7 +1,6 @@
 package com.backend.stayEasy.sevice;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,8 +29,7 @@ public class UserService {
 	public List<UserDTO> getAllUser() {
 		List<UserDTO> result = new ArrayList<>();
 		for (User user : userRepository.findAll()) {
-			result.add(new UserDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
-					user.getPhone(), user.getAddress(), null, user.getRole().name()));
+			result.add(userConverter.toDTO(user));
 		}
 		return result;
 	}
@@ -54,9 +52,9 @@ public class UserService {
 		if (userDTO.getId() != null) {
 			User oldUser = userRepository.findUserById(userDTO.getId()).get();
 			user = userConverter.toEntity(oldUser, userDTO);
-			user.setUpdatedAt(Date.valueOf(LocalDate.now()));
+			user.setUpdatedAt(LocalDateTime.now());
 		}
-		user.setUpdatedAt(Date.valueOf(LocalDate.now()));
+		user.setUpdatedAt(LocalDateTime.now());
 		return userConverter.toDTO(userRepository.save(user));
 	}
 }

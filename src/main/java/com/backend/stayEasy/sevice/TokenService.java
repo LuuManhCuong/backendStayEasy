@@ -1,15 +1,20 @@
 package com.backend.stayEasy.sevice;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.stayEasy.convertor.TokenConverters;
 import com.backend.stayEasy.dto.TokenDTO;
 import com.backend.stayEasy.entity.Token;
+import com.backend.stayEasy.exception.TokenExceptionHandle;
 import com.backend.stayEasy.repository.TokenRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -37,4 +42,30 @@ public class TokenService {
 	public TokenDTO getTokenById(UUID id) {
 		return tokenConverter.toDTO(tokenRepository.findById(id).get());
 	}
+	
+	public Optional<Token> getByToken(String token) {
+        return tokenRepository.findByToken(token);
+    }
+	
+	
+	public Optional<Token> getByRefreshToken(String refreshToken) {
+        return tokenRepository.findByRefreshToken(refreshToken);
+    }
+	
+	
+ 	@Scheduled(fixedRate = 3600000) // Kiểm tra mỗi giờ
+    @Transactional
+    public void updateTokenExpirations() {
+        LocalDateTime now = LocalDateTime.now();
+        tokenRepository.updateExpiredTokens(now);
+    }
+	
+	public Token verifyExpiration(Token token) {
+        if (token.getExpirationRefTokenDate().compareTo(LocalDateTime.now()) < 0) {
+        	tokenRepository.delete(token);
+            throw new TokenExceptionHandle(token.getToken(), "Refresh token was expired. Please make a new signin request");
+        }
+
+        return token;
+    }
 }
