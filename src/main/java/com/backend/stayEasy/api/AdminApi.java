@@ -1,5 +1,24 @@
 package com.backend.stayEasy.api;
 
+<<<<<<< HEAD
+=======
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+>>>>>>> origin/namhh-refresh-token
 import com.backend.stayEasy.convertor.BookingConverter;
 import com.backend.stayEasy.convertor.StatisticsConverter;
 import com.backend.stayEasy.dto.BookingDTO;
@@ -10,8 +29,11 @@ import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.Statistics;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.StatisticsRepository;
+<<<<<<< HEAD
 import com.backend.stayEasy.repository.UserRepository;
 
+=======
+>>>>>>> origin/namhh-refresh-token
 import com.backend.stayEasy.sevice.StatisticSevice;
 import com.backend.stayEasy.sevice.UserService;
 import com.backend.stayEasy.sevice.impl.IPropertyService;

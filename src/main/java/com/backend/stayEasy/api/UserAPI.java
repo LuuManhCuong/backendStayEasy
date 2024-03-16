@@ -19,18 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.stayEasy.config.ApplicationAuditAware;
+import com.backend.stayEasy.dto.CheckLoginResponseDTO;
 import com.backend.stayEasy.dto.SignUpRequest;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.sevice.AuthService;
 import com.backend.stayEasy.sevice.JwtService;
+import com.backend.stayEasy.sevice.TokenService;
 import com.backend.stayEasy.sevice.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -49,9 +44,10 @@ public class UserAPI {
 	private JwtService jwtService;
 
 	@Autowired
-	private ApplicationAuditAware applicationAuditAware;
+	private TokenService tokenService;
 
 	@GetMapping
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<List<UserDTO>> getAllUser() {
 		return ResponseEntity.ok(userService.getAllUser());
 	}
@@ -61,13 +57,39 @@ public class UserAPI {
 		String token = request.getHeader("Authorization");
 		if (token != null && token.startsWith("Bearer ")) {
 			token = token.substring(7);
-			System.out.println("hello");
 			boolean isValid = jwtService.isTokenValid(token);
+			boolean isExpired = jwtService.isTokenExpired(token);
+			boolean isTokenExist = tokenService.getByToken(token).isPresent();
 			if (isValid) {
-				return ResponseEntity.ok(userService.getUserByToken(token));
+				if (!isExpired && isTokenExist) {
+					return ResponseEntity.ok(CheckLoginResponseDTO.builder()
+							.message("Thành công!")
+							.isLogin(true)
+							.isExpried(isExpired)
+							.isExist(isTokenExist)
+							.isValid(isValid)
+							.user(userService.getUserByToken(token))
+							.build());
+				}
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(CheckLoginResponseDTO.builder()
+						.message("Token không hợp lệ hoặc hết hạn.")
+						.isLogin(false)
+						.isExpried(isExpired)
+						.isExist(isTokenExist)
+						.isValid(isValid)
+						.user(null)
+						.build());
 			}
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CheckLoginResponseDTO.builder()
+					.message("Người dùng chưa đăng nhập.")
+					.isLogin(false)
+					.isExpried(isExpired)
+					.isExist(isTokenExist)
+					.isValid(isValid)
+					.user(null)
+					.build());
 		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not logged in.");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi server.");
 	}
 
 	@GetMapping("/{id}")
@@ -84,8 +106,9 @@ public class UserAPI {
 
 	@PutMapping("/update")
 	public ResponseEntity<?> update(@RequestBody UserDTO userDTO, HttpServletRequest request) {
-		// Get người dùng đang đăng nhập hiện tại
-		UUID currentUserId = applicationAuditAware.getCurrentAuditor().get();
+		final String token = request.getHeader("Authorization").substring(7); // Lấy token từ Header
+
+		final UUID currentUserId = userService.getUserByToken(token).getId();
 
 		// Kiểm tra xem người dùng hiện tại có được phép thay đổi thông tin không?
 		if (!currentUserId.equals(userDTO.getId())) {

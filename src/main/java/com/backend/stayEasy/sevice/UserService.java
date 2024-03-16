@@ -29,8 +29,7 @@ public class UserService {
 	public List<UserDTO> getAllUser() {
 		List<UserDTO> result = new ArrayList<>();
 		for (User user : userRepository.findAll()) {
-			result.add(new UserDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
-					user.getPhone(), user.getAddress(), null, user.getRole().name()));
+			result.add(userConverter.toDTO(user));
 		}
 		return result;
 	}
@@ -44,7 +43,7 @@ public class UserService {
 	}
 
 	public UserDTO getUserByToken(String token) {
-		return userConverter.toDTO(userRepository.findByToken(token).get());
+		return userConverter.toDTO(userRepository.findByToken(token).orElseThrow());
 	}
 
 	@Transactional
