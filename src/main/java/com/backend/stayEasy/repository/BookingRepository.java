@@ -20,7 +20,7 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     List<Booking> findAllByUser_IdOrderByDateBookingDesc(UUID id);
     List<Booking> findAllByPropertyPropertyIdOrderByDateBookingDesc(UUID property_propertyId);
     @Query("SELECT b FROM Booking b " +
-            "WHERE b.property.propertyId = :propertyID AND (b.checkIn<= :checkOutDate) AND (b.checkOut >= :checkInDate)")
+            "WHERE b.property.propertyId = :propertyID AND b.status = true AND (b.checkIn<= :checkOutDate) AND (b.checkOut >= :checkInDate)")
     List<Booking> findConflictingBookings(@Param("propertyID") UUID propertyID, @Param("checkInDate") Date checkInDate,
                                           @Param("checkOutDate") Date checkOutDate);
     

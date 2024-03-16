@@ -1,7 +1,8 @@
 package com.backend.stayEasy.api;
 
 import com.backend.stayEasy.convertor.BookingConverter;
-import com.backend.stayEasy.dto.*;
+import com.backend.stayEasy.dto.BookingDTO;
+import com.backend.stayEasy.dto.PaymentDTO;
 import com.backend.stayEasy.entity.Mail;
 import com.backend.stayEasy.sevice.BookingService;
 import com.backend.stayEasy.sevice.PaymentBillService;
@@ -9,8 +10,6 @@ import com.backend.stayEasy.sevice.PaypalService;
 import com.backend.stayEasy.sevice.impl.IMailService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
@@ -19,12 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin
@@ -96,7 +93,7 @@ public class BookingAPI {
     // payment with paypal
     public String payment(BookingDTO bookingDTO) {
         try {
-            Payment payment = service.createPayment(bookingDTO.getPrice(), bookingDTO.getCurrency(), bookingDTO.getIntent(), bookingDTO.getMethod(), bookingDTO.getDescription(), "http://localhost:3000/payment" + CANCEL_URL, "http://localhost:3000/payment" + SUCCESS_URL);
+            Payment payment = service.createPayment(bookingDTO.getTotal(), bookingDTO.getCurrency(), bookingDTO.getIntent(), bookingDTO.getMethod(), bookingDTO.getDescription(), "http://localhost:3000/payment" + CANCEL_URL, "http://localhost:3000/payment" + SUCCESS_URL);
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
                     System.out.println("link" + link.getRel());

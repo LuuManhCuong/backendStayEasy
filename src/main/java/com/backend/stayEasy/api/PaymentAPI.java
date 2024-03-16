@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -38,7 +40,7 @@ public class PaymentAPI {
     private boolean emailSent = false;
 
     // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
-    @GetMapping("/payment/captures/{capture_id}")
+    @GetMapping("/captures/{capture_id}")
     public ResponseEntity<Object> lookupCaptures(@PathVariable("capture_id") String captureId) {
         // Ideally, fetch your token from a secure place
         String response;
@@ -70,10 +72,12 @@ public class PaymentAPI {
     }
 
     // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
-    @PostMapping("/payment/refund")
-    public ResponseEntity<Object> refundTransaction(@RequestBody RefundDTO refundDTO) throws IOException {
+    @PostMapping("/refund")
+    public ResponseEntity<Map<String, String>> refundTransaction(@RequestBody RefundDTO refundRequest) throws IOException {
+        RefundDTO refundDTO = paymentService.createBillToRefund(refundRequest);
         String Authorization = "Bearer " + paypalService.getAccessToken();
         System.out.println(Authorization);
+        Map<String, String> responser = new HashMap<>();
         JsonObject jsonObject;
         URL url = new URL("https://api-m.sandbox.paypal.com/v2/payments/captures/" + refundDTO.getCaptureId() + "/refund");
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
@@ -90,10 +94,13 @@ public class PaymentAPI {
                 + "\"invoice_id\": \"" + refundDTO.getInvoiceId() + "\","
                 + "\"note_to_payer\": \"" + refundDTO.getNoteToPayer() + "\""
                 + "}";
+        System.out.println(requestBody);
         // Lấy một luồng đầu ra từ kết nối HTTP để ghi dữ liệu yêu cầu lên máy chủ
         try (OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream())) {
             writer.write(requestBody);
         }
+        int responseCode = httpConn.getResponseCode();
+        System.out.println(responseCode);
         // Handle response
         //  Lấy mã trạng thái HTTP của phản hồi từ máy chủ (coi có nằm ngoài phạm vi 2xx không)
         InputStream responseStream = httpConn.getResponseCode() / 100 == 2
@@ -104,34 +111,25 @@ public class PaymentAPI {
             String response = scanner.hasNext() ? scanner.next() : "";
             Gson gson = new Gson();
             jsonObject = gson.fromJson(response, JsonObject.class);
-            if (jsonObject.has("status")) {
+            System.out.println(jsonObject);
+            if ( jsonObject.has("status")) {
                 String status = jsonObject.get("status").getAsString();
                 if (status.equals("COMPLETED")) {
-                    bookingService.updateBookingCancel(refundDTO.getInvoiceId(),true);
+                    bookingService.updateBookingCancel(refundDTO.getInvoiceId(),true, false);
                     System.out.println("Cập nhật refund in payment bill");
-                } else {// Return bad request response if status is not "COMPLETED"
-                    return ResponseEntity.badRequest().build();
+                    responser.put("message", "Hủy booking thành công");
+                    return ResponseEntity.ok().body(responser);
                 }
+
                 paymentService.updateBillWhenRefund(refundDTO.getPaypalRequestId(), status);
-            } else if(jsonObject.has("name")) {
-                String name = jsonObject.get("name").getAsString();
-                switch (name) {
-                    case "RESOURCE_NOT_FOUND":
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("The capture has already been fully refunded. You cannot capture additional refunds against this capture.");
-                    case "UNPROCESSABLE_ENTITY":
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("The requested action could not be performed, semantically incorrect, or failed business validation");
-                    default:
-                        // Handle other error cases
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-                }
             }
-            return ResponseEntity.ok().body(jsonObject);
+//
         } finally {
             httpConn.disconnect();
         }
+        return ResponseEntity.ok().body(responser);
     }
+
     @PostMapping("/performPayout")
     public ResponseEntity<Object> performPayout(@RequestBody PayoutDTO payoutDTO) {
         String Authorization = "Bearer " + paypalService.getAccessToken();
@@ -197,6 +195,9 @@ public class PaymentAPI {
             }
         }
     }
+
+
+    // Hàm kiểm tra ngày hủy thanh toán
 
 
 }
