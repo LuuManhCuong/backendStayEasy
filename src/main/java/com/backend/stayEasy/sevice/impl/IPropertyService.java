@@ -1,10 +1,10 @@
 package com.backend.stayEasy.sevice.impl;
 
-import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.entity.Property;
-
 import java.util.List;
 import java.util.UUID;
+
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Property;
 
 public interface IPropertyService {
 
@@ -18,16 +18,11 @@ public interface IPropertyService {
 
 	Property delete(UUID propertyId);
 
-
 	List<PropertyDTO> findByCategory(UUID categoryId);
 
-<<<<<<< HEAD
-    List<PropertyDTO> findAllPropertiesByHostId(UUID hostId);
+	List<PropertyDTO> findAllPropertiesByHostId(UUID hostId);
 
 //	List<Property> findByCategory(UUID categoryId);
 
-	
 	List<PropertyDTO> findByPropertyNameOrAddressContainingIgnoreCase(String keySearch);
-=======
->>>>>>> origin/namhh-refresh-token
 }

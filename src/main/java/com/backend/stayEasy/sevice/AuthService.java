@@ -1,7 +1,5 @@
 package com.backend.stayEasy.sevice;
 
-<<<<<<< HEAD
-=======
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
->>>>>>> origin/namhh-refresh-token
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.SignInRequest;
 import com.backend.stayEasy.dto.SignInResponse;
@@ -33,28 +30,10 @@ import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.enums.TokenType;
 import com.backend.stayEasy.repository.TokenRepository;
 import com.backend.stayEasy.repository.UserRepository;
-<<<<<<< HEAD
-import com.fasterxml.jackson.databind.ObjectMapper;
-=======
 
->>>>>>> origin/namhh-refresh-token
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -98,36 +77,6 @@ public class AuthService implements UserDetailsService {
 	 */
 	public ResponseEntity<?> register(SignUpRequest request) {
 		// Kiểm tra xem email đã tồn tại trong hệ thống chưa
-<<<<<<< HEAD
-        if (repository.existsByEmail(request.getEmail())) {
-        	Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Email " + request.getEmail() + " đã đăng ký!");
-            errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
-            // Trả về thông báo lỗi khi email đã tồn tại
-        	return ResponseEntity
-        			.status(HttpStatus.BAD_REQUEST)
-        			.contentType(MediaType.APPLICATION_JSON)
-                    .body(errorResponse);
-        }
-        // Lấy ngày hiện tại
-	    LocalDate currentDate = LocalDate.now();
-	    
-	    // Chuyển đổi ngày hiện tại sang kiểu java.sql.Date
-	    Date todayDate = Date.valueOf(currentDate);
-		var user = User.builder()
-				.firstName(request.getFirstName())
-				.lastName(request.getLastName())
-				.email(request.getEmail())
-				.password(passwordEncoder.encode(request.getPassword()))
-				.role(request.getRole())
-				.createdAt(todayDate)
-				.updatedAt(todayDate)
-				.build();
-		var savedUser = repository.save(user);
-		var jwtToken = jwtService.generateToken(user);
-		var refreshToken = jwtService.generateRefreshToken(user);
-		saveUserToken(savedUser, jwtToken);
-=======
 		if (repository.existsByEmail(request.getEmail())) {
 			Map<String, Object> errorResponse = new HashMap<>();
 			errorResponse.put("message", "Email " + request.getEmail() + " đã đăng ký!");
@@ -147,7 +96,6 @@ public class AuthService implements UserDetailsService {
 		var jwtToken = jwtService.generateToken(user); //Tạo accessToken
 		var refreshToken = jwtService.generateRefreshToken(user); //Tạo refreshToken
 		saveUserToken(savedUser, jwtToken, refreshToken); //lưu token vào db
->>>>>>> origin/namhh-refresh-token
 		return ResponseEntity.ok(SignInResponse.builder()
 				.accessToken(jwtToken)
 				.refreshToken(refreshToken)

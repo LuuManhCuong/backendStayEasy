@@ -16,12 +16,13 @@ import com.backend.stayEasy.dto.TokenDTO;
 import com.backend.stayEasy.entity.Token;
 import com.backend.stayEasy.exception.TokenExceptionHandle;
 import com.backend.stayEasy.repository.TokenRepository;
+import com.backend.stayEasy.sevice.impl.ITokenService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TokenService {
+public class TokenService implements ITokenService{
 	
 	@Autowired
 	private TokenRepository tokenRepository;
@@ -29,6 +30,11 @@ public class TokenService {
 	@Autowired
 	private TokenConverters tokenConverter;
 	
+	/**
+	 * 
+	 * @author NamHH
+	 * @return
+	 */
 	public List<TokenDTO> getAllToken(){
 		List<TokenDTO> result = new ArrayList<>();
 		

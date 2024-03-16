@@ -1,7 +1,6 @@
 package com.backend.stayEasy.entity;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
@@ -17,18 +16,18 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="rules")
+@Table(name = "rules")
 public class Rules {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID rulesId;
-	
+
 	@Column(name = "rules_name", columnDefinition = "nvarchar(255)")
 	private String rulesName;
-	
+
 	@Column(name = "rules_type", columnDefinition = "nvarchar(255)")
 	private String type;
-	
+
 	@OneToMany(mappedBy = "rules", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyRules> propertyRules;
 }

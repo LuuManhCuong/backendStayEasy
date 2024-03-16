@@ -1,17 +1,13 @@
 package com.backend.stayEasy.entity;
 
-import com.backend.stayEasy.enums.Role;
-import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-<<<<<<< HEAD
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-=======
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.backend.stayEasy.enums.Role;
 
 import jakarta.persistence.CascadeType;
@@ -31,7 +27,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
->>>>>>> origin/namhh-refresh-token
 
 @Data
 @Builder
@@ -58,20 +53,20 @@ public class User implements UserDetails {
 
 	@Column(name = "lastName")
 	String lastName;
-	
+
 	@Column(name = "phone")
 	String phone;
 
 	String avatar;
 
-	Date createdAt;
+	LocalDateTime createdAt;
 
-	Date updatedAt;
+	LocalDateTime updatedAt;
 
 	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
-	
+	@JoinColumn(name = "address_id", referencedColumnName = "id")
+	private Address address;
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 

@@ -19,7 +19,6 @@ import com.backend.stayEasy.dto.SignInResponse;
 import com.backend.stayEasy.dto.SignUpRequest;
 import com.backend.stayEasy.dto.TokenDTO;
 import com.backend.stayEasy.sevice.AuthService;
-import com.backend.stayEasy.sevice.JwtService;
 import com.backend.stayEasy.sevice.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,10 +31,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthAPI {
 
-	private final AuthService service;
-
 	@Autowired
-	private JwtService jwtService;
+	private AuthService authService;
 
 	@Autowired
 	private UserService userService;
@@ -43,27 +40,58 @@ public class AuthAPI {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
+	
+	/**
+	 * 
+	 * @author NamHH
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody SignUpRequest request) {
 
-		return service.register(request);
+		return authService.register(request);
 	}
 
+	/**
+	 * 
+	 * @author NamHH
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<SignInResponse> authenticate(@RequestBody SignInRequest request) {
-		return ResponseEntity.ok(service.authenticate(request));
+		return ResponseEntity.ok(authService.authenticate(request));
 	}
 
+	/**
+	 * @author NamHH
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
 	@PostMapping("/refresh-token")
 	public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		return service.refreshToken(request, response);
+		return authService.refreshToken(request, response);
 	}
 
+	/**
+	 * @author NamHH
+	 * @return
+	 */
 	@GetMapping("/token")
 	public ResponseEntity<TokenDTO> getAllToken() {
 		return ResponseEntity.ok(null);
 	}
 
+	/**
+	 * 
+	 * @author NamHH
+	 * @param changePasswordRequest
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/change-password")
 	public ResponseEntity<SignInResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,
 			HttpServletRequest request) {
@@ -76,7 +104,7 @@ public class AuthAPI {
 				new UsernamePasswordAuthenticationToken(username, changePasswordRequest.getOldPassword()));
 
 		// Cập nhật mật khẩu
-		return ResponseEntity.ok(service.changePassword(username, changePasswordRequest.getNewPassword()));
+		return ResponseEntity.ok(authService.changePassword(username, changePasswordRequest.getNewPassword()));
 	}
 
 }

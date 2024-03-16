@@ -1,5 +1,13 @@
 package com.backend.stayEasy.sevice;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.backend.stayEasy.convertor.PaymentConverter;
 import com.backend.stayEasy.dto.PaymentDTO;
 import com.backend.stayEasy.dto.RefundDTO;
@@ -8,23 +16,17 @@ import com.backend.stayEasy.entity.PaymentBill;
 import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.PaymentRepository;
 import com.paypal.api.payments.Payment;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class PaymentBillService {
 	@Autowired
 	private PaymentRepository PaymentRepo;
+	
 	@Autowired
 	private BookingRepository bookingRepository;
+	
 	@Autowired
 	private PaymentConverter paymentConverter;
-	@Autowired BookingService bookingService;
 
 	public PaymentDTO savePayment(Payment paymentParams, UUID bookingId) {
 		// Nhận json tư Payment Paypal sau đó set dữ liệu trong database

@@ -1,15 +1,5 @@
 package com.backend.stayEasy.sevice;
 
-import com.backend.stayEasy.convertor.BookingConverter;
-import com.backend.stayEasy.dto.BookingDTO;
-import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.entity.Booking;
-import com.backend.stayEasy.enums.Confirmation;
-import com.backend.stayEasy.repository.BookingRepository;
-import com.backend.stayEasy.repository.PropertyUilitisRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,17 +7,25 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.backend.stayEasy.convertor.BookingConverter;
+import com.backend.stayEasy.dto.BookingDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Booking;
+import com.backend.stayEasy.enums.Confirmation;
+import com.backend.stayEasy.repository.BookingRepository;
+
 @Service
 public class BookingService {
 
 	@Autowired
 	PropertyService propertyService;
+	
     @Autowired
     private BookingRepository bookingRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PropertyUilitisRepository propertyRepository;
+    
     @Autowired
     private BookingConverter bookingConverter;
 

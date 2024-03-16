@@ -1,24 +1,25 @@
 package com.backend.stayEasy.sevice;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.UserRepository;
+import com.backend.stayEasy.sevice.impl.IUserService;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements IUserService{
 
 	@Autowired
 	private UserRepository userRepository;
@@ -26,43 +27,61 @@ public class UserService {
 	@Autowired
 	private UserConverter userConverter;
 
+	/**
+	 * @author NamHH
+	 */
 	public List<UserDTO> getAllUser() {
 		List<UserDTO> result = new ArrayList<>();
 		for (User user : userRepository.findAll()) {
+			//chuyển user lấy được thành DTO
 			result.add(userConverter.toDTO(user));
 		}
 		return result;
 	}
 
+	/**
+	 * @author NamHH
+	 */
 	public UserDTO getUserById(UUID id) {
 		return userConverter.toDTO(userRepository.findById(id).get());
 	}
 
+	/**
+	 * @author NamHH
+	 */
 	public UserDTO getUserByEmail(String email) {
 		return userConverter.toDTO(userRepository.findByEmail(email).get());
 	}
 
+	/**
+	 * @author NamHH
+	 */
 	public UserDTO getUserByToken(String token) {
 		return userConverter.toDTO(userRepository.findByToken(token).orElseThrow());
 	}
 
+	/**
+	 * 
+	 * @author NamHH
+	 * @param userDTO
+	 * @return
+	 */
 	@Transactional
 	public UserDTO save(UserDTO userDTO) {
 		User user = new User();
-		  // Lấy ngày hiện tại
-	    LocalDate currentDate = LocalDate.now();
-	    
-	    // Chuyển đổi ngày hiện tại sang kiểu java.sql.Date
-	    Date todayDate = Date.valueOf(currentDate);
+
+		//check nếu body request có userId thì update
 		if (userDTO.getId() != null) {
+			//tìm user trong db
 			User oldUser = userRepository.findUserById(userDTO.getId()).get();
+			//set lại giá trị mới cho user
 			user = userConverter.toEntity(oldUser, userDTO);
-			
-			user.setUpdatedAt(todayDate);
+			//set thời gian update
+			user.setUpdatedAt(LocalDateTime.now());
 		}
-		user.setUpdatedAt(todayDate);
+		//set thời gian create
+		user.setCreatedAt(LocalDateTime.now());
 		return userConverter.toDTO(userRepository.save(user));
 	}
-
 
 }
