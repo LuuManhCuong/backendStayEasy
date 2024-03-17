@@ -10,5 +10,7 @@ import com.backend.stayEasy.entity.Feedback;
 public interface FeedbackRepository extends JpaRepository<Feedback, UUID> {
 
 	List<Feedback> findByPropertyId(UUID propertyId);
+	
+	
 
 }
