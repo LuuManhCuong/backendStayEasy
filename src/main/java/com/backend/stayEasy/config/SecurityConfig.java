@@ -4,7 +4,6 @@ import static com.backend.stayEasy.enums.Permission.ADMIN_CREATE;
 import static com.backend.stayEasy.enums.Permission.ADMIN_DELETE;
 import static com.backend.stayEasy.enums.Permission.ADMIN_READ;
 import static com.backend.stayEasy.enums.Permission.ADMIN_UPDATE;
-import static com.backend.stayEasy.enums.Permission.OWNER_READ;
 import static com.backend.stayEasy.enums.Role.ADMIN;
 import static com.backend.stayEasy.enums.Role.OWNER;
 import static org.springframework.http.HttpMethod.DELETE;
@@ -31,7 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.backend.stayEasy.exception.AccessDeniedExceptionHandler;
-import com.backend.stayEasy.exception.JwtAuthenticationExceptionHandler;
+import com.backend.stayEasy.exception.AuthenticationExceptionHandler;
 import com.backend.stayEasy.filter.JwtAuthenticationFilter;
 import com.backend.stayEasy.sevice.LogoutService;
 
@@ -47,8 +46,8 @@ public class SecurityConfig {
 	@Autowired
 	private LogoutService logoutService;
 
-	private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**", "/api/v1/stayeasy/**"};
-	private static final String[] ADMIN_LIST_URL = {"/api/v1/user/**", "/api/v1/token/**"};
+	private static final String[] WHITE_LIST_URL = {"/**", "/api/v1/auth/**", "/api/v1/stayeasy/**", "/api/v1/user/**"};
+	private static final String[] ADMIN_LIST_URL = {"/api/v1/token/**"};
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final AuthenticationProvider authenticationProvider;
 
@@ -59,14 +58,15 @@ public class SecurityConfig {
 						req -> req.requestMatchers(WHITE_LIST_URL).permitAll()
 						.requestMatchers("/api/v1/owner/**").hasAnyRole(OWNER.name())
 						.requestMatchers(ADMIN_LIST_URL).hasAnyRole(ADMIN.name())
-						.requestMatchers(GET, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_READ.name(), OWNER_READ.name())
+						.requestMatchers(GET, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_READ.name())
 						.requestMatchers(POST, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_CREATE.name())
 						.requestMatchers(PUT, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_UPDATE.name())
 						.requestMatchers(DELETE, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_DELETE.name())
 						.anyRequest().authenticated())
 				.exceptionHandling(configurer -> configurer
 				        .accessDeniedHandler(new AccessDeniedExceptionHandler())
-				        .authenticationEntryPoint(new JwtAuthenticationExceptionHandler()))
+				        .authenticationEntryPoint(new AuthenticationExceptionHandler())
+				        )
 				.authenticationProvider(authenticationProvider)
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 				.logout(logout -> logout.logoutUrl("/api/v1/auth/logout")

@@ -1,5 +1,6 @@
 package com.backend.stayEasy.dto;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -14,6 +15,9 @@ public class TokenDTO {
 	private boolean expired;
 	private boolean revoked;
 	private String token;
+	private String refreshToken;
 	private String type;
+	private LocalDateTime expirationToken;
+	private LocalDateTime expirationRefreshToken;
 	private UUID userId;
 }

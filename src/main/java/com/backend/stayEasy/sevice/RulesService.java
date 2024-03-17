@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.backend.stayEasy.convertor.RulesConverter;
 import com.backend.stayEasy.dto.RulesDTO;
 import com.backend.stayEasy.repository.RulesRepository;
+import com.backend.stayEasy.sevice.impl.IRulesService;
 
 @Service
 public class RulesService implements IRulesService{

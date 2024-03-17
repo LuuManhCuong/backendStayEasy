@@ -62,6 +62,7 @@ public class FeedbackAPI {
 	    public Feedback sendFeedback(@Payload FeedbackDTO feedbackDTO, @DestinationVariable UUID propertyId) {        
 	    	Feedback feedback = feedbackConverter.toEntity(feedbackDTO);
 	    	feedback.setCreateAt(LocalDateTime.now());
+	    	System.out.println("feedback: " + feedback.getContent());
 	    	feedbackRepository.save(feedback);
 	    	return feedback;
 	    }
@@ -70,7 +71,7 @@ public class FeedbackAPI {
 	    
 	    @GetMapping("/get/{propertyId}")
 	    public ResponseEntity<List<Feedback>> getAllFeedbacksByPropertyId(@PathVariable UUID propertyId) {
-	        List<Feedback> feedbacks = feedbackRepository.findByPropertyId(propertyId);
+	        List<Feedback> feedbacks = feedbackRepository.findByPropertyIdOrderByCreateAtDesc(propertyId);
 	        return ResponseEntity.ok(feedbacks);
 	    }
 	    

@@ -1,12 +1,20 @@
 package com.backend.stayEasy.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
 import java.sql.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Data
@@ -17,23 +25,31 @@ public class Property {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "property_id")
 	private UUID propertyId;
+
 	@Column(name = "property_name", columnDefinition = "nvarchar(255)")
 	private String propertyName;
+
 	@Column(columnDefinition = "ntext")
 	private String description;
-	private String thumbnail;
+
 	@Column(columnDefinition = "nvarchar(255)")
 	private String address;
-	private Float price;
-	private Float rating;
+
 	@Column(name = "is_null")
 	private boolean isNull;
+
 	@Column(name = "num_guests")
 	private int numGuests;
+
 	@Column(name = "discount")
 	private int discount;
+
 	@Column(name = "create_at")
 	private Date createAt;
+
+	private String thumbnail;
+	private Float price;
+	private Float rating;
 
 	@ManyToOne
 	private User user;
@@ -56,7 +72,7 @@ public class Property {
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyUilitis> propertyUilitis;
-	
+
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyRules> propertyRules;
 

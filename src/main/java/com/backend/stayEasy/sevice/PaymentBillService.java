@@ -1,26 +1,30 @@
 package com.backend.stayEasy.sevice;
 
-import com.backend.stayEasy.convertor.PaymentConverter;
-import com.backend.stayEasy.dto.PaymentDTO;
-import com.backend.stayEasy.entity.Booking;
-import com.backend.stayEasy.entity.PaymentBill;
-import com.backend.stayEasy.repository.BookingRepository;
-import com.backend.stayEasy.repository.PaymentRepository;
-import com.paypal.api.payments.Payment;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.backend.stayEasy.convertor.PaymentConverter;
+import com.backend.stayEasy.dto.PaymentDTO;
+import com.backend.stayEasy.dto.RefundDTO;
+import com.backend.stayEasy.entity.Booking;
+import com.backend.stayEasy.entity.PaymentBill;
+import com.backend.stayEasy.repository.BookingRepository;
+import com.backend.stayEasy.repository.PaymentRepository;
+import com.paypal.api.payments.Payment;
+
 @Service
 public class PaymentBillService {
 	@Autowired
 	private PaymentRepository PaymentRepo;
+	
 	@Autowired
 	private BookingRepository bookingRepository;
+	
 	@Autowired
 	private PaymentConverter paymentConverter;
 
@@ -71,6 +75,28 @@ public class PaymentBillService {
 	private void notifyBookingConfirmation(Booking booking) {
 		// Implement notification logic here (e.g., email or SMS)
 		System.out.println("Booking confirmation sent for booking: " + booking);
+	}
+
+	// find bill for return
+    public List<PaymentDTO> findWithBookingId(UUID invoiceId) {
+		return PaymentRepo.findByBookingBookingId(invoiceId).stream().map(paymentConverter::toDTO)
+				.collect(Collectors.toList());
+    }
+	public RefundDTO createBillToRefund(RefundDTO refundDTO){
+		List<PaymentDTO> paymentDTOs = findWithBookingId(refundDTO.getInvoiceId());
+		Optional<PaymentDTO> firstPaymentDTO = paymentDTOs.stream().findFirst();
+		if(firstPaymentDTO.isPresent() ){
+			PaymentDTO firstPayment = firstPaymentDTO.get();
+			refundDTO.setCaptureId(firstPayment.getCapturesId());
+			refundDTO.setRefundAmount(refundDTO.getRefundAmount());
+			refundDTO.setCurrencyCode("USD");
+			refundDTO.setNoteToPayer(refundDTO.getNoteToPayer());
+			refundDTO.setPaypalRequestId(firstPayment.getPaymentBillId());
+			refundDTO.setInvoiceId(refundDTO.getInvoiceId());
+		}
+		System.out.println(refundDTO.toString());
+		return refundDTO ;
+
 	}
 
 }

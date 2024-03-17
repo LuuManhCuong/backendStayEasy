@@ -12,7 +12,9 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatRoomID implements Serializable{
-    private UUID userId;
-    private UUID hostId;
+public class ChatRoomID implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private UUID userId;
+	private UUID hostId;
 }

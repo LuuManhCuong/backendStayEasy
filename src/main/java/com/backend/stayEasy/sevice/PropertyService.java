@@ -1,21 +1,16 @@
 package com.backend.stayEasy.sevice;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.backend.stayEasy.convertor.CategoryConverter;
-import com.backend.stayEasy.convertor.FeedbackConverter;
-import com.backend.stayEasy.convertor.ImagesConventer;
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.dto.CategoryDTO;
@@ -34,7 +29,6 @@ import com.backend.stayEasy.entity.PropertyCategory;
 import com.backend.stayEasy.entity.PropertyRules;
 import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.entity.Rules;
-import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.entity.Utilities;
 import com.backend.stayEasy.repository.CategoryRepository;
 import com.backend.stayEasy.repository.FeedbackRepository;
@@ -49,11 +43,6 @@ import com.backend.stayEasy.repository.UtilitiesRepository;
 import com.backend.stayEasy.sevice.impl.IPropertyService;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PropertyService implements IPropertyService {
