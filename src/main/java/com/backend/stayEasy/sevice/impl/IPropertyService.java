@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface IPropertyService {
 	
+	DataPropertyExploreDTO findAll();
+	
 	DataPropertyExploreDTO findAll(Pageable pageable);
 
 	PropertyDTO findById(UUID id);

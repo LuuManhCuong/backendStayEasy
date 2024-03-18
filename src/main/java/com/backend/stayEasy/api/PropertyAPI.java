@@ -59,7 +59,10 @@ public class PropertyAPI {
 	private LikeConverter likeConverter;
 	
 	@GetMapping
-	public DataPropertyExploreDTO getAllProperty(@RequestParam("page") int page, @RequestParam("size") int size) {
+	public DataPropertyExploreDTO getAllProperty(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
+		if(page == null || size == null ) {
+			return propertyService.findAll();
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		return propertyService.findAll(pageable);
 	}

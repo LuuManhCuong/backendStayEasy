@@ -89,7 +89,7 @@ public class PropertyService implements IPropertyService {
 		long totalCount = propertyRepository.count();
 		List<PropertyDTO> result = new ArrayList<>();
 
-		for (Property p : propertyRepository.findAll()) {
+		for (Property p : tempList) {
 			List<Like> likes = likeRepository.findByPropertyPropertyId(p.getPropertyId());
 			List<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
 			PropertyDTO temp = propertyConverter.toDTO(p);
@@ -130,9 +130,9 @@ public class PropertyService implements IPropertyService {
 			PropertyCategory temp = new PropertyCategory();
 			temp.setProperty(property);
 			Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
-			if (categoryOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
-				Category category = categoryOp.get(); // Trích xuất giá trị User từ Optional
-				temp.setCategory(category); // Gán giá trị User cho property
+			if (categoryOp.isPresent()) {
+				Category category = categoryOp.get();
+				temp.setCategory(category); 
 			}
 			propertyCategory.add(temp);
 		}
@@ -153,9 +153,9 @@ public class PropertyService implements IPropertyService {
 			temp.setProperty(property);
 			temp.setQuantity(propertyUtilitiesDTO.getQuantity());
 			Optional<Utilities> utilitiesOp = utilitiesRepository.findById(propertyUtilitiesDTO.getUtilitiesId());
-			if (utilitiesOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
-				Utilities utilities = utilitiesOp.get(); // Trích xuất giá trị User từ Optional
-				temp.setUtilities(utilities); // Gán giá trị User cho property
+			if (utilitiesOp.isPresent()) { 
+				Utilities utilities = utilitiesOp.get(); 
+				temp.setUtilities(utilities); 
 			}
 			propertyUtilities.add(temp);
 		}
@@ -407,6 +407,27 @@ public class PropertyService implements IPropertyService {
 	    } else {
 	        return 0;
 	    }
+	}
+
+	@Override
+	public DataPropertyExploreDTO findAll() {
+		long totalCount = propertyRepository.count();
+		List<PropertyDTO> result = new ArrayList<>();
+
+		for (Property p : propertyRepository.findAll()) {
+			List<Like> likes = likeRepository.findByPropertyPropertyId(p.getPropertyId());
+			List<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+			PropertyDTO temp = propertyConverter.toDTO(p);
+			float rating = getRatingProperty(p.getPropertyId());
+			temp.setLikeList(likeRequestDTOs);
+			temp.setRating(rating);
+			result.add(temp);
+		}
+		DataPropertyExploreDTO newData = new DataPropertyExploreDTO();
+		newData.setProperties(result);
+		newData.setTotalCount(totalCount);
+		return newData;
+		// TODO Auto-generated method stub
 	}
 
 }
