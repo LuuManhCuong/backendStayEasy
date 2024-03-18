@@ -1,5 +1,7 @@
 package com.backend.stayEasy.sevice;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -180,7 +182,8 @@ public class PropertyService implements IPropertyService {
 			propertyUtilities.add(temp);
 		}
 
-		property.setCreateAt(LocalDateTime.now());
+		LocalDate today = LocalDate.now();
+		property.setCreateAt(Date.valueOf(today));
 		property.setImages(images);
 		property.setPropertyCategories(propertyCategory);
 		property.setPropertyRules(propertyRules);

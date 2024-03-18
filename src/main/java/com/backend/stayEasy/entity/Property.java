@@ -1,5 +1,6 @@
 package com.backend.stayEasy.entity;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +48,8 @@ public class Property {
 	private int discount;
 
 	@Column(name = "create_at")
-	private LocalDateTime createAt;
+	private Date createAt;
+	
 	@Column (name = "service_fee")
 	private int serviceFee;
 	
