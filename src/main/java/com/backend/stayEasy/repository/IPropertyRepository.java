@@ -2,6 +2,9 @@ package com.backend.stayEasy.repository;
 
 
 import com.backend.stayEasy.entity.Property;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -31,4 +34,6 @@ public interface IPropertyRepository extends JpaRepository<Property, UUID>{
 	    long countPropertiesBetween(Date startDate, Date endDate);
 	 // Get Properties of host
 	List<Property> findAllByUserId(UUID userId);
+	
+	Page<Property> findAll(Pageable pageable);
 }

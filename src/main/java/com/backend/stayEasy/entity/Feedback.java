@@ -33,6 +33,9 @@ public class Feedback {
 	@Column(name = "avatar")
 	private String avatar;
 	
+	@Column(name="rating")
+	private int rating;
+	
 	@Column(name = "userId")
 	private UUID userId;
 	
