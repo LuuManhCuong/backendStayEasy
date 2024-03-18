@@ -27,6 +27,10 @@ public class PaymentBill {
     private String createTime;
     @Column(name = "account_type")
     private String accountType;
+    @Column (name = "captures")
+    private String captures;
+    @Column (name = "refund_status")
+    private String refundStatus;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;

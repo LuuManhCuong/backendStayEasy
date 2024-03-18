@@ -14,6 +14,9 @@ public class TokenConverters {
 		result.setExpired(token.isExpired());
 		result.setRevoked(token.isRevoked());
 		result.setToken(token.getToken());
+		result.setRefreshToken(token.getRefreshToken());
+		result.setExpirationToken(token.getExpirationTokenDate());
+		result.setExpirationRefreshToken(token.getExpirationRefTokenDate());
 		result.setType(token.getTokenType().toString());
 		result.setUserId(token.getUser().getId());
 		return result;

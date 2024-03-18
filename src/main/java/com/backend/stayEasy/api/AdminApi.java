@@ -1,9 +1,26 @@
 package com.backend.stayEasy.api;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.backend.stayEasy.convertor.BookingConverter;
 import com.backend.stayEasy.convertor.StatisticsConverter;
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.DailyRevenueDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.dto.StatisticsDTO;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.Statistics;
@@ -11,13 +28,7 @@ import com.backend.stayEasy.repository.BookingRepository;
 import com.backend.stayEasy.repository.StatisticsRepository;
 import com.backend.stayEasy.sevice.StatisticSevice;
 import com.backend.stayEasy.sevice.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
 
 @RestController
 @CrossOrigin
@@ -40,6 +51,9 @@ public class AdminApi {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private IPropertyService propertyService;
+	
 	@GetMapping("/revenue")
 	public List<StatisticsDTO> getRevenueByMonth() {
 		System.out.println("revenue here");
@@ -51,7 +65,17 @@ public class AdminApi {
 		return statisticsDTOs;
 	}
 	
-
+//	  trả về dữ liệu của tháng này và tháng trước theo từng property	
+	@GetMapping("/statistics")
+	public List<StatisticsDTO> getRevenueByMonthAndPropertyId(@RequestParam("propertyId") UUID propertyId) {
+		System.out.println("get statistic id: " + propertyId);
+		List<StatisticsDTO> statisticsDTOs = new ArrayList<>();
+		List<Statistics> statisticsList = statisticSevice.calculateRevenueForCurrentAndPreviousMonthByPropertyId(propertyId);
+		for (Statistics statisticsItem : statisticsList) {
+			statisticsDTOs.add(statisticsConverter.toDTO(statisticsItem));
+		}
+		return statisticsDTOs;
+	}
 	
 
 	 @GetMapping("/revenue/daily")
@@ -95,12 +119,18 @@ public class AdminApi {
 	 
 	 
 	 @GetMapping("/statistics/monthly")
-	 public List<Statistics> getStatisticsMonthly() {
+	 public List<StatisticsDTO> getStatisticsMonthly() {
 		 LocalDate currentDate = LocalDate.now();
 	     Date firstDayOfYear= Date.valueOf(currentDate.withDayOfYear(1));
 	     Date todayDate = Date.valueOf(currentDate);
 
-	     return statisticsRepository.sumRevenueFromStartOfYearToDate(firstDayOfYear, todayDate);
+	     List<StatisticsDTO> statistics =  statisticsRepository
+	    		 .sumRevenueFromStartOfYearToDate(firstDayOfYear, todayDate)
+	    		 .stream()
+				 .map(statisticsConverter::toDTO)
+				 .collect(Collectors.toList());
+	     return statistics;
+	     
 	 }
 	 
 	 
@@ -109,15 +139,24 @@ public class AdminApi {
 		 return userService.getAllUser();
 	 }
 	 
+	 @GetMapping("/property/search")
+	 public List<PropertyDTO> searchProperty(@RequestParam("keySearch") String keySearch){
+		 return propertyService.findByPropertyNameOrAddressContainingIgnoreCase(keySearch);
+	 }
 	 
 	 @GetMapping("/booking")
 	 public List<BookingDTO> getBookingById(@RequestParam("propertyId") UUID propertyId){
-		 // Lấy ngày hiện tại
+	        // Lấy ngày hiện tại
 	        LocalDate currentDate = LocalDate.now();
-	        Date todayDate = Date.valueOf(currentDate);
-	        System.out.println("go here: " + propertyId);
+	        
+	        // Lấy tháng hiện tại
+	        int currentMonth = currentDate.getMonthValue();
+	        
+	        // Lấy ngày đầu của tháng hiện tại
+	        LocalDate firstDayOfCurrentMonth = LocalDate.of(currentDate.getYear(), currentMonth, 1);
+	        Date firstDateOfCurrentMonth = Date.valueOf(firstDayOfCurrentMonth);
 		 return bookingRepository
-				 .findAllByProperty_PropertyIdAndCheckInAfter(propertyId, todayDate)
+				 .findAllByPropertyIdAndDateBookingAfterAndCancelIsNull(propertyId, firstDateOfCurrentMonth)
 				 .stream()
 				 .map(bookingConverter::toDTO)
 				 .collect(Collectors.toList());

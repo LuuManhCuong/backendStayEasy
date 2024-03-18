@@ -1,14 +1,13 @@
 package com.backend.stayEasy.api;
 
 import com.backend.stayEasy.convertor.BookingConverter;
-
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.PaymentDTO;
 import com.backend.stayEasy.entity.Mail;
 import com.backend.stayEasy.sevice.BookingService;
-import com.backend.stayEasy.sevice.impl.IMailService;
 import com.backend.stayEasy.sevice.PaymentBillService;
 import com.backend.stayEasy.sevice.PaypalService;
+import com.backend.stayEasy.sevice.impl.IMailService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paypal.api.payments.Links;
@@ -17,6 +16,7 @@ import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -40,11 +40,13 @@ public class BookingAPI {
     private IMailService mailService;
     @Autowired
     private BookingConverter bookingConverter;
+    @Autowired PaypalService paypalService;
     private UUID bookingId;
     private boolean emailSent = false;
 
     // chi admin moi xem duoc
     @GetMapping(value = "")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<BookingDTO>> returnMyActiveBookings() {
         return ResponseEntity.ok().body(bookingService.findAll());
     }
@@ -53,6 +55,10 @@ public class BookingAPI {
     @GetMapping("/traveler/{id}")
     public ResponseEntity<List<BookingDTO>> getBookingById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok().body(bookingService.returnMyBookings(id));
+    }
+    @GetMapping("/listing/{id}")
+    public ResponseEntity<List<BookingDTO>> returnListingBookings(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok().body(bookingService.returnListingBookings(id));
     }
 
     // huy booking (check ngay truoc checkin 1 ngay  , return payment ,them vao bang paymnet bill , cap nhat trang thai vot  booking)
@@ -89,14 +95,13 @@ public class BookingAPI {
     // payment with paypal
     public String payment(BookingDTO bookingDTO) {
         try {
-            Payment payment = service.createPayment(bookingDTO.getPrice(), bookingDTO.getCurrency(), bookingDTO.getIntent(), bookingDTO.getMethod(), bookingDTO.getDescription(), "http://localhost:3000/payment" + CANCEL_URL, "http://localhost:3000/payment" + SUCCESS_URL);
+            Payment payment = service.createPayment(bookingDTO.getTotal(), bookingDTO.getCurrency(), bookingDTO.getIntent(), bookingDTO.getMethod(), bookingDTO.getDescription(), "http://localhost:3000/payment" + CANCEL_URL, "http://localhost:3000/payment" + SUCCESS_URL);
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
                     System.out.println("link" + link.getRel());
                     return link.getHref();
                 }
             }
-
         } catch (PayPalRESTException e) {
             e.printStackTrace();
         }
@@ -108,13 +113,16 @@ public class BookingAPI {
     public ResponseEntity<List<PaymentDTO>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId)  {
         try {
             Payment payment = service.executePayment(paymentId, payerId);
+            String data = payment.toJSON();
             if ("approved".equals(payment.getState())) {
                 // tranh null exception
                 bookingService.updateBookingStatus(bookingId, true);
                 paymentService.savePayment(payment, bookingId);
+                System.out.println(data);
                 // Lưu thông tin payment
                 return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
             }
+
         } catch (PayPalRESTException e) {
             sendEmailBooking(); // Send email notification about the cancellation
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -164,8 +172,6 @@ public class BookingAPI {
         System.out.println("running");
         return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
     }
-    // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
-
 }
 
 

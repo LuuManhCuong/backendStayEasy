@@ -8,20 +8,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.stayEasy.dto.UtilitiesDTO;
 import com.backend.stayEasy.entity.Utilities;
-import com.backend.stayEasy.sevice.IUtilService;
+import com.backend.stayEasy.sevice.impl.IUtilitiesService;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value="/api/v1/stayeasy/util", produces = "application/json")
+@RequestMapping(value = "/api/v1/stayeasy/util", produces = "application/json")
 public class UtilApi {
-	
+
 	@Autowired
-	private IUtilService utilService;
-	
+	private IUtilitiesService utilitiesService;
+
 	@GetMapping("")
-	public List<Utilities> getAll() {
-		return utilService.findAll();
+	public List<UtilitiesDTO> getAll() {
+
+		return utilitiesService.findAll();
 	}
 
 }

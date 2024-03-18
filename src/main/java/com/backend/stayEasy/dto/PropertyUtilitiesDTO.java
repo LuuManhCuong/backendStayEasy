@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PropertyUtilitiesDTO {
-	private UUID propertyUtilitiesId;
+	private UUID utilitiesId;
     private int quantity;
     private String utilitiesName;
 }

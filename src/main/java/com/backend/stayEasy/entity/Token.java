@@ -1,5 +1,6 @@
 package com.backend.stayEasy.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.backend.stayEasy.enums.TokenType;
@@ -34,13 +35,24 @@ public class Token {
 
 	@Column(unique = true)
 	public String token;
+	
+	@Column(name = "refresh_token", unique = true)
+	public String refreshToken;
+	
+	@Column(name = "expiration_token", unique = true)
+	public LocalDateTime expirationTokenDate;
+	
+	@Column(name = "expiration_refeshtoken", unique = true)
+	public LocalDateTime expirationRefTokenDate;
+	
+	@Column(name = "revoked")
+	public boolean revoked;
+	
+	@Column(name = "expired")
+	public boolean expired;
 
 	@Enumerated(EnumType.STRING)
 	public TokenType tokenType = TokenType.BEARER;
-
-	public boolean revoked;
-
-	public boolean expired;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")

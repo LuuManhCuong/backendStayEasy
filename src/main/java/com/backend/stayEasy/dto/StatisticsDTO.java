@@ -18,6 +18,6 @@ public class StatisticsDTO {
 	private long totalBookings;
 	private long totalPost;
 	private long totalCancelBooking;
-//	private long visitCount;
+	private long totalLike;
 
 }
