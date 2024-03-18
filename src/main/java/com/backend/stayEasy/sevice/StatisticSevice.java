@@ -1,8 +1,9 @@
 package com.backend.stayEasy.sevice;
 
 import java.sql.Date;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -173,8 +174,12 @@ public class StatisticSevice {
 	        long totalBookings = bookingRepository.countBookingsBetween(startDate, endDate);
 	        statistics.setTotalBookings(totalBookings);
 	        
+	        
+	     // Chuyển đổi từ java.sql.Date sang java.time.LocalDateTime
+	        LocalDateTime startDateTime = startDate.toLocalDate().atStartOfDay();
+	        LocalDateTime endDateTime = endDate.toLocalDate().atTime(LocalTime.MAX);
 	        // Đếm số lượng tài khoản được tạo từ đầu tháng cho đến ngày hiện tại
-	        long totalAccounts = userRepository.countUsersCreatedBetween(startDate, endDate);
+	        long totalAccounts = userRepository.countUsersCreatedBetween(startDateTime, endDateTime);
 	        statistics.setTotalAccount(totalAccounts);
 	        
 	        // Đếm số lượng property từ ngày đầu tháng cho đến ngày hiện tại
