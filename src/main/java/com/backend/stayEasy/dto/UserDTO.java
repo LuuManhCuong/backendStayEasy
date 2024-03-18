@@ -1,10 +1,11 @@
 package com.backend.stayEasy.dto;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 
 @Data
@@ -16,7 +17,9 @@ public class UserDTO {
 	private String firstName;
 	private String lastName;
 	private String phone;
-	private String address;
+	private AddressDTO address;
 	private String avatar;
 	private String roleName;
+	private LocalDateTime updateAt;
+	private LocalDateTime createAt;
 }

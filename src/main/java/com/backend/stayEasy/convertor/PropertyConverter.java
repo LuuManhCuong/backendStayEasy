@@ -4,6 +4,8 @@ import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
+import com.backend.stayEasy.dto.RulesDTO;
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.entity.PropertyCategory;
@@ -16,6 +18,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.backend.stayEasy.dto.CategoryDTO;
+import com.backend.stayEasy.dto.ImagesDTO;
+import com.backend.stayEasy.dto.LikeRequestDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Category;
+import com.backend.stayEasy.entity.Feedback;
+import com.backend.stayEasy.entity.Images;
+import com.backend.stayEasy.entity.Like;
+import com.backend.stayEasy.entity.Property;
+import com.backend.stayEasy.entity.PropertyCategory;
+import com.backend.stayEasy.entity.PropertyRules;
+import com.backend.stayEasy.entity.PropertyUilitis;
+import com.backend.stayEasy.entity.User;
+import com.backend.stayEasy.repository.UserRepository;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 
 @Component
@@ -32,11 +57,19 @@ public class PropertyConverter {
 
 	@Autowired
 	private UserRepository userRepository;
-
+	
+	@Autowired
+	private RulesConverter rulesConverter;
+	
+	@Autowired
+	private PropertyUtilitiesConverter propertyUtilitiesConverter;
+	
 
 	public PropertyDTO toDTO(Property property) {
 		List<ImagesDTO> listImages = new ArrayList<>();
 		List<CategoryDTO> listCategory = new ArrayList<>();
+		List<RulesDTO> listRules = new ArrayList<>();
+		List<PropertyUtilitiesDTO> listUtilities = new ArrayList<>();
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());
@@ -46,7 +79,7 @@ public class PropertyConverter {
 		propertyDTO.setPrice(property.getPrice());
 		propertyDTO.setPropertyId(property.getPropertyId());
 		propertyDTO.setPropertyName(property.getPropertyName());
-//		propertyDTO.setRating(property.getRating());
+		propertyDTO.setRating(property.getRating());
 		if (!property.getPropertyCategories().isEmpty()) {
 			for (PropertyCategory c : property.getPropertyCategories()) {
 				listCategory.add(categoryConverter.toDTO(c.getCategory()));
@@ -61,7 +94,19 @@ public class PropertyConverter {
 		}
 		propertyDTO.setImagesList(listImages);
 //		propertyDTO.setOwnerId(property.getUser().getId());
-
+		if (!property.getPropertyRules().isEmpty()) {
+			for (PropertyRules c : property.getPropertyRules()) {
+				listRules.add(rulesConverter.toDTO(c.getRules()));
+			}
+		}
+		propertyDTO.setRulesList(listRules);
+		
+		if (!property.getPropertyUilitis().isEmpty()) {
+			for (PropertyUilitis c : property.getPropertyUilitis()) {
+				listUtilities.add(propertyUtilitiesConverter.toDTO(c));
+			}
+		}
+		propertyDTO.setPropertyUtilitis(listUtilities);
 		if (property.getUser() != null) {
 			propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
 		}
@@ -81,7 +126,7 @@ public class PropertyConverter {
 		property.setPrice(propertyDTO.getPrice());
 		property.setPropertyId(propertyDTO.getPropertyId());
 		property.setPropertyName(propertyDTO.getPropertyName());
-//		property.setRating(5.0);
+		property.setRating(propertyDTO.getRating());
 		property.setThumbnail(propertyDTO.getThumbnail());
 
 		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());
@@ -97,7 +142,7 @@ public class PropertyConverter {
 
 //	no
 
-	public PropertyDTO toDTO(Property property, Set<LikeRequestDTO> likeRequestDTOlist) {
+	public PropertyDTO toDTO(Property property, List<LikeRequestDTO> likeRequestDTOlist) {
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());
@@ -113,8 +158,9 @@ public class PropertyConverter {
 		propertyDTO.setLikeList(likeRequestDTOlist);
 		return propertyDTO;
 	}
+	
 
-	public List<PropertyDTO> arrayToDTO(List<Property> propertyList, List<LikeRequestDTO> likeRequestDTOlist) {
+	public List<PropertyDTO> arrayToDTO(List<Property> propertyList) {
 		List<PropertyDTO> propertyDTOList = new ArrayList<>();
 		for (Property property : propertyList) {
 			propertyDTOList.add(toDTO(property));

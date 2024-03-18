@@ -1,5 +1,13 @@
 package com.backend.stayEasy.sevice;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.backend.stayEasy.convertor.PaymentConverter;
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.PaymentDTO;
@@ -13,30 +21,30 @@ import com.backend.stayEasy.repository.PaymentRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.paypal.api.payments.Payment;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PaymentBillService {
 	@Autowired
 	private PaymentRepository PaymentRepo;
+	
 	@Autowired
 	private MailService mailService;
 	@Autowired
 	private BookingRepository bookingRepository;
+	
 	@Autowired
 	private PaymentConverter paymentConverter;
+
 	@Autowired BookingService bookingService;
 	@Autowired PaypalService paypalService;
+
 
 	public PaymentDTO savePayment(Payment paymentParams, UUID bookingId) {
 		// Nhận json tư Payment Paypal sau đó set dữ liệu trong database
@@ -74,17 +82,6 @@ public class PaymentBillService {
 			PaymentRepo.save(paymentBill);
 			// send Email
 		}
-	}
-
-
-	private void logPaymentDetails(PaymentBill paymentBill) {
-		// Implement logging mechanism here (e.g., using a logger)
-		System.out.println("Payment details logged: " + paymentBill);
-	}
-
-	private void notifyBookingConfirmation(Booking booking) {
-		// Implement notification logic here (e.g., email or SMS)
-		System.out.println("Booking confirmation sent for booking: " + booking);
 	}
 
 	// find bill for return

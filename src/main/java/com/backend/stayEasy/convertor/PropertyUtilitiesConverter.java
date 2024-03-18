@@ -13,7 +13,7 @@ import java.util.List;
 public class PropertyUtilitiesConverter {
 	public PropertyUtilitiesDTO toDTO(PropertyUilitis propertyUtiliti) {
 		PropertyUtilitiesDTO propertyUtilitiesDTO = new PropertyUtilitiesDTO();
-		propertyUtilitiesDTO.setPropertyUtilitiesId(propertyUtiliti.getPropertyUtilitiesId());
+		propertyUtilitiesDTO.setUtilitiesId(propertyUtiliti.getUtilities().getUtilitiId());
 		propertyUtilitiesDTO.setQuantity(propertyUtiliti.getQuantity());
 		propertyUtilitiesDTO.setUtilitiesName(propertyUtiliti.getUtilities().getUtilitiesName());
 		return propertyUtilitiesDTO;

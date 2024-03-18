@@ -2,6 +2,7 @@ package com.backend.stayEasy.api;
 
 import com.backend.stayEasy.dto.PayoutDTO;
 import com.backend.stayEasy.dto.RefundDTO;
+import com.backend.stayEasy.enums.Confirmation;
 import com.backend.stayEasy.sevice.BookingService;
 import com.backend.stayEasy.sevice.PaymentBillService;
 import com.backend.stayEasy.sevice.PaypalService;
@@ -75,9 +76,10 @@ public class PaymentAPI {
     public ResponseEntity<Object> performPayout( @PathVariable String idBooking) {
         UUID requestBookingId = UUID.fromString(idBooking);
         PayoutDTO createPayout = paymentService.createPerformPayout(requestBookingId);
-
         try {
             String response = paymentService.performPayout(createPayout);
+            bookingService.updateConfirmBooking(requestBookingId, String.valueOf(Confirmation.COMPLETED));
+
             return ResponseEntity.ok().body(response);
         } catch (IOException e) {
             e.printStackTrace();

@@ -90,7 +90,7 @@ public class ExploreApi {
 				 PropertyDTO propertyDTO = propertyConverter.toDTO(property);
 				List<Like> likes = likeRepository.findByPropertyPropertyId(property.getPropertyId()); // get like tương ứng mỗi property
 			
-				Set<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
+				List<LikeRequestDTO> likeRequestDTOs = likeConverter.arraytoDTO(likes);
 				
 				 propertyDTO.setLikeList(likeRequestDTOs);
 				 propertyDTOs.add(propertyDTO);

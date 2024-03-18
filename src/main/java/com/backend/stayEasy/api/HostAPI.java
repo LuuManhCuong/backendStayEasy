@@ -40,7 +40,7 @@ public class HostAPI {
     }
 
     // update status
-    @PutMapping("/{id}&{status}")
+   
     public ResponseEntity<String> confirmBooking(@PathVariable UUID id, @PathVariable String status){
         bookingService.updateConfirmBooking(id, status);
         // khi trạng thái thay đổi thì gửi thông báo or mail

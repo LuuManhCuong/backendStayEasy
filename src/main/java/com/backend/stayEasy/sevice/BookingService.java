@@ -1,5 +1,6 @@
 package com.backend.stayEasy.sevice;
 
+
 import com.backend.stayEasy.convertor.BookingConverter;
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
@@ -8,8 +9,8 @@ import com.backend.stayEasy.enums.Confirmation;
 import com.backend.stayEasy.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
+
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,11 +19,22 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.backend.stayEasy.convertor.BookingConverter;
+import com.backend.stayEasy.dto.BookingDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Booking;
+import com.backend.stayEasy.enums.Confirmation;
+import com.backend.stayEasy.repository.BookingRepository;
+
 @Service
 public class BookingService {
 
 	@Autowired
 	PropertyService propertyService;
+	
     @Autowired
     private BookingRepository bookingRepository;
     @Autowired
@@ -109,7 +121,7 @@ public class BookingService {
 			// ...
 		}
 	}
-    public void updateBookingCancel(UUID bookingId, boolean status, boolean CancelBooking) {
+    public void updateBookingCancel(UUID bookingId, boolean cancelBooking, boolean status) {
         Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
         if (bookingOptional.isEmpty()) {
             // Handle booking not found (e.g., throw an exception, log an error, etc.)
@@ -117,7 +129,7 @@ public class BookingService {
         }
             Booking booking = bookingOptional.get();
             booking.setCancel(status);
-            booking.setStatus(CancelBooking);
+            booking.setStatus(status);
             booking.setConfirmation(Confirmation.valueOf(Confirmation.REJECTED.name()));
             bookingRepository.save(booking);
             // Send notification (optional)
@@ -126,7 +138,7 @@ public class BookingService {
     }
 
 	// create booking
-	public BookingDTO crateBooking(Booking booking) {
+	public BookingDTO createBooking(Booking booking) {
 		booking = bookingRepository.save(booking);
 		System.out.println("Booking added or updated");
 		return bookingConverter.toDTO(booking);

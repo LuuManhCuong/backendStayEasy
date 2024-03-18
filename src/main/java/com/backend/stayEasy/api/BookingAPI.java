@@ -16,6 +16,7 @@ import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class BookingAPI {
 
     // chi admin moi xem duoc
     @GetMapping(value = "")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<BookingDTO>> returnMyActiveBookings() {
         return ResponseEntity.ok().body(bookingService.findAll());
     }
@@ -71,7 +73,7 @@ public class BookingAPI {
         if (bookingService.isRoomAvailable(bookingParam.getPropertyId(), bookingParam.getCheckIn(), bookingParam.getCheckOut())) {
             BookingDTO bookingDTO = bookingService.newBooking(bookingParam);
             // Lưu booking vào cơ sở dữ liệu
-            BookingDTO savedBooking = bookingService.crateBooking(bookingConverter.toEntity(bookingDTO)); //  phương thức saveBooking
+            BookingDTO savedBooking = bookingService.createBooking(bookingConverter.toEntity(bookingDTO)); //  phương thức saveBooking
             if (savedBooking != null) {
                 bookingId = savedBooking.getBookingId();
                 // Chuyển hướng đến PayPal để thanh town

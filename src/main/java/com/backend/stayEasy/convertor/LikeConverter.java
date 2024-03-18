@@ -1,5 +1,6 @@
 package com.backend.stayEasy.convertor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,8 +35,8 @@ public class LikeConverter {
 		return newDTO;
 	}
 	
-	public Set<LikeRequestDTO> arraytoDTO (List<Like> likes) {
-		Set<LikeRequestDTO> newList = new HashSet<>();
+	public List<LikeRequestDTO> arraytoDTO (List<Like> likes) {
+		List<LikeRequestDTO> newList = new ArrayList<>();
 		for (Like like : likes) {
 			newList.add(convertToLikeDTO(like));
 		}

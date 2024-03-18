@@ -1,7 +1,6 @@
 package com.backend.stayEasy.entity;
 
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
@@ -17,15 +16,15 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="utilities")
+@Table(name = "utilities")
 public class Utilities {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID utilitiId;
-	
+
 	@Column(name = "utilities_name", columnDefinition = "nvarchar(255)")
 	private String utilitiesName;
-	
+
 	@OneToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PropertyUilitis> propertyUilitis;
+	private List<PropertyUilitis> propertyUilitis;
 }
