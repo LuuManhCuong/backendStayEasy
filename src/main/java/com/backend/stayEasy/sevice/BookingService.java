@@ -6,11 +6,12 @@ import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Booking;
 import com.backend.stayEasy.enums.Confirmation;
 import com.backend.stayEasy.repository.BookingRepository;
-import com.backend.stayEasy.repository.PropertyUilitisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +25,6 @@ public class BookingService {
 	PropertyService propertyService;
     @Autowired
     private BookingRepository bookingRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PropertyUilitisRepository propertyRepository;
     @Autowired
     private BookingConverter bookingConverter;
 
@@ -45,9 +42,43 @@ public class BookingService {
 	}
 
 	public List<BookingDTO> findAll() {
-		return bookingRepository.findAll().stream().map(bookingConverter::toDTO).collect(Collectors.toList());
+		return bookingRepository.findAll().stream()
+                .map(bookingConverter::toDTO)
+                .collect(Collectors.toList());
 	}
 
+    public List<UUID> updateBookingStatusWithSchedule() throws IOException {
+        // Lấy danh sách các booking
+        List<Booking> bookings = bookingRepository.findAll().stream()
+                // loc danh sach
+                .filter(Booking -> Booking.getStatus() && Booking.getConfirmation() != Confirmation.PENDING && Booking.getConfirmation() != Confirmation.REJECTED)
+                .toList();
+        // Lặp qua từng booking để kiểm tra và cập nhật trạng thái
+        LocalDate currentDate = LocalDate.now();
+        System.out.println(currentDate);
+        List<UUID> updateBooking = new ArrayList<>();
+        for (Booking booking : bookings) {
+            // neu trang thai khong phaoi la PENDING // REJECTED
+                LocalDate checkInDate = booking.getCheckIn().toLocalDate(); // Chuyển đổi Date thành LocalDate
+                LocalDate checkOutDate = booking.getCheckOut().toLocalDate(); // Chuyển đổi Date thành LocalDate
+            System.out.println(checkInDate);
+                // So sánh ngày check-in và ngày checkout với ngày hiện tại
+                if (booking.getConfirmation()!= Confirmation.IN_PROGRESS && checkInDate.isAfter(currentDate) && checkOutDate.isBefore(currentDate)) {
+                    // Nếu ngày hiện tại nằm trong khoảng từ ngày check-in đến ngày checkout
+                    // Cập nhật trạng thái của booking thành "Đang diễn ra"
+                    booking.setConfirmation(Confirmation.IN_PROGRESS);
+                    System.out.println("Đã chạy");
+                } else if (booking.getConfirmation()!= Confirmation.COMPLETED && checkOutDate.isAfter(currentDate)) {
+                    // Nếu ngày hiện tại sau ngày checkout
+                    // Cập nhật trạng thái của booking thành "Hoàn thành"
+                    booking.setConfirmation(Confirmation.COMPLETED);
+                    booking.setStatus(false); // Đặt trạng thái của booking là false
+                    updateBooking.add(booking.getBookingId());
+                }
+                bookingRepository.save(booking);
+            }
+        return updateBooking;
+        }
 
     public List<BookingDTO> returnMyBookings(UUID userId) {
         return bookingRepository.findAllByUser_IdOrderByDateBookingDesc(userId)

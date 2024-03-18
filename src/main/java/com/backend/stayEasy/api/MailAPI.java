@@ -25,8 +25,9 @@ public class MailAPI {
 	public void SendBookMail(@RequestBody Mail mail) {
 		mailService.sendBook(mail);
 	}
-	@PostMapping("/send/cancel")
-	public void SendCancleMail(@RequestBody Mail mail) {
-		mailService.sendCancel(mail);
-	}
+
+//	@PostMapping("/send/cancel")
+//	public void SendCancleMail(@RequestBody Mail mail) {
+//		mailService.sendCancel(mail);
+//	}
 }

@@ -41,7 +41,6 @@ public class BookingAPI {
     private BookingConverter bookingConverter;
     @Autowired PaypalService paypalService;
     private UUID bookingId;
-    private boolean emailSent = false;
 
     // chi admin moi xem duoc
     @GetMapping(value = "")
@@ -109,6 +108,8 @@ public class BookingAPI {
     // return success payment
     @GetMapping(value = SUCCESS_URL)
     public ResponseEntity<List<PaymentDTO>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId)  {
+        boolean emailSent = false;
+        // Kiểm tra trạng thái gửi email từ cache
         try {
             Payment payment = service.executePayment(paymentId, payerId);
             String data = payment.toJSON();
@@ -117,12 +118,20 @@ public class BookingAPI {
                 bookingService.updateBookingStatus(bookingId, true);
                 paymentService.savePayment(payment, bookingId);
                 System.out.println(data);
-                // Lưu thông tin payment
+                // Lưu thông tin payment'
+                if (!emailSent) {
+                    sendEmailBookingSuccess(bookingId);
+                    // Cập nhật trạng thái gửi email vào cache
+                    emailSent = true;
+                }
                 return ResponseEntity.ok().body(paymentService.findByPaymentId(paymentId));
             }
 
         } catch (PayPalRESTException e) {
-            sendEmailBooking(); // Send email notification about the cancellation
+            if(!emailSent){
+                sendEmailPayBooking(bookingId); // Send email notification about the cancellation
+                emailSent = true;
+            }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -133,11 +142,11 @@ public class BookingAPI {
     // return when cancel payment
     @GetMapping(value = CANCEL_URL)
     public ResponseEntity<Map<String, Object>> cancelPay()  {
+         boolean emailSent = false;
         Map<String, Object> response = new HashMap<>();
         if (!emailSent) {
             // Gửi email nhắc thanh toán chỉ 1 lần
-            sendEmailBooking();
-            emailSent = true;
+            sendEmailPayBooking(bookingId);
             String message = "Đã hủy thanh toán và gửi email nhắc thanh toán thành công.";
             BookingDTO bookingDTO = bookingService.getBookingById(bookingId);
             String paymentLinkTemplate = "http://localhost:3000/booking/%s?checkin=%s&checkout=%s&numGuest=%d";
@@ -145,12 +154,13 @@ public class BookingAPI {
             response.put("message", message);
             response.put("bookingDTO", bookingDTO);
             response.put("paymentLink", paymentLink);
+            emailSent = true;
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // can code in booking service
-    private void sendEmailBooking() {
+    private void sendEmailPayBooking(UUID bookingId) {
         BookingDTO bookingDTO = bookingService.getBookingById(bookingId);
         String paymentLinkTemplate = "http://localhost:3000/booking/%s?checkin=%s&checkout=%s&numGuest=%d";
         String paymentLink = String.format(paymentLinkTemplate, bookingDTO.getPropertyDTOS().getPropertyId(), bookingDTO.getCheckIn(), bookingDTO.getCheckOut(), bookingDTO.getNumOfGuest());
@@ -162,6 +172,18 @@ public class BookingAPI {
         mail.setSubject(subject);
         mail.setContent(content);
         mailService.sendEmailPayment(mail, bookingDTO, paymentLink);
+    }
+    // can code in booking service
+    private void sendEmailBookingSuccess(UUID bookingId) {
+        BookingDTO bookingDTO = bookingService.getBookingById(bookingId);
+        String subject = "Thanh toán booking thành công cho " + bookingDTO.getPropertyName();
+        String content = "Payment mail";
+        // set new mail
+        Mail mail = new Mail();
+        mail.setRecipient(bookingDTO.getUserDTOS().getEmail());
+        mail.setSubject(subject);
+        mail.setContent(content);
+        mailService.sendEmailSuccess(mail, bookingDTO);
     }
 
     // get transaction detail
