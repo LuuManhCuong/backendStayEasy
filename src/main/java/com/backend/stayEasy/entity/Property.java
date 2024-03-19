@@ -64,9 +64,9 @@ public class Property {
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Images> images;
 
-//	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<Feedback> feedbacks;
-
+	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Feedback2> feedbacks;
+	
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyCategory> propertyCategories;
 

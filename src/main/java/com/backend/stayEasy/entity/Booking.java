@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -52,5 +53,6 @@ public class Booking {
 	@Enumerated(EnumType.STRING)
 	private Confirmation confirmation = Confirmation.PENDING;
 	
-	
+	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<PaymentBill> paymentBills;
 }

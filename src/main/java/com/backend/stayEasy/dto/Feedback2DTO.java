@@ -1,5 +1,6 @@
 package com.backend.stayEasy.dto;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -9,11 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FeedbackDTO {
+public class Feedback2DTO {
 	private UUID feedbackId;
 	private String content;
-	private String username;
-	private String avatar;
-	private UUID userId;
-	private UUID propertyId;
+	private int rating;
+	private LocalDateTime createAt;
+	private UserDTO user;
+	private PropertyDTO property;
+
 }

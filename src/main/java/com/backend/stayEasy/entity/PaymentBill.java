@@ -31,7 +31,7 @@ public class PaymentBill {
     private String captures;
     @Column (name = "refund_status")
     private String refundStatus;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;
 

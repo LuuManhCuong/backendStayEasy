@@ -24,6 +24,8 @@ public class BookingConverter {
     public BookingDTO toDTO(Booking booking) {
         BookingDTO bookingDTO = new BookingDTO();
         bookingDTO.setBookingId(booking.getBookingId());
+        bookingDTO.setPropertyId(booking.getProperty().getPropertyId());
+        bookingDTO.setUserId(booking.getUser().getId());
         bookingDTO.setDateBooking(booking.getDateBooking());
         bookingDTO.setCheckIn(booking.getCheckIn());
         bookingDTO.setCheckOut(booking.getCheckOut());

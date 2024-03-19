@@ -14,7 +14,6 @@ public class FeedbackConverter {
 		feedbackDTO.setFeedbackId(feedback.getFeedbackId());
 		feedbackDTO.setUserId(feedback.getUserId());
 		feedbackDTO.setPropertyId(feedback.getPropertyId());
-		feedbackDTO.setRating(feedback.getRating());
 		return feedbackDTO;
 	}
 
@@ -26,7 +25,6 @@ public class FeedbackConverter {
 		feedback.setAvatar(feedbackDTO.getAvatar());
 		feedback.setUsername(feedbackDTO.getUsername());
 		feedback.setPropertyId(feedbackDTO.getPropertyId());
-		feedback.setRating(feedbackDTO.getRating());
 		;
 		return feedback;
 	}

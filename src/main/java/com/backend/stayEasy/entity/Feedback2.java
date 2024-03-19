@@ -3,23 +3,25 @@ package com.backend.stayEasy.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
 @Data
-@Table(name="feedback")
-public class Feedback {
+@Table(name="feedback2")
+public class Feedback2 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="feedback_id")
 	private UUID feedbackId;
-
 	
 	@Column(name="content",columnDefinition = "NTEXT" )
 	private String content;
@@ -27,17 +29,12 @@ public class Feedback {
 	@Column(name = "createAt")
 	private LocalDateTime createAt;
 	
-	@Column(name = "username")
-	private String username;
+	@Column(name="rating")
+	private int rating;
 	
-	@Column(name = "avatar")
-	private String avatar;
-		
-	@Column(name = "userId")
-	private UUID userId;
+	@OneToOne()
+	private Property property;
 	
-	@Column(name = "property_id")
-	private UUID propertyId;
-	
-
+	@OneToOne()
+	private User user;
 }

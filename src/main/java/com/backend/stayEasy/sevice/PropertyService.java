@@ -22,6 +22,7 @@ import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
 import com.backend.stayEasy.dto.RulesDTO;
 import com.backend.stayEasy.entity.Category;
 import com.backend.stayEasy.entity.Feedback;
+import com.backend.stayEasy.entity.Feedback2;
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
@@ -31,7 +32,7 @@ import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.entity.Rules;
 import com.backend.stayEasy.entity.Utilities;
 import com.backend.stayEasy.repository.CategoryRepository;
-import com.backend.stayEasy.repository.FeedbackRepository;
+import com.backend.stayEasy.repository.Feedback2Repository;
 import com.backend.stayEasy.repository.IImageRepository;
 import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
@@ -81,7 +82,7 @@ public class PropertyService implements IPropertyService {
 	private PropertyUilitisRepository propertyUilitisRepository;
 	
 	@Autowired
-	private FeedbackRepository feedbackRepository;
+	private Feedback2Repository feedbackRepository;
 
 	@Override
 	public DataPropertyExploreDTO findAll(Pageable pageable) {
@@ -245,7 +246,6 @@ public class PropertyService implements IPropertyService {
 		List<PropertyRules> rulesToMove = new ArrayList<>();
 		List<PropertyUilitis> utilitiesToMove = new ArrayList<>();
 		List<Images> imagesToRemove = new ArrayList<>();
-		List<PropertyUilitis> updatedPropertyUtilities = new ArrayList<>();
 
 		for (PropertyCategory existingCategory : existingProperty.getPropertyCategories()) {
 			boolean existsInUpdate = false;
@@ -397,9 +397,9 @@ public class PropertyService implements IPropertyService {
 	}
 	
 	public float getRatingProperty(UUID propertyId) {
-	    List<Feedback> feedbackList = feedbackRepository.findByPropertyId(propertyId);
+	    List<Feedback2> feedbackList = feedbackRepository.findByPropertyPropertyId(propertyId);
 	    float total = 0;
-	    for (Feedback feedback : feedbackList) {
+	    for (Feedback2 feedback : feedbackList) {
 	        total += feedback.getRating();
 	    }
 	    if (feedbackList.size() > 0) {

@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.backend.stayEasy.convertor.FeedbackConverter;
 import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.FeedbackDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.Feedback;
 import com.backend.stayEasy.entity.Property;
@@ -32,6 +34,7 @@ import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.FeedbackRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.UserRepository;
+import com.backend.stayEasy.sevice.FeedbackService;
 
 @Controller
 @CrossOrigin
@@ -54,6 +57,9 @@ public class FeedbackAPI {
 	@Autowired 
 	private FeedbackConverter feedbackConverter;
 	
+	@Autowired
+	private FeedbackService feedbackService;
+	
 	  @Autowired
 	    private SimpMessagingTemplate messagingTemplate;
 
@@ -74,11 +80,6 @@ public class FeedbackAPI {
 	        List<Feedback> feedbacks = feedbackRepository.findByPropertyIdOrderByCreateAtDesc(propertyId);
 	        return ResponseEntity.ok(feedbacks);
 	    }
-	    
-	 
-
-
-	    
 	    
 }
  

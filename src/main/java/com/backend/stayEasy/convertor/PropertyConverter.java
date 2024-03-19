@@ -106,6 +106,7 @@ public class PropertyConverter {
 				listUtilities.add(propertyUtilitiesConverter.toDTO(c));
 			}
 		}
+		System.out.println("o day: "+listUtilities);
 		propertyDTO.setPropertyUtilitis(listUtilities);
 		if (property.getUser() != null) {
 			propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
