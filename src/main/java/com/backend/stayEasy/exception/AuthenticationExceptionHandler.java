@@ -46,6 +46,17 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 		mapper.writeValue(httpServletResponse.getOutputStream(), errorResponse);
 	}
 
+	
+	/**
+	 * 
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param ex
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws DatabindException
+	 * @throws IOException
+	 */
 	@ExceptionHandler({ BadCredentialsException.class, AuthenticationCredentialsNotFoundException.class })
 	public void handleBadCredentialsException(HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse, Exception ex)
@@ -58,6 +69,17 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 		mapper.writeValue(httpServletResponse.getOutputStream(), errorResponse);
 	}
 
+	
+	/**
+	 * 
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param ex
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws DatabindException
+	 * @throws IOException
+	 */
 	@ExceptionHandler(ExpiredJwtException.class)
 	public void handleExpiredJwtException(HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse, NoSuchElementException ex)
@@ -70,6 +92,17 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 		mapper.writeValue(httpServletResponse.getOutputStream(), errorResponse);
 	}
 
+	
+	/**
+	 * 
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param ex
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws DatabindException
+	 * @throws IOException
+	 */
 	@ExceptionHandler(NoSuchElementException.class)
 	public void handleNoSuchElementException(HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse, NoSuchElementException ex)
@@ -82,44 +115,92 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 		mapper.writeValue(httpServletResponse.getOutputStream(), errorResponse);
 	}
 
+	
+	/**
+	 * 
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(DisabledException.class)
 	public ResponseEntity<?> handleDisabledException(DisabledException ex) {
 		// Xử lý khi tài khoản người dùng bị vô hiệu hóa
 		return ResponseEntity.status(403).body("Tài khoản của bạn đã bị vô hiệu hóa");
 	}
 
+	
+	/**
+	 * 
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(LockedException.class)
 	public ResponseEntity<?> handleLockedException(LockedException ex) {
 		// Xử lý khi tài khoản người dùng bị khóa
 		return ResponseEntity.status(403).body("Tài khoản của bạn đã bị khóa");
 	}
 
+	
+	/**
+	 * 
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(InternalServerError.class)
 	public ResponseEntity<?> handleDisabledException(InternalServerError ex) {
 		return ResponseEntity.status(500).body("Lỗi 5 xị");
 	}
 	
+	
+	/**
+	 * 
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<?> handleDisabledException(DataIntegrityViolationException ex) {
 		return ResponseEntity.status(500).body("Lỗi ");
 	}
 	
+	
+	/**
+	 * 
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
 		// Xử lý khi không tìm thấy người dùng
 		return ResponseEntity.badRequest().body("Không tìm thấy người dùng");
 	}
 
+	
+	/**
+	 * 
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public ResponseEntity<String> handleNoHandlerFoundException(NoHandlerFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Đường dẫn không tồn tại.");
 	}
 
+	
+	/**
+	 * 
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(NoResourceFoundException.class)
 	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy đường dẫn này.");
 	}
 
+	
+	/**
+	 * 
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<String> handleMethodNotAllowedException(
 			org.springframework.web.HttpRequestMethodNotSupportedException ex) {

@@ -1,18 +1,5 @@
 package com.backend.stayEasy.api;
 
-import com.backend.stayEasy.dto.PayoutDTO;
-import com.backend.stayEasy.dto.RefundDTO;
-import com.backend.stayEasy.sevice.BookingService;
-import com.backend.stayEasy.sevice.PaymentBillService;
-import com.backend.stayEasy.sevice.PaypalService;
-import com.backend.stayEasy.sevice.impl.IMailService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -22,6 +9,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.backend.stayEasy.dto.PayoutDTO;
+import com.backend.stayEasy.dto.RefundDTO;
+import com.backend.stayEasy.sevice.BookingService;
+import com.backend.stayEasy.sevice.PaymentBillService;
+import com.backend.stayEasy.sevice.PaypalService;
+import com.backend.stayEasy.sevice.impl.IMailService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @RestController
 @CrossOrigin

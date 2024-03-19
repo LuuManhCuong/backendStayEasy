@@ -9,4 +9,6 @@ public interface IMailService {
 	void sendCancel(Mail mail);
 
 	void sendEmailPayment(Mail mail, BookingDTO bookingDTO, String paymentLink);
+
+	void sendEmailVerify(Mail mail, String Code);
 }

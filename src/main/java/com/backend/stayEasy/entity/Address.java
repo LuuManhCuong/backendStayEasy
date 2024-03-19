@@ -19,10 +19,19 @@ public class Address {
     @Column(name = "id")
 	private UUID id;
 	
+	@Column(name = "street", columnDefinition = "NVARCHAR(255)")
 	private String street;
+	
+	@Column(name = "ward", columnDefinition = "NVARCHAR(255)")
 	private String ward;
+	
+	@Column(name = "district", columnDefinition = "NVARCHAR(255)")
 	private String district;
+	
+	@Column(name = "city", columnDefinition = "NVARCHAR(255)")
 	private String city;
+	
+	@Column(name = "country", columnDefinition = "NVARCHAR(255)")
 	private String country;
 	
 	@OneToOne(mappedBy = "address")

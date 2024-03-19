@@ -69,7 +69,7 @@ public class TokenService implements ITokenService{
 	public Token verifyExpiration(Token token) {
         if (token.getExpirationRefTokenDate().compareTo(LocalDateTime.now()) < 0) {
         	tokenRepository.delete(token);
-            throw new TokenExceptionHandle(token.getToken(), "Refresh token was expired. Please make a new signin request");
+            throw new TokenExceptionHandle(token.getToken(), "Refresh token Đã hết hạn. Vui lòng đăng nhập lại");
         }
 
         return token;
