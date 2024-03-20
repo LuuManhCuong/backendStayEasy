@@ -6,6 +6,8 @@ public enum Confirmation {
     REJECTED ,// Đã từ chối
     COMPLETED,// Đã hoàn thành.
     IN_PROGRESS ,// Đang diễn ra
-    CANCEL // tu choi
+    CANCEL, // tu choi
+    RESERVE // giữ chỗ
+
 
 }

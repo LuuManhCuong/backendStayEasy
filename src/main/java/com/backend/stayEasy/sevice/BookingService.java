@@ -9,8 +9,8 @@ import com.backend.stayEasy.enums.Confirmation;
 import com.backend.stayEasy.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,16 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.backend.stayEasy.convertor.BookingConverter;
-import com.backend.stayEasy.dto.BookingDTO;
-import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.entity.Booking;
-import com.backend.stayEasy.enums.Confirmation;
-import com.backend.stayEasy.repository.BookingRepository;
 
 @Service
 public class BookingService {
@@ -71,26 +61,30 @@ public class BookingService {
         List<UUID> updateBooking = new ArrayList<>();
         for (Booking booking : bookings) {
             // neu trang thai khong phaoi la PENDING // REJECTED
-                LocalDate checkInDate = booking.getCheckIn().toLocalDate(); // Chuyển đổi Date thành LocalDate
-                LocalDate checkOutDate = booking.getCheckOut().toLocalDate(); // Chuyển đổi Date thành LocalDate
-            System.out.println(checkInDate);
-                // So sánh ngày check-in và ngày checkout với ngày hiện tại
-                if (booking.getConfirmation()!= Confirmation.IN_PROGRESS && checkInDate.isAfter(currentDate) && checkOutDate.isBefore(currentDate)) {
-                    // Nếu ngày hiện tại nằm trong khoảng từ ngày check-in đến ngày checkout
-                    // Cập nhật trạng thái của booking thành "Đang diễn ra"
-                    booking.setConfirmation(Confirmation.IN_PROGRESS);
-                    System.out.println("Đã chạy");
-                } else if (booking.getConfirmation()!= Confirmation.COMPLETED && checkOutDate.isAfter(currentDate)) {
-                    // Nếu ngày hiện tại sau ngày checkout
-                    // Cập nhật trạng thái của booking thành "Hoàn thành"
-                    booking.setConfirmation(Confirmation.COMPLETED);
-                    booking.setStatus(false); // Đặt trạng thái của booking là false
-                    updateBooking.add(booking.getBookingId());
-                }
-                bookingRepository.save(booking);
+            LocalDate checkInDate = booking.getCheckIn().toLocalDate(); // Chuyển đổi Date thành LocalDate
+            LocalDate checkOutDate = booking.getCheckOut().toLocalDate(); // Chuyển đổi Date thành LocalDate
+//            System.out.println(checkInDate);
+//            // So sánh ngày check-in và ngày checkout với ngày hiện tại
+//            System.out.println("confirm " +  booking.getConfirmation().equals(Confirmation.CONFIRMED));
+//            System.out.println("checkin " +  checkInDate.equals(currentDate));
+//            System.out.println("checkout " +  currentDate.isBefore(checkOutDate));
+            if (booking.getConfirmation() == Confirmation.CONFIRMED && checkInDate.equals(currentDate) && currentDate.isBefore(checkOutDate)) {
+                // Nếu ngày hiện tại nằm trong khoảng từ ngày check-in đến ngày checkout
+                // lấy danh sách CONFIRMED
+                // Cập nhật trạng thái của booking thành "Đang diễn ra"
+                booking.setConfirmation(Confirmation.IN_PROGRESS);
+                System.out.println("Đã chạy");
+            } else if (booking.getConfirmation() == Confirmation.IN_PROGRESS && checkOutDate.equals(currentDate)) {
+                // Nếu ngày hiện tại sau ngày checkout
+                // danh sach IN_PROGRESS
+                // Cập nhật trạng thái của booking thành "Hoàn thành"
+                booking.setConfirmation(Confirmation.COMPLETED);
+                updateBooking.add(booking.getBookingId());
             }
-        return updateBooking;
+            bookingRepository.save(booking);
         }
+        return updateBooking;
+    }
 
     public List<BookingDTO> returnMyBookings(UUID userId) {
         return bookingRepository.findAllByUser_IdOrderByDateBookingDesc(userId)
@@ -100,7 +94,8 @@ public class BookingService {
     }
 
 	public List<BookingDTO> returnListingBookings(UUID id) {
-		return bookingRepository.findAllByPropertyPropertyIdOrderByDateBookingDesc(id).stream()
+        LocalDate today = LocalDate.now(); // Get today's date
+        return bookingRepository.findAllByPropertyPropertyIdOrderByDateBookingDesc(id).stream()
                 .filter(Booking::getStatus)
                 .map(bookingConverter::toDTO)
                 .collect(Collectors.toList());
@@ -115,6 +110,7 @@ public class BookingService {
 		Booking booking = bookingOptional.get();
 		if (booking.getStatus() != status) {
 			booking.setStatus(status);
+            booking.setConfirmation(Confirmation.valueOf(Confirmation.PENDING.name()));
 			bookingRepository.save(booking);
 			// Send notification (optional)
             // send Email
@@ -128,9 +124,9 @@ public class BookingService {
             throw new RuntimeException("Booking with ID " + bookingId + " not found.");
         }
             Booking booking = bookingOptional.get();
-            booking.setCancel(status);
-            booking.setStatus(status);
-            booking.setConfirmation(Confirmation.valueOf(Confirmation.REJECTED.name()));
+            booking.setCancel(cancelBooking); // true
+            booking.setStatus(status); // false
+            booking.setConfirmation(Confirmation.valueOf(Confirmation.REJECTED.name())); // Rejected
             bookingRepository.save(booking);
             // Send notification (optional)
             // send Email
@@ -140,7 +136,7 @@ public class BookingService {
 	// create booking
 	public BookingDTO createBooking(Booking booking) {
 		booking = bookingRepository.save(booking);
-		System.out.println("Booking added or updated");
+		System.out.println("Booking added");
 		return bookingConverter.toDTO(booking);
 	}
     public BookingDTO newBooking(BookingDTO bookingDTO) {
@@ -154,7 +150,8 @@ public class BookingService {
         bookingDto.setCheckOut(bookingDTO.getCheckOut());
         bookingDto.setNumberNight(bookingDTO.getNumberNight());
         bookingDto.setStatus(false);
-        bookingDto.setConfirmation(Confirmation.PENDING.name());
+        bookingDto.setConfirmation(Confirmation.RESERVE.name());
+        System.out.println(Confirmation.RESERVE.name());
         return bookingDto;
     }
     public boolean isRoomAvailable(UUID id, Date checkInDate, Date checkOutDate) {
@@ -163,16 +160,9 @@ public class BookingService {
         return conflictingBookings.isEmpty();
     }
 
-    public void deleteBooking(UUID bookingId) {
+    public void deleteBooking(UUID userId , UUID propertyId) {
         // set du lieu lai thanh false  khong xoa khoi database
-        Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
-        if(bookingOptional.isPresent()){
-            Booking booking = bookingOptional.get();
-            booking.setCancel(false);
-            booking.setConfirmation(Confirmation.REJECTED);
-        } else {
-            throw new RuntimeException("Booking with ID " + bookingId + " not found.");
-        }
+        bookingRepository.deleteByUserIdAndPropertyIdAndStatusIsFalse(userId, propertyId);
     }
 
 

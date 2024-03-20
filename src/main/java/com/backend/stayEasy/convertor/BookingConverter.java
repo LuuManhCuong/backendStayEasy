@@ -33,7 +33,7 @@ public class BookingConverter {
         bookingDTO.setNumberNight(booking.getNumNight());
         bookingDTO.setNumOfGuest(booking.getNumGuest());
         bookingDTO.setTotal(booking.getTotalPrice());
-        bookingDTO.setStatus(booking.getStatus()); 
+        bookingDTO.setStatus(booking.getStatus());
         bookingDTO.setConfirmation(booking.getConfirmation().name());
 //        bookingDTO.setPropertyName(listingServiceStatic.findById(booking.getProperty().getId()).getPropertyName());
         return  bookingDTO;

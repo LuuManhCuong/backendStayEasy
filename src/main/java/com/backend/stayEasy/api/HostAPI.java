@@ -22,15 +22,29 @@ public class HostAPI {
     private BookingService bookingService;
     @Autowired
     private PaymentBillService paymentBillService;
-    @Scheduled(cron = "0 */5 * * * *") // Chạy mỗi 5 phút
+    @Scheduled(cron = "0 */15 * * * *") // Chạy mỗi 5 phút
     public void scheduleBookingStatusUpdate() throws IOException {
-        List<UUID> listUpdate = bookingService.updateBookingStatusWithSchedule();
-        for (UUID id: listUpdate) {
-            System.out.println(id);
-            PayoutDTO payoutDTO = paymentBillService.createPerformPayout(id);
-            paymentBillService.performPayout(payoutDTO);
+        System.out.println("Chạy lịch schedule");
+        try {
+            // Lấy danh sách các booking cần cập nhật trạng thái
+            List<UUID> listUpdate = bookingService.updateBookingStatusWithSchedule();
+            // Duyệt qua danh sách và thực hiện việc cập nhật và thanh toán cho mỗi booking
+            for (UUID id: listUpdate) {
+                System.out.println("Updating booking: " + id);
+                // Tạo thanh toán cho booking
+                PayoutDTO payoutDTO = paymentBillService.createPerformPayout(id);
+                // Thực hiện thanh toán cho chủ
+                paymentBillService.performPayout(payoutDTO);
+            }
+        } catch (IOException e) {
+            // Xử lý ngoại lệ IOException nếu có
+            System.err.println("An error occurred while scheduling booking status update: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            // Xử lý các ngoại lệ khác nếu có
+            System.err.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
-
     }
 
     // get all booking

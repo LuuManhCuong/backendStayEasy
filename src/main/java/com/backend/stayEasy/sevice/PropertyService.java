@@ -1,22 +1,47 @@
 package com.backend.stayEasy.sevice;
-
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
-import com.backend.stayEasy.dto.*;
-import com.backend.stayEasy.entity.*;
-import com.backend.stayEasy.repository.*;
 import com.backend.stayEasy.sevice.impl.IPropertyService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import com.backend.stayEasy.dto.CategoryDTO;
+import com.backend.stayEasy.dto.DataPropertyExploreDTO;
+import com.backend.stayEasy.dto.ImagesDTO;
+import com.backend.stayEasy.dto.LikeRequestDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
+import com.backend.stayEasy.dto.RulesDTO;
+import com.backend.stayEasy.entity.Category;
+import com.backend.stayEasy.entity.Feedback;
+import com.backend.stayEasy.entity.Images;
+import com.backend.stayEasy.entity.Like;
+import com.backend.stayEasy.entity.Property;
+import com.backend.stayEasy.entity.PropertyCategory;
+import com.backend.stayEasy.entity.PropertyRules;
+import com.backend.stayEasy.entity.PropertyUilitis;
+import com.backend.stayEasy.entity.Rules;
+import com.backend.stayEasy.entity.User;
+import com.backend.stayEasy.repository.CategoryRepository;
+import com.backend.stayEasy.entity.Utilities;
+import com.backend.stayEasy.repository.FeedbackRepository;
+import com.backend.stayEasy.repository.IImageRepository;
+import com.backend.stayEasy.repository.IPropertyCategoryRepository;
+import com.backend.stayEasy.repository.IPropertyRepository;
+import com.backend.stayEasy.repository.LikeRepository;
+import com.backend.stayEasy.repository.PropertyUilitisRepository;
+import com.backend.stayEasy.repository.RulesRepository;
+import com.backend.stayEasy.repository.PropertyRulesRepository;
+import com.backend.stayEasy.repository.UtilitiesRepository;
 
 @Service
 public class PropertyService implements IPropertyService {
@@ -53,7 +78,7 @@ public class PropertyService implements IPropertyService {
 
 	@Autowired
 	private PropertyUilitisRepository propertyUilitisRepository;
-	
+
 	@Autowired
 	private FeedbackRepository feedbackRepository;
 
@@ -72,6 +97,7 @@ public class PropertyService implements IPropertyService {
 			temp.setRating(rating);
 			result.add(temp);
 		}
+//		return result;
 		DataPropertyExploreDTO newData = new DataPropertyExploreDTO();
 		newData.setProperties(result);
 		newData.setTotalCount(totalCount);
@@ -93,7 +119,6 @@ public class PropertyService implements IPropertyService {
 		List<PropertyCategory> propertyCategory = new ArrayList<>();
 		List<PropertyRules> propertyRules = new ArrayList<>();
 		List<PropertyUilitis> propertyUtilities = new ArrayList<>();
-
 		property = propertyConverter.toEntity(propertyDTO);
 
 		for (ImagesDTO i : propertyDTO.getImagesList()) {
@@ -106,7 +131,7 @@ public class PropertyService implements IPropertyService {
 			Optional<Category> categoryOp = categoryRepository.findById(categoryDTO.getCategoryId());
 			if (categoryOp.isPresent()) {
 				Category category = categoryOp.get();
-				temp.setCategory(category); 
+				temp.setCategory(category);
 			}
 			propertyCategory.add(temp);
 		}
@@ -117,7 +142,7 @@ public class PropertyService implements IPropertyService {
 			Optional<Rules> rulesOp = rulesRepository.findById(rulesDTO.getRulesId());
 			if (rulesOp.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
 				Rules rules = rulesOp.get(); // Trích xuất giá trị User từ Optional
-				temp.setRules(rules); // Gán giá trị User cho property
+				temp.setRules(rules);
 			}
 			propertyRules.add(temp);
 		}
@@ -127,13 +152,15 @@ public class PropertyService implements IPropertyService {
 			temp.setProperty(property);
 			temp.setQuantity(propertyUtilitiesDTO.getQuantity());
 			Optional<Utilities> utilitiesOp = utilitiesRepository.findById(propertyUtilitiesDTO.getUtilitiesId());
-			if (utilitiesOp.isPresent()) { 
-				Utilities utilities = utilitiesOp.get(); 
-				temp.setUtilities(utilities); 
+			if (utilitiesOp.isPresent()) {
+				Utilities utilities = utilitiesOp.get();
+				temp.setUtilities(utilities);
 			}
 			propertyUtilities.add(temp);
 		}
 
+		LocalDate today = LocalDate.now();
+		property.setCreateAt(Date.valueOf(today));
 		property.setImages(images);
 		property.setPropertyCategories(propertyCategory);
 		property.setPropertyRules(propertyRules);
@@ -159,6 +186,9 @@ public class PropertyService implements IPropertyService {
 			existingProperty.setPrice(updatedProperty.getPrice());
 			existingProperty.setNumGuests(updatedProperty.getNumGuests());
 			existingProperty.setDiscount(updatedProperty.getDiscount());
+			existingProperty.setNumBathRoom(updatedProperty.getNumBathRoom());
+			existingProperty.setNumBedRoom(updatedProperty.getNumBedRoom());
+			existingProperty.setServiceFee(updatedProperty.getServiceFee());
 
 			checkUpdateProperty(existingProperty, updatePropertyDTO);
 
@@ -214,6 +244,7 @@ public class PropertyService implements IPropertyService {
 		return propertyConverter.arrayToDTO(propertyList);
 	}
 
+	// Check update
 	public void checkUpdateProperty(Property existingProperty, PropertyDTO updatePropertyDTO) {
 		List<PropertyCategory> categoryToRemove = new ArrayList<>();
 		List<PropertyRules> rulesToMove = new ArrayList<>();
@@ -369,18 +400,18 @@ public class PropertyService implements IPropertyService {
 		}
 
 	}
-	
+
 	public float getRatingProperty(UUID propertyId) {
-	    List<Feedback> feedbackList = feedbackRepository.findByPropertyId(propertyId);
-	    float total = 0;
-	    for (Feedback feedback : feedbackList) {
-	        total += feedback.getRating();
-	    }
-	    if (feedbackList.size() > 0) {
-	        return total / feedbackList.size(); 
-	    } else {
-	        return 0;
-	    }
+		List<Feedback> feedbackList = feedbackRepository.findByPropertyId(propertyId);
+		float total = 0;
+		for (Feedback feedback : feedbackList) {
+			total += feedback.getRating();
+		}
+		if (feedbackList.size() > 0) {
+			return total / feedbackList.size();
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
@@ -403,5 +434,4 @@ public class PropertyService implements IPropertyService {
 		return newData;
 		// TODO Auto-generated method stub
 	}
-
 }

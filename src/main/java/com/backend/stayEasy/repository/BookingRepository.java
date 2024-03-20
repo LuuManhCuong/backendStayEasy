@@ -1,16 +1,15 @@
 package com.backend.stayEasy.repository;
 
 import com.backend.stayEasy.dto.DailyRevenueDTO;
-
-
 import com.backend.stayEasy.entity.Booking;
 import com.backend.stayEasy.enums.Confirmation;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-//import java.sql.Date;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -71,4 +70,8 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     
     List<Booking> findAllByPropertyPropertyIdAndConfirmationOrderByDateBookingDesc(UUID property_propertyId, Confirmation confirmation);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Booking b WHERE b.user.id = :userId AND b.property.propertyId = :propertyId AND b.status = false")
+    void deleteByUserIdAndPropertyIdAndStatusIsFalse(UUID userId, UUID propertyId);
 }

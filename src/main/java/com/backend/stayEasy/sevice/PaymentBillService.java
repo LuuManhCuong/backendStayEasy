@@ -1,13 +1,5 @@
 package com.backend.stayEasy.sevice;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.backend.stayEasy.convertor.PaymentConverter;
 import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.PaymentDTO;
@@ -21,13 +13,17 @@ import com.backend.stayEasy.repository.PaymentRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.paypal.api.payments.Payment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentBillService {
@@ -101,7 +97,7 @@ public class PaymentBillService {
 			refundDTO.setPaypalRequestId(firstPayment.getPaymentBillId());
 			refundDTO.setInvoiceId(refundDTO.getInvoiceId());
 		}
-		System.out.println(refundDTO.toString());
+		System.out.println(refundDTO);
 		return refundDTO ;
 
 	}

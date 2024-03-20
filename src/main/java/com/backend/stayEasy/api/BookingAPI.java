@@ -62,9 +62,12 @@ public class BookingAPI {
 
     // huy booking (check ngay truoc checkin 1 ngay  , return payment ,them vao bang paymnet bill , cap nhat trang thai vot  booking)
     // refund payment (lay stk cua user da thanh toan va refund)
-    @DeleteMapping("/traveler-cancel/{bookingId}")
-    public void cancelBooking(@PathVariable("bookingId") UUID bookingId) {
-        bookingService.deleteBooking(bookingId);
+    @DeleteMapping("/traveler-reserve/{userId}&{propertyId}")
+    public ResponseEntity<String> cancelBooking(@PathVariable("userId") UUID userId, @PathVariable("propertyId") UUID propertyId) {
+        bookingService.deleteBooking(userId, propertyId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message" , "booking đã bị hủy");
+        return ResponseEntity.ok((response.toString()));
     }
 
     // create payment and update booking (check id  user isn't host )

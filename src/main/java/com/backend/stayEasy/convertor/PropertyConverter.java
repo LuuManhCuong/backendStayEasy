@@ -1,15 +1,7 @@
 package com.backend.stayEasy.convertor;
 
-import com.backend.stayEasy.dto.CategoryDTO;
-import com.backend.stayEasy.dto.ImagesDTO;
-import com.backend.stayEasy.dto.LikeRequestDTO;
-import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
-import com.backend.stayEasy.dto.RulesDTO;
-import com.backend.stayEasy.entity.Images;
-import com.backend.stayEasy.entity.Property;
-import com.backend.stayEasy.entity.PropertyCategory;
-import com.backend.stayEasy.entity.User;
+import com.backend.stayEasy.dto.*;
+import com.backend.stayEasy.entity.*;
 import com.backend.stayEasy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,30 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.backend.stayEasy.dto.CategoryDTO;
-import com.backend.stayEasy.dto.ImagesDTO;
-import com.backend.stayEasy.dto.LikeRequestDTO;
-import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.entity.Category;
-import com.backend.stayEasy.entity.Feedback;
-import com.backend.stayEasy.entity.Images;
-import com.backend.stayEasy.entity.Like;
-import com.backend.stayEasy.entity.Property;
-import com.backend.stayEasy.entity.PropertyCategory;
-import com.backend.stayEasy.entity.PropertyRules;
-import com.backend.stayEasy.entity.PropertyUilitis;
-import com.backend.stayEasy.entity.User;
-import com.backend.stayEasy.repository.UserRepository;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 
 @Component
@@ -80,20 +48,29 @@ public class PropertyConverter {
 		propertyDTO.setPropertyId(property.getPropertyId());
 		propertyDTO.setPropertyName(property.getPropertyName());
 		propertyDTO.setRating(property.getRating());
+		propertyDTO.setNumBathRoom(property.getNumBathRoom());
+		propertyDTO.setNumBedRoom(property.getNumBedRoom());
+		propertyDTO.setServiceFee(property.getServiceFee());
+		
+		// CATEGORIES
 		if (!property.getPropertyCategories().isEmpty()) {
 			for (PropertyCategory c : property.getPropertyCategories()) {
 				listCategory.add(categoryConverter.toDTO(c.getCategory()));
 			}
 		}
 		propertyDTO.setCategories(listCategory);
+		
+		// THUMBNAIL
 		propertyDTO.setThumbnail(property.getThumbnail());
+		
 		if (!property.getImages().isEmpty()) {
 			for (Images i : property.getImages()) {
 				listImages.add(imagesConventer.toDTO(i));
 			}
 		}
 		propertyDTO.setImagesList(listImages);
-//		propertyDTO.setOwnerId(property.getUser().getId());
+
+		// RULES
 		if (!property.getPropertyRules().isEmpty()) {
 			for (PropertyRules c : property.getPropertyRules()) {
 				listRules.add(rulesConverter.toDTO(c.getRules()));
@@ -101,18 +78,23 @@ public class PropertyConverter {
 		}
 		propertyDTO.setRulesList(listRules);
 		
+		// UTILITIESS
 		if (!property.getPropertyUilitis().isEmpty()) {
 			for (PropertyUilitis c : property.getPropertyUilitis()) {
 				listUtilities.add(propertyUtilitiesConverter.toDTO(c));
 			}
 		}
 		propertyDTO.setPropertyUtilitis(listUtilities);
+		
+		// USER
 		if (property.getUser() != null) {
 			propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
 		}
+		
 		return propertyDTO;
 	}
 
+	// TO ENTITY
 	public Property toEntity(PropertyDTO propertyDTO) {
 		Property property = new Property();
 		if(propertyDTO.getPropertyId()!=null) {
@@ -123,16 +105,19 @@ public class PropertyConverter {
 		property.setDiscount(propertyDTO.getDiscount());
 		property.setNull(false);
 		property.setNumGuests(propertyDTO.getNumGuests());
+		property.setNumBathRoom(propertyDTO.getNumBathRoom());
+		property.setNumBedRoom(propertyDTO.getNumBedRoom());
 		property.setPrice(propertyDTO.getPrice());
 		property.setPropertyId(propertyDTO.getPropertyId());
 		property.setPropertyName(propertyDTO.getPropertyName());
+		property.setServiceFee(propertyDTO.getServiceFee());
 		property.setRating(propertyDTO.getRating());
 		property.setThumbnail(propertyDTO.getThumbnail());
 
 		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());
-				if (optionalUser.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
-				    User user = optionalUser.get(); // Trích xuất giá trị User từ Optional
-				    property.setUser(user); // Gán giá trị User cho property
+				if (optionalUser.isPresent()) {
+				    User user = optionalUser.get(); 
+				    property.setUser(user);
 				} else {
 				   property.setUser(null);
 				}

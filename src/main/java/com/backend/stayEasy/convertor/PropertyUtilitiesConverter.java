@@ -16,6 +16,7 @@ public class PropertyUtilitiesConverter {
 		propertyUtilitiesDTO.setUtilitiesId(propertyUtiliti.getUtilities().getUtilitiId());
 		propertyUtilitiesDTO.setQuantity(propertyUtiliti.getQuantity());
 		propertyUtilitiesDTO.setUtilitiesName(propertyUtiliti.getUtilities().getUtilitiesName());
+		propertyUtilitiesDTO.setType(propertyUtiliti.getUtilities().getType());
 		return propertyUtilitiesDTO;
 	}
 	
