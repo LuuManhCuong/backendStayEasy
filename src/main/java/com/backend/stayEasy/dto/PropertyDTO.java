@@ -1,6 +1,7 @@
 package com.backend.stayEasy.dto;
 
-import java.sql.Date;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -23,8 +24,9 @@ public class PropertyDTO {
     private Float price;
     private boolean isNull;
     private int numGuests;
+    private int serviceFee;
     private int discount;
-    private Date createAt;
+    private LocalDateTime createAt;
     private Float rating;
     private UserDTO owner;
     private List<ImagesDTO> imagesList;

@@ -42,22 +42,21 @@ public class PropertyAPI {
 
 	@Autowired
 	private IPropertyService propertyService;
-	
 	@Autowired
 	private ExploreRepository exploreRepository;
-	
-	@Autowired
-	private PropertyConverter propertyConverter;
-	
+
 	@Autowired
 	private IPropertyRepository propertyRepository;
-	
+
+	@Autowired
+	private PropertyConverter propertyConverter;
+
 	@Autowired
 	private LikeRepository likeRepository;
-	
+
 	@Autowired
 	private LikeConverter likeConverter;
-	
+
 	@GetMapping
 	public DataPropertyExploreDTO getAllProperty(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
 		if(page == null || size == null ) {
@@ -83,12 +82,12 @@ public class PropertyAPI {
 			@Validated @RequestBody PropertyDTO updaPropertyDTO) {
 		return propertyService.update(propertyId, updaPropertyDTO);
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
 	public Property delete(@PathVariable("id") UUID propertyId) {
 		return propertyService.delete(propertyId);
 	}
-	
+
 	@GetMapping("/category/{category}")
 	public List<PropertyDTO> getPropertyByCategory(@PathVariable("category") UUID categoryId) {
 		System.out.println(categoryId);
@@ -103,7 +102,7 @@ public class PropertyAPI {
 		for (Property property : searchResults) {
 			propertyDTOs.add(propertyConverter.toDTO(property));
 		}
-        return propertyDTOs;
+		return propertyDTOs;
 	}
 	
 	
