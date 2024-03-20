@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,11 +26,13 @@ import com.backend.stayEasy.convertor.UserConverter;
 import com.backend.stayEasy.dto.SignInRequest;
 import com.backend.stayEasy.dto.SignInResponse;
 import com.backend.stayEasy.dto.SignUpRequest;
+import com.backend.stayEasy.entity.Mail;
 import com.backend.stayEasy.entity.Token;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.enums.TokenType;
 import com.backend.stayEasy.repository.TokenRepository;
 import com.backend.stayEasy.repository.UserRepository;
+import com.backend.stayEasy.sevice.impl.IMailService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,6 +47,9 @@ public class AuthService implements UserDetailsService {
 
 	@Autowired
 	private UserConverter userConverter;
+	
+	@Autowired
+	private IMailService mailService;
 
 	@Autowired
 	private TokenRepository tokenRepository;
@@ -190,29 +196,43 @@ public class AuthService implements UserDetailsService {
 		//Bỏ "Bearer " trong chuỗi lấy được từ header
 		refreshToken = authHeader.substring(7);
 		
+		Map<String, Object> errorResponse = new HashMap<>();
+		
 		//Get userName từ refreshToken 
-		userEmail = jwtService.extractUsername(refreshToken);
-		if (userEmail != null) {
-			//Tìm kiếm người dùng trong cơ sở dữ liệu dựa trên email. Nếu không tìm thấy người dùng, phương thức sẽ ném một ngoại lệ.
-			var user = this.repository.findByEmail(userEmail).orElseThrow();
-			//Check refreshToken đó có hợp lệ không
-			if (jwtService.isTokenValid(refreshToken, user)) {
-				var newAccessToken = jwtService.generateToken(user);//Tạo token mới
-				var newRefreshToken = jwtService.generateRefreshToken(user);//tạo refreshToken mới
-				
-				revokeAllUserTokens(user);//Tìm và hủy tất cả các token đang hoạt động của user này
-				
-				saveUserToken(user, newAccessToken, newRefreshToken);//lưu token vào db
-				
-				return ResponseEntity.ok(SignInResponse.builder()
-						.accessToken(newAccessToken)
-						.refreshToken(newRefreshToken)
-						.user(userConverter.toDTO(user))
-						.message("Làm mới token thành công!")
-						.build());
+		try {
+			userEmail = jwtService.extractUsername(refreshToken);
+			if (userEmail != null) {
+				//Tìm kiếm người dùng trong cơ sở dữ liệu dựa trên email. Nếu không tìm thấy người dùng, phương thức sẽ ném một ngoại lệ.
+				var user = this.repository.findByEmail(userEmail).orElseThrow();
+				//Check refreshToken đó có hợp lệ không
+				if (jwtService.isTokenValid(refreshToken, user)) {
+					var newAccessToken = jwtService.generateToken(user);//Tạo token mới
+					var newRefreshToken = jwtService.generateRefreshToken(user);//tạo refreshToken mới
+					
+					revokeAllUserTokens(user);//Tìm và hủy tất cả các token đang hoạt động của user này
+					
+					saveUserToken(user, newAccessToken, newRefreshToken);//lưu token vào db
+					
+					return ResponseEntity.ok(SignInResponse.builder()
+							.accessToken(newAccessToken)
+							.refreshToken(newRefreshToken)
+							.user(userConverter.toDTO(user))
+							.message("Làm mới token thành công!")
+							.build());
+				}
 			}
+		} catch (Exception e) {
+			errorResponse.put("message", "Token Không hợp lệ!");
+			errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.contentType(MediaType.APPLICATION_JSON)
+					.body(errorResponse);
 		}
-		return null;
+		errorResponse.put("message", "Không tìm thấy token!");
+		errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(errorResponse);
 	}
 
 	@Override
@@ -253,5 +273,32 @@ public class AuthService implements UserDetailsService {
 				.user(userConverter.toDTO(user))
 				.message("Đổi mật khẩu thành công!")
 				.build();
+	}
+	
+	public ResponseEntity<?> sendVerifyCodeToEmail(String email){
+		//Tạo 1 mã để xác thực
+		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder result = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
+            result.append(characters.charAt(random.nextInt(characters.length())));
+        }
+		
+		String subject = "Xác minh Email";
+		String code = result.toString();
+		
+        // set new mail
+        Mail mail = new Mail();
+        mail.setRecipient(email);// email lấy từ body request
+        mail.setSubject(subject);
+        mail.setContent(code);
+        mailService.sendEmailVerify(mail, code);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Đã gửi mã tới email. Hãy kiểm tra email!");
+        response.put("code", code);
+        response.put("status", HttpStatus.OK.value());
+        
+        return ResponseEntity.ok(response);
 	}
 }

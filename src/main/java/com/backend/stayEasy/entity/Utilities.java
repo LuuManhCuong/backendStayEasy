@@ -21,10 +21,13 @@ public class Utilities {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID utilitiId;
-
-	@Column(name = "utilities_name", columnDefinition = "nvarchar(255)")
+	
+	@Column(name = "utilities_name", columnDefinition = "text")
 	private String utilitiesName;
-
+	
+	@Column(name = "type")
+	private String type;
+	
 	@OneToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyUilitis> propertyUilitis;
 }

@@ -1,14 +1,19 @@
 package com.backend.stayEasy.sevice.impl;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.backend.stayEasy.dto.DataPropertyExploreDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.entity.Property;
 
-public interface IPropertyService {
+import java.util.List;
+import java.util.UUID;
 
-	List<PropertyDTO> findAll();
+import org.springframework.data.domain.Pageable;
+
+public interface IPropertyService {
+	
+	DataPropertyExploreDTO findAll();
+	
+	DataPropertyExploreDTO findAll(Pageable pageable);
 
 	PropertyDTO findById(UUID id);
 
@@ -18,11 +23,13 @@ public interface IPropertyService {
 
 	Property delete(UUID propertyId);
 
+
 	List<PropertyDTO> findByCategory(UUID categoryId);
 
-	List<PropertyDTO> findAllPropertiesByHostId(UUID hostId);
+    List<PropertyDTO> findAllPropertiesByHostId(UUID hostId);
 
 //	List<Property> findByCategory(UUID categoryId);
 
+	
 	List<PropertyDTO> findByPropertyNameOrAddressContainingIgnoreCase(String keySearch);
 }

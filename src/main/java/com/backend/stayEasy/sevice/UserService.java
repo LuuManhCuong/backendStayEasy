@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.backend.stayEasy.convertor.UserConverter;
@@ -26,6 +27,9 @@ public class UserService implements IUserService{
 
 	@Autowired
 	private UserConverter userConverter;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	/**
 	 * @author NamHH
@@ -81,6 +85,26 @@ public class UserService implements IUserService{
 		}
 		//set thời gian create
 		user.setCreatedAt(LocalDateTime.now());
+		return userConverter.toDTO(userRepository.save(user));
+	}
+	
+	/**
+	 * 
+	 * @author NamHH
+	 * @param userDTO
+	 * @return
+	 */
+	@Transactional
+	public UserDTO resetPassword(String email, String password) {
+		User user = new User();
+		//check nếu body request có userId thì update
+		//tìm user trong db
+		user = userRepository.findByEmail(email).get();
+		//set lại giá trị mới cho user
+		user.setPassword(passwordEncoder.encode(password));
+		//set thời gian update
+		user.setUpdatedAt(LocalDateTime.now());
+		
 		return userConverter.toDTO(userRepository.save(user));
 	}
 

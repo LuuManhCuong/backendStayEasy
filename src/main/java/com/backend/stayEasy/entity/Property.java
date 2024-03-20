@@ -1,6 +1,7 @@
 package com.backend.stayEasy.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +35,8 @@ public class Property {
 
 	@Column(columnDefinition = "nvarchar(255)")
 	private String address;
+	private int numBedRoom;
+	private int numBathRoom;
 
 	@Column(name = "is_null")
 	private boolean isNull;
@@ -46,6 +49,10 @@ public class Property {
 
 	@Column(name = "create_at")
 	private Date createAt;
+	
+	@Column (name = "service_fee")
+	private int serviceFee;
+	
 
 	private String thumbnail;
 	private Float price;
@@ -54,6 +61,8 @@ public class Property {
 	@ManyToOne
 	private User user;
 
+//	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<Feedback> feedbacks;
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 
 	private List<Like> likes;
@@ -69,11 +78,13 @@ public class Property {
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyCategory> propertyCategories;
-
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyUilitis> propertyUilitis;
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyRules> propertyRules;
 
+//	@ManyToMany
+//	@JoinTable(name = "category_property", joinColumns = @JoinColumn(referencedColumnName = "property_id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "category_id"))
+//	private Set<Category> categories = new HashSet<>();
 }
