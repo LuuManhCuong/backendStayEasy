@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PropertyUtilitiesDTO {
 	private UUID utilitiesId;
-    private int quantity;
+	private String type;
     private String utilitiesName;
 }

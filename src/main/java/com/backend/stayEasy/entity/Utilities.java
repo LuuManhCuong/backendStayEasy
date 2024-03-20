@@ -24,6 +24,9 @@ public class Utilities {
 
 	@Column(name = "utilities_name", columnDefinition = "nvarchar(255)")
 	private String utilitiesName;
+	
+	@Column(name = "type")
+	private String type;
 
 	@OneToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyUilitis> propertyUilitis;

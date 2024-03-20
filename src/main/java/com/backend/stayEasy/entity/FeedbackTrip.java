@@ -16,8 +16,8 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="feedback2")
-public class Feedback2 {
+@Table(name="feedback-trip")
+public class FeedbackTrip {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="feedback_id")

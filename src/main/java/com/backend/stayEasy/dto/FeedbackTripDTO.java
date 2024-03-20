@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Feedback2DTO {
+public class FeedbackTripDTO {
 	private UUID feedbackId;
 	private String content;
 	private int rating;

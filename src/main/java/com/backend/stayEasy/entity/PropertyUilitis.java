@@ -18,8 +18,6 @@ public class PropertyUilitis {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID propertyUtilitiesId;
 
-	private int quantity;
-
 	@ManyToOne()
 	private Property property;
 

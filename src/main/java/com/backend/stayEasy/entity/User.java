@@ -48,10 +48,10 @@ public class User implements UserDetails {
 	@Column(name = "password", nullable = false)
 	String password;
 
-	@Column(name = "firstName", nullable = true)
+	@Column(name = "firstName", nullable = true,columnDefinition = "nvarchar(255)")
 	String firstName;
 
-	@Column(name = "lastName")
+	@Column(name = "lastName",columnDefinition = "nvarchar(255)")
 	String lastName;
 
 	@Column(name = "phone")

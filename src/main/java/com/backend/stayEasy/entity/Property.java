@@ -34,6 +34,8 @@ public class Property {
 
 	@Column(columnDefinition = "nvarchar(255)")
 	private String address;
+	private int numBedRoom;
+	private int numBathRoom;
 
 	@Column(name = "is_null")
 	private boolean isNull;
@@ -65,7 +67,7 @@ public class Property {
 	private List<Images> images;
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Feedback2> feedbacks;
+	private List<FeedbackTrip> feedbacks;
 	
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyCategory> propertyCategories;

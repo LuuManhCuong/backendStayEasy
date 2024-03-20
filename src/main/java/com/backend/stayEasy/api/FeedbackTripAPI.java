@@ -15,41 +15,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.stayEasy.dto.Feedback2DTO;
-import com.backend.stayEasy.sevice.impl.IFeedback2Service;
+import com.backend.stayEasy.dto.FeedbackTripDTO;
+import com.backend.stayEasy.sevice.impl.IFeedbackTripService;
 
 
 
 @RestController
 @CrossOrigin("http://localhost:3000")
-@RequestMapping(value = "/api/v1/stayeasy/test", produces = "application/json")
-public class Feedback2API {
+@RequestMapping(value = "/api/v1/stayeasy/trip/feedback", produces = "application/json")
+public class FeedbackTripAPI {
 	
 	@Autowired
-	private IFeedback2Service feedbackService;
+	private IFeedbackTripService feedbackService;
 	
 	@GetMapping("")
-	public List<Feedback2DTO> getFeedback(){
+	public List<FeedbackTripDTO> getFeedback(){
 		return feedbackService.getFeedback();
 	}
 	
 	@GetMapping("/{id}")
-	public List<Feedback2DTO> getByPropertyId(@PathVariable("id") UUID propertyId) {
+	public List<FeedbackTripDTO> getByPropertyId(@PathVariable("id") UUID propertyId) {
 		return feedbackService.getByPropertyId(propertyId);
 	}
 	
 	@GetMapping("/{userId}/{propertyId}")
-	public Feedback2DTO getByUserIdAndPropertyId(@PathVariable("userId") UUID userId, @PathVariable("propertyId") UUID propertyId) {
+	public FeedbackTripDTO getByUserIdAndPropertyId(@PathVariable("userId") UUID userId, @PathVariable("propertyId") UUID propertyId) {
 	    return feedbackService.getByUserIdAndPropertyId(userId, propertyId);
 	}
 	
 	@PostMapping("/add")
-	public Feedback2DTO addFeedback(@RequestBody Feedback2DTO feedbackDTO) {
+	public FeedbackTripDTO addFeedback(@RequestBody FeedbackTripDTO feedbackDTO) {
 		return feedbackService.add(feedbackDTO);
 	}
 
 	@PutMapping("/edit/{id}")
-	public Feedback2DTO editFeedback(@PathVariable("id") UUID feedbackId, @RequestBody Feedback2DTO updaFeedbackDTO) {
+	public FeedbackTripDTO editFeedback(@PathVariable("id") UUID feedbackId, @RequestBody FeedbackTripDTO updaFeedbackDTO) {
 		return feedbackService.update(feedbackId, updaFeedbackDTO);
 	}
 	

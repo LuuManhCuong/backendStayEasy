@@ -80,6 +80,8 @@ public class PropertyConverter {
 		propertyDTO.setPropertyId(property.getPropertyId());
 		propertyDTO.setPropertyName(property.getPropertyName());
 		propertyDTO.setRating(property.getRating());
+		propertyDTO.setNumBathRoom(property.getNumBathRoom());
+		propertyDTO.setNumBedRoom(property.getNumBedRoom());
 		if (!property.getPropertyCategories().isEmpty()) {
 			for (PropertyCategory c : property.getPropertyCategories()) {
 				listCategory.add(categoryConverter.toDTO(c.getCategory()));
@@ -129,6 +131,8 @@ public class PropertyConverter {
 		property.setPropertyName(propertyDTO.getPropertyName());
 		property.setRating(propertyDTO.getRating());
 		property.setThumbnail(propertyDTO.getThumbnail());
+		property.setNumBathRoom(propertyDTO.getNumBathRoom());
+		property.setNumBedRoom(propertyDTO.getNumBedRoom());
 
 		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());
 				if (optionalUser.isPresent()) { // Kiểm tra xem giá trị tồn tại trong Optional hay không
