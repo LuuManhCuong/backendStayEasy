@@ -37,6 +37,7 @@ public class MailService implements IMailService {
 			// TODO: handle exception
 		}
 	}
+
 	@Override
 	public void sendCancel(Mail mail , BookingDTO bookingDTO , String link) {
 		LocalDateTime cancelDate = LocalDateTime.now();
@@ -55,15 +56,34 @@ public class MailService implements IMailService {
 			// TODO: handle exception
 		}
 	}
+
 	@Override
-	public void sendEmailPayment(Mail mail, BookingDTO bookingDTO , String paymentLink)  {
+	public void sendEmailPayment(Mail mail, BookingDTO bookingDTO, String paymentLink) {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
 		Context context = new Context();
 		context.setVariable("bookingDTO", bookingDTO);
 		context.setVariable("paymentLink", paymentLink);
 		String htmlContent = templateEngine.process("email-payment", context);
-		try{
+		try {
+			helper.setText(htmlContent, true);
+			helper.setTo(mail.getRecipient());
+			helper.setSubject(mail.getSubject());
+			mailSender.send(message);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+	}
+
+	@Override
+	public void sendEmailVerify(Mail mail, String code) {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
+		Context context = new Context();
+		context.setVariable("code", code);
+		String htmlContent = templateEngine.process("email-verify", context);
+		try {
 			helper.setText(htmlContent, true);
 			helper.setTo(mail.getRecipient());
 			helper.setSubject(mail.getSubject());
@@ -94,4 +114,3 @@ public class MailService implements IMailService {
 		}
 	}
 }
-

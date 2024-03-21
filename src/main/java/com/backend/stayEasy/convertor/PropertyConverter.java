@@ -1,15 +1,38 @@
 package com.backend.stayEasy.convertor;
 
+<<<<<<< HEAD
 import com.backend.stayEasy.dto.*;
 import com.backend.stayEasy.entity.*;
 import com.backend.stayEasy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+=======
+>>>>>>> origin/namhh-exception
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+<<<<<<< HEAD
+=======
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.backend.stayEasy.dto.CategoryDTO;
+import com.backend.stayEasy.dto.ImagesDTO;
+import com.backend.stayEasy.dto.LikeRequestDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
+import com.backend.stayEasy.dto.RulesDTO;
+import com.backend.stayEasy.entity.Images;
+import com.backend.stayEasy.entity.Property;
+import com.backend.stayEasy.entity.PropertyCategory;
+import com.backend.stayEasy.entity.PropertyRules;
+import com.backend.stayEasy.entity.PropertyUilitis;
+import com.backend.stayEasy.entity.User;
+import com.backend.stayEasy.repository.UserRepository;
+
+>>>>>>> origin/namhh-exception
 
 @Component
 public class PropertyConverter {
