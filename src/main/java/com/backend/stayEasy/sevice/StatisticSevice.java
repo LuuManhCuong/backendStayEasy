@@ -167,8 +167,8 @@ public class StatisticSevice {
 	        statistics.setDate(endDate);
 	        
 	        // Tính tổng doanh thu từ ngày đầu tháng đến ngày hiện tại
-	        Float totalRevenue = bookingRepository.getTotalRevenueBetween(startDate, endDate);
-	        statistics.setRevenue(totalRevenue);
+	        Double totalRevenue = bookingRepository.getTotalRevenueBetween(startDate, endDate);
+	        statistics.setRevenue(totalRevenue != null ? totalRevenue : 0.0);
 	        
 	        // Đếm số lượng booking từ ngày đầu tháng cho đến ngày hiện tại
 	        long totalBookings = bookingRepository.countBookingsBetween(startDate, endDate);
@@ -203,8 +203,9 @@ public class StatisticSevice {
 		        statistics.setDate(endDate);
 		        
 		        // Tính tổng doanh thu từ ngày đầu tháng đến ngày hiện tại
-		        Float totalRevenue = bookingRepository.getTotalRevenueBetweenAndByPropertyId(startDate, endDate, propertyId);
-		        statistics.setRevenue(totalRevenue != null?  totalRevenue: 0);
+		        Double totalRevenue = bookingRepository.getTotalRevenueBetweenAndByPropertyId(startDate, endDate, propertyId);
+		        statistics.setRevenue(totalRevenue != null ? totalRevenue : 0.0);
+
 		        
 		        // Đếm số lượng booking từ ngày đầu tháng cho đến ngày hiện tại
 		        long totalBookings = bookingRepository.countBookingsBetweenAndByPropertyId(startDate, endDate, propertyId);

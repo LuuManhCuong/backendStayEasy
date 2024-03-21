@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class StatisticsDTO {
 	private UUID statisticsId;
 	private Date date;
-	private float revenue;
+	private Double revenue;
 	private long totalAccount;
 	private long totalBookings;
 	private long totalPost;

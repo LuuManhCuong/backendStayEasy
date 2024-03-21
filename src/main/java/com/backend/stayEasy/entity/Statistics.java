@@ -18,7 +18,7 @@ public class Statistics {
     @GeneratedValue(strategy = GenerationType.AUTO)
 		private UUID statisticsId;
 		private Date date;
-		private float revenue;
+		private Double revenue;
 		private Long totalAccount;
 		private Long totalBookings;
 		private Long totalPost;

@@ -25,7 +25,7 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     
     
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.dateBooking BETWEEN :startDate AND :endDate AND b.cancel IS NULL")
-    Float getTotalRevenueBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    Double getTotalRevenueBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
     
     
     @Query("SELECT SUM(b.totalPrice) FROM Booking b "
@@ -33,7 +33,7 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     		+ "AND b.dateBooking BETWEEN :startDate "
     		+ "AND :endDate "
     		+ "AND b.cancel IS NULL")
-    Float getTotalRevenueBetweenAndByPropertyId(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("propertyId") UUID propertyId);
+    Double getTotalRevenueBetweenAndByPropertyId(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("propertyId") UUID propertyId);
     
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.dateBooking BETWEEN :startDate AND :endDate")
     long countBookingsBetween(Date startDate, Date endDate);
