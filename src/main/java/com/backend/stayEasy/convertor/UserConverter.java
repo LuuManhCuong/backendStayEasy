@@ -1,5 +1,6 @@
 package com.backend.stayEasy.convertor;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,6 @@ public class UserConverter {
 		}
 		user.setAvatar(Optional.ofNullable(userDTO.getAvatar()).orElse(user.getAvatar()));
 		user.setRole(userDTO.getRoleName() != null ? Role.valueOf(userDTO.getRoleName()) : user.getRole());
-
 		return user;
 	}
 
