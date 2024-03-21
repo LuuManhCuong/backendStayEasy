@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.backend.stayEasy.convertor.FeedbackConverter;
 import com.backend.stayEasy.dto.FeedbackDTO;
 import com.backend.stayEasy.entity.Feedback;
 import com.backend.stayEasy.repository.FeedbackRepository;
+import com.backend.stayEasy.sevice.FeedbackService;
+
 
 @Controller
 @CrossOrigin
@@ -31,6 +34,7 @@ public class FeedbackAPI {
 
 	@Autowired
 	private FeedbackConverter feedbackConverter;
+	
 
 	@MessageMapping("/feedback/{propertyId}")
 	@SendTo("/api/v1/stayeasy/topic/feedback/{propertyId}")
@@ -47,5 +51,13 @@ public class FeedbackAPI {
 		List<Feedback> feedbacks = feedbackRepository.findByPropertyIdOrderByCreateAtDesc(propertyId);
 		return ResponseEntity.ok(feedbacks);
 	}
+
+
+	
+	
+
+
+	    
+
 
 }

@@ -1,6 +1,6 @@
 package com.backend.stayEasy.entity;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
@@ -10,24 +10,31 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "utilities")
-public class Utilities {
+@Table(name="feedback-trip")
+public class FeedbackTrip {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID utilitiId;
+	@Column(name="feedback_id")
+	private UUID feedbackId;
 	
-	@Column(name = "utilities_name", columnDefinition = "text")
-	private String utilitiesName;
+	@Column(name="content",columnDefinition = "NTEXT" )
+	private String content;
 	
-	@Column(name = "type")
-	private String type;
-
-	@OneToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<PropertyUilitis> propertyUilitis;
+	@Column(name = "createAt")
+	private LocalDateTime createAt;
+	
+	@Column(name="rating")
+	private int rating;
+	
+	@OneToOne()
+	private Property property;
+	
+	@OneToOne()
+	private User user;
 }

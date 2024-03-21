@@ -71,7 +71,7 @@ public class PropertyAPI {
 
 	@PostMapping("/add")
 	public PropertyDTO addProperty(@Validated @RequestBody PropertyDTO propertyDTO) {
-		System.out.println("BODY: " + propertyDTO);
+		System.out.println("api o day: "+propertyDTO);
 		return propertyService.add(propertyDTO);
 	}
 

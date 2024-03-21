@@ -95,6 +95,7 @@ public class PropertyConverter {
 				listUtilities.add(propertyUtilitiesConverter.toDTO(c));
 			}
 		}
+		System.out.println("o day: "+listUtilities);
 		propertyDTO.setPropertyUtilitis(listUtilities);
 		
 		// USER
@@ -124,6 +125,8 @@ public class PropertyConverter {
 		property.setServiceFee(propertyDTO.getServiceFee());
 		property.setRating(propertyDTO.getRating());
 		property.setThumbnail(propertyDTO.getThumbnail());
+		property.setNumBathRoom(propertyDTO.getNumBathRoom());
+		property.setNumBedRoom(propertyDTO.getNumBedRoom());
 
 		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());
 				if (optionalUser.isPresent()) {

@@ -1,6 +1,7 @@
 package com.backend.stayEasy.dto;
 
 import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PropertyUtilitiesDTO {
 	private UUID utilitiesId;
-    private int quantity;
+	private String type;
     private String utilitiesName;
-    private String type;
+   
 }
