@@ -1,15 +1,6 @@
 package com.backend.stayEasy.sevice;
 
 
-import com.backend.stayEasy.convertor.BookingConverter;
-import com.backend.stayEasy.dto.BookingDTO;
-import com.backend.stayEasy.dto.PropertyDTO;
-import com.backend.stayEasy.entity.Booking;
-import com.backend.stayEasy.enums.Confirmation;
-import com.backend.stayEasy.repository.BookingRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -18,6 +9,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.backend.stayEasy.convertor.BookingConverter;
+import com.backend.stayEasy.dto.BookingDTO;
+import com.backend.stayEasy.dto.PropertyDTO;
+import com.backend.stayEasy.entity.Booking;
+import com.backend.stayEasy.enums.Confirmation;
+import com.backend.stayEasy.repository.BookingRepository;
 
 @Service
 public class BookingService {
@@ -94,7 +95,6 @@ public class BookingService {
     }
 
 	public List<BookingDTO> returnListingBookings(UUID id) {
-        LocalDate today = LocalDate.now(); // Get today's date
         return bookingRepository.findAllByPropertyPropertyIdOrderByDateBookingDesc(id).stream()
                 .filter(Booking::getStatus)
                 .map(bookingConverter::toDTO)

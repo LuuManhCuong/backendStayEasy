@@ -104,8 +104,6 @@
 		    <artifactId>guava</artifactId>
 		    <version>30.0-jre</version>
 		</dependency>
-<<<<<<< HEAD
-=======
 		
 		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
 		<dependency>
@@ -113,10 +111,6 @@
 		    <artifactId>okhttp</artifactId>
 		    <version>4.10.0</version>
 		</dependency>
-
->>>>>>> origin/namhh-exception
-
-
 	</dependencies>
 
 	<build>

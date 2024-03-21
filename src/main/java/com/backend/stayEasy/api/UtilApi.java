@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.dto.UtilitiesDTO;
-import com.backend.stayEasy.entity.Utilities;
 import com.backend.stayEasy.sevice.impl.IUtilitiesService;
 
 @RestController

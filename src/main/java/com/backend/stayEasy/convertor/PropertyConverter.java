@@ -1,20 +1,9 @@
 package com.backend.stayEasy.convertor;
 
-<<<<<<< HEAD
-import com.backend.stayEasy.dto.*;
-import com.backend.stayEasy.entity.*;
-import com.backend.stayEasy.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-=======
->>>>>>> origin/namhh-exception
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-<<<<<<< HEAD
-=======
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +21,6 @@ import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.UserRepository;
 
->>>>>>> origin/namhh-exception
 
 @Component
 public class PropertyConverter {

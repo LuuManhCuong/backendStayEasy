@@ -1,19 +1,5 @@
 package com.backend.stayEasy.api;
 
-<<<<<<< HEAD
-import com.backend.stayEasy.dto.PayoutDTO;
-import com.backend.stayEasy.dto.RefundDTO;
-import com.backend.stayEasy.enums.Confirmation;
-import com.backend.stayEasy.sevice.BookingService;
-import com.backend.stayEasy.sevice.PaymentBillService;
-import com.backend.stayEasy.sevice.PaypalService;
-import com.backend.stayEasy.sevice.impl.IMailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-=======
->>>>>>> origin/namhh-exception
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -23,7 +9,6 @@ import java.util.Scanner;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,28 +20,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.stayEasy.dto.PayoutDTO;
 import com.backend.stayEasy.dto.RefundDTO;
+import com.backend.stayEasy.enums.Confirmation;
 import com.backend.stayEasy.sevice.BookingService;
 import com.backend.stayEasy.sevice.PaymentBillService;
 import com.backend.stayEasy.sevice.PaypalService;
-import com.backend.stayEasy.sevice.impl.IMailService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/stayeasy/payment")
 public class PaymentAPI {
     @Autowired
-    PaypalService service;
-    @Autowired
-    PaymentBillService paymentService;
+    private PaymentBillService paymentService;
+    
     @Autowired
     private BookingService bookingService;
-    @Autowired
-    private IMailService mailService;
-    @Autowired PaypalService paypalService;
-    private UUID bookingId;
-    private boolean emailSent = false;
+
+    @Autowired 
+    private PaypalService paypalService;
 
     // Method payment host when traveler checkout ( khi user checkout thi AUTO PAYMENT  cho host theo stk đã dky trong user account )
     @GetMapping("/captures/{capture_id}")

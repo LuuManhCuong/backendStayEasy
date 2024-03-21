@@ -6,14 +6,12 @@ import com.backend.stayEasy.entity.Mail;
 public interface IMailService {
 	void sendBook(Mail mail);
 
-	void sendCancel(Mail mail, BookingDTO bookingDTO , String link);
+	void sendCancel(Mail mail, BookingDTO bookingDTO, String link);
 
 	void sendEmailPayment(Mail mail, BookingDTO bookingDTO, String paymentLink);
-<<<<<<< HEAD
+
 	void sendEmailSuccess(Mail mail, BookingDTO bookingDTO);
 
-=======
-
 	void sendEmailVerify(Mail mail, String Code);
->>>>>>> origin/namhh-exception
+
 }
