@@ -39,6 +39,9 @@ public class Property {
 
 	@Column(name = "is_null")
 	private boolean isNull;
+	
+	@Column(name = "status")
+	private Boolean status;
 
 	@Column(name = "num_guests")
 	private int numGuests;
@@ -76,6 +79,7 @@ public class Property {
 
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyCategory> propertyCategories;
+	
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyUilitis> propertyUilitis;
 

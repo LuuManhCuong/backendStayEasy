@@ -46,7 +46,7 @@ public class BookingAPI {
 
     // chi admin moi xem duoc
     @GetMapping(value = "")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<BookingDTO>> returnMyActiveBookings() {
         return ResponseEntity.ok().body(bookingService.findAll());
     }
@@ -56,7 +56,7 @@ public class BookingAPI {
     public ResponseEntity<List<BookingDTO>> getBookingById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok().body(bookingService.returnMyBookings(id));
     }
-    @GetMapping("/listing/{id}")
+    @GetMapping("/listing/{id}")	
     public ResponseEntity<List<BookingDTO>> returnListingBookings(@PathVariable("id") UUID id) {
         return ResponseEntity.ok().body(bookingService.returnListingBookings(id));
     }

@@ -26,7 +26,7 @@ public interface IPropertyService {
 
 	List<PropertyDTO> findByCategory(UUID categoryId);
 
-    List<PropertyDTO> findAllPropertiesByHostId(UUID hostId);
+    List<PropertyDTO> findAllPropertiesByHostId(UUID id);
 
 //	List<Property> findByCategory(UUID categoryId);
 

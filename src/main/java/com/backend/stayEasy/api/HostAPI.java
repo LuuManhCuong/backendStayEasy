@@ -18,13 +18,14 @@ public class HostAPI {
     private BookingService bookingService;
     // get all booking
     @GetMapping(value = "/{id}&{filter}")
-    public ResponseEntity<List<BookingDTO>> getAllBookingOfHost(@PathVariable("id") UUID hostId, @PathVariable("filter") String Filter ){
-        return ResponseEntity.ok().body(bookingService.returnAllBookingOfHost(hostId, Filter));
+    public ResponseEntity<List<BookingDTO>> getAllBookingOfHost(@PathVariable("id") UUID id, @PathVariable("filter") String Filter ){
+        return ResponseEntity.ok().body(bookingService.returnAllBookingOfHost(id, Filter));
     }
     // update status
    
-    public ResponseEntity<String> confirmBooking(@PathVariable UUID id, @PathVariable String status){
-        bookingService.updateConfirmBooking(id, status);
+    @PutMapping(value = "/update/{bookingId}&{status}")
+    public ResponseEntity<String> confirmBooking(@PathVariable UUID bookingId, @PathVariable String status){
+        bookingService.updateConfirmBooking(bookingId, status);
         // khi trạng thái thay đổi thì gửi thông báo or mail
         return ResponseEntity.ok("Confirmed " + status );
     }

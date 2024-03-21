@@ -249,10 +249,10 @@ public class PropertyService implements IPropertyService {
 		return result;
 	}
 
-	public List<PropertyDTO> findAllPropertiesByHostId(UUID hostId) {
+	public List<PropertyDTO> findAllPropertiesByHostId(UUID id) {
 		// Truy vấn cơ sở dữ liệu để lấy danh sách các property có userId giống với
 		// hostId
-		List<Property> properties = propertyRepository.findAllByUserId(hostId);
+		List<Property> properties = propertyRepository.findAllByUserId(id);
 
 		// Chuyển đổi danh sách các property sang danh sách PropertyDTO
 		return properties.stream().map(propertyConverter::toDTO).collect(Collectors.toList());
