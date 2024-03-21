@@ -1,14 +1,9 @@
 package com.backend.stayEasy.entity;
 
-import java.util.UUID;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.UUID;
 
 @Entity
 @Data
@@ -18,7 +13,6 @@ public class PropertyUilitis {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID propertyUtilitiesId;
     private int quantity;
-    
     @ManyToOne()
     private Property property;
     

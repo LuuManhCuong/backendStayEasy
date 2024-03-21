@@ -1,37 +1,28 @@
 package com.backend.stayEasy.api;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import com.backend.stayEasy.convertor.FeedbackConverter;
+import com.backend.stayEasy.convertor.UserConverter;
+import com.backend.stayEasy.dto.FeedbackDTO;
+import com.backend.stayEasy.entity.Feedback;
+import com.backend.stayEasy.repository.FeedbackRepository;
+import com.backend.stayEasy.repository.IPropertyRepository;
+import com.backend.stayEasy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.backend.stayEasy.convertor.FeedbackConverter;
-import com.backend.stayEasy.convertor.UserConverter;
-import com.backend.stayEasy.dto.FeedbackDTO;
-import com.backend.stayEasy.dto.UserDTO;
-import com.backend.stayEasy.entity.Feedback;
-import com.backend.stayEasy.entity.Property;
-import com.backend.stayEasy.entity.User;
-import com.backend.stayEasy.repository.FeedbackRepository;
-import com.backend.stayEasy.repository.IPropertyRepository;
-import com.backend.stayEasy.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Controller
 @CrossOrigin

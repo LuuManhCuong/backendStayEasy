@@ -1,32 +1,19 @@
 package com.backend.stayEasy.sevice;
-
+import com.backend.stayEasy.convertor.LikeConverter;
+import com.backend.stayEasy.convertor.PropertyConverter;
+import com.backend.stayEasy.sevice.impl.IPropertyService;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.backend.stayEasy.convertor.CategoryConverter;
-import com.backend.stayEasy.convertor.FeedbackConverter;
-import com.backend.stayEasy.convertor.ImagesConventer;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import com.backend.stayEasy.convertor.LikeConverter;
-import com.backend.stayEasy.convertor.PropertyConverter;
 import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.DataPropertyExploreDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
@@ -53,18 +40,8 @@ import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
 import com.backend.stayEasy.repository.PropertyUilitisRepository;
 import com.backend.stayEasy.repository.RulesRepository;
-import com.backend.stayEasy.sevice.impl.IPropertyService;
-
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.backend.stayEasy.repository.PropertyRulesRepository;
-import com.backend.stayEasy.repository.PropertyUilitisRepository;
-import com.backend.stayEasy.repository.RulesRepository;
 import com.backend.stayEasy.repository.UtilitiesRepository;
-import com.backend.stayEasy.sevice.impl.IPropertyService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PropertyService implements IPropertyService {
