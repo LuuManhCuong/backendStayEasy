@@ -126,5 +126,33 @@ public class UserAPI {
 		}
 		return ResponseEntity.ok(userService.save(userDTO));
 	}
+	
+	/**
+	 * 
+	 * @author NamHH
+	 * @param userDTO
+	 * @param request
+	 * @return
+	 */
+	@PutMapping("/update-role")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<?> updateRole(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			UserDTO user = userService.save(userDTO);// call method reset password từ service
+			
+			// Set các thông tin cần thiết để gửi về client
+			response.put("message", "Thay đổi thành công!");
+	        response.put("user", user);
+	        response.put("status", HttpStatus.OK.value());
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			// Thông báo lỗi về cho người dùng
+						response.put("message", "Thay đổi thất bại!");
+				        response.put("user", null);
+				        response.put("status", HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+	}
 
 }
