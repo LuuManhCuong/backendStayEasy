@@ -22,10 +22,10 @@ public class Utilities {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID utilitiId;
 	
-	@Column(name = "utilities_name", columnDefinition = "text")
+	@Column(name = "utilities_name", columnDefinition = "NTEXT")
 	private String utilitiesName;
 	
-	@Column(name = "type")
+	@Column(name = "type", columnDefinition = "NTEXT")
 	private String type;
 
 	@OneToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
