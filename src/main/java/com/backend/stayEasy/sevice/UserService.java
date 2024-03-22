@@ -46,6 +46,7 @@ public class UserService implements IUserService{
 	/**
 	 * @author NamHH
 	 */
+	@Transactional
 	public UserDTO getUserById(UUID id) {
 		return userConverter.toDTO(userRepository.findById(id).get());
 	}
@@ -60,8 +61,9 @@ public class UserService implements IUserService{
 	/**
 	 * @author NamHH
 	 */
+	@Transactional
 	public UserDTO getUserByToken(String token) {
-		return userConverter.toDTO(userRepository.findByToken(token).orElseThrow());
+        return userConverter.toDTO(userRepository.findByToken(token).orElse(null));
 	}
 
 	/**

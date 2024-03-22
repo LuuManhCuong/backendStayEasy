@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -27,9 +28,11 @@ import com.backend.stayEasy.dto.SignInRequest;
 import com.backend.stayEasy.dto.SignInResponse;
 import com.backend.stayEasy.dto.SignUpRequest;
 import com.backend.stayEasy.entity.Mail;
+import com.backend.stayEasy.entity.Role;
 import com.backend.stayEasy.entity.Token;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.enums.TokenType;
+import com.backend.stayEasy.repository.RoleRepository;
 import com.backend.stayEasy.repository.TokenRepository;
 import com.backend.stayEasy.repository.UserRepository;
 import com.backend.stayEasy.sevice.impl.IMailService;
@@ -46,7 +49,7 @@ import okhttp3.Response;
 public class AuthService implements UserDetailsService {
 
 	@Autowired
-	private UserRepository repository;
+	private UserRepository userrepository;
 
 	@Autowired
 	private UserConverter userConverter;
@@ -68,6 +71,9 @@ public class AuthService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bcryptEncoder;
@@ -92,7 +98,7 @@ public class AuthService implements UserDetailsService {
 	 */
 	public ResponseEntity<?> register(SignUpRequest request) {
 		// Kiểm tra xem email đã tồn tại trong hệ thống chưa
-		if (repository.existsByEmail(request.getEmail())) {
+		if (userrepository.existsByEmail(request.getEmail())) {
 			Map<String, Object> errorResponse = new HashMap<>();
 			errorResponse.put("message", "Email " + request.getEmail() + " đã đăng ký!");
 			errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
@@ -101,13 +107,20 @@ public class AuthService implements UserDetailsService {
 					.body(errorResponse);
 		}
 		
+		List<Role> roles = new ArrayList<>();
+		
+		for(String roleName: request.getRole()) {
+			roles.add(roleRepository.findRoleByName("ROLE_"+roleName));
+		}
+		
 		//lấy và giá trị từ client gửi lên vào obj user mới
 		var user = User.builder().firstName(request.getFirstName()).lastName(request.getLastName())
 				.email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
-				.role(request.getRole()).createdAt(LocalDateTime.now())
+				.roles(roles)
+				.createdAt(LocalDateTime.now())
 				.updatedAt(LocalDateTime.now()).build();
 		
-		var savedUser = repository.save(user); //lưu user vào db
+		var savedUser = userrepository.save(user); //lưu user vào db
 		var jwtToken = jwtService.generateToken(user); //Tạo accessToken
 		var refreshToken = jwtService.generateRefreshToken(user); //Tạo refreshToken
 		saveUserToken(savedUser, jwtToken, refreshToken); //lưu token vào db
@@ -128,7 +141,7 @@ public class AuthService implements UserDetailsService {
 	public SignInResponse authenticate(SignInRequest request) {
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-		var user = repository.findByEmail(request.getEmail()).orElseThrow();
+		var user = userrepository.findByEmail(request.getEmail()).orElseThrow();
 		
 		var jwtToken = jwtService.generateToken(user); //Tạo refreshToken
 		var refreshToken = jwtService.generateRefreshToken(user); //lưu token vào db
@@ -138,7 +151,7 @@ public class AuthService implements UserDetailsService {
 		revokeAllUserTokens(user);
 		
 		saveUserToken(user, jwtToken, refreshToken); //Lưu token mới vào db
-		return SignInResponse.builder().accessToken(jwtToken).refreshToken(refreshToken).user(userConverter.toDTO(user))
+		return SignInResponse.builder().accessToken(jwtToken).refreshToken(refreshToken).message("Đăng nhập thành công").user(userConverter.toDTO(user))
 				.build();
 	}
 
@@ -212,7 +225,7 @@ public class AuthService implements UserDetailsService {
 			userEmail = jwtService.extractUsername(refreshToken);
 			if (userEmail != null) {
 				//Tìm kiếm người dùng trong cơ sở dữ liệu dựa trên email. Nếu không tìm thấy người dùng, phương thức sẽ ném một ngoại lệ.
-				var user = this.repository.findByEmail(userEmail).orElseThrow();
+				var user = this.userrepository.findByEmail(userEmail).orElseThrow();
 				//Check refreshToken đó có hợp lệ không
 				if (jwtService.isTokenValid(refreshToken, user)) {
 					var newAccessToken = jwtService.generateToken(user);//Tạo token mới
