@@ -1,27 +1,18 @@
 package com.backend.stayEasy.sevice;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.backend.stayEasy.convertor.CategoryConverter;
-import com.backend.stayEasy.convertor.FeedbackConverter;
-import com.backend.stayEasy.convertor.ImagesConventer;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.backend.stayEasy.convertor.LikeConverter;
 import com.backend.stayEasy.convertor.PropertyConverter;
@@ -34,6 +25,7 @@ import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
 import com.backend.stayEasy.dto.RulesDTO;
 import com.backend.stayEasy.entity.Category;
 import com.backend.stayEasy.entity.Feedback;
+import com.backend.stayEasy.entity.FeedbackTrip;
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Like;
 import com.backend.stayEasy.entity.Property;
@@ -41,21 +33,17 @@ import com.backend.stayEasy.entity.PropertyCategory;
 import com.backend.stayEasy.entity.PropertyRules;
 import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.entity.Rules;
-import com.backend.stayEasy.entity.User;
-import com.backend.stayEasy.repository.CategoryRepository;
 import com.backend.stayEasy.entity.Utilities;
+
+import com.backend.stayEasy.repository.CategoryRepository;
 import com.backend.stayEasy.repository.FeedbackRepository;
+
+import com.backend.stayEasy.repository.FeedbackTripRepository;
+
 import com.backend.stayEasy.repository.IImageRepository;
 import com.backend.stayEasy.repository.IPropertyCategoryRepository;
 import com.backend.stayEasy.repository.IPropertyRepository;
 import com.backend.stayEasy.repository.LikeRepository;
-import com.backend.stayEasy.repository.PropertyUilitisRepository;
-import com.backend.stayEasy.repository.RulesRepository;
-import com.backend.stayEasy.sevice.impl.IPropertyService;
-
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.backend.stayEasy.repository.PropertyRulesRepository;
 import com.backend.stayEasy.repository.PropertyUilitisRepository;
 import com.backend.stayEasy.repository.RulesRepository;
@@ -101,7 +89,7 @@ public class PropertyService implements IPropertyService {
 	private PropertyUilitisRepository propertyUilitisRepository;
 
 	@Autowired
-	private FeedbackRepository feedbackRepository;
+	private FeedbackTripRepository feedbackRepository;
 
 	@Override
 	public DataPropertyExploreDTO findAll(Pageable pageable) {
@@ -171,7 +159,6 @@ public class PropertyService implements IPropertyService {
 		for (PropertyUtilitiesDTO propertyUtilitiesDTO : propertyDTO.getPropertyUtilitis()) {
 			PropertyUilitis temp = new PropertyUilitis();
 			temp.setProperty(property);
-			temp.setQuantity(propertyUtilitiesDTO.getQuantity());
 			Optional<Utilities> utilitiesOp = utilitiesRepository.findById(propertyUtilitiesDTO.getUtilitiesId());
 			if (utilitiesOp.isPresent()) {
 				Utilities utilities = utilitiesOp.get();
@@ -180,7 +167,8 @@ public class PropertyService implements IPropertyService {
 			propertyUtilities.add(temp);
 		}
 
-		property.setCreateAt(LocalDateTime.now());
+		LocalDate today = LocalDate.now();
+		property.setCreateAt(Date.valueOf(today));
 		property.setImages(images);
 		property.setPropertyCategories(propertyCategory);
 		property.setPropertyRules(propertyRules);
@@ -270,7 +258,6 @@ public class PropertyService implements IPropertyService {
 		List<PropertyRules> rulesToMove = new ArrayList<>();
 		List<PropertyUilitis> utilitiesToMove = new ArrayList<>();
 		List<Images> imagesToRemove = new ArrayList<>();
-		List<PropertyUilitis> updatedPropertyUtilities = new ArrayList<>();
 
 		for (PropertyCategory existingCategory : existingProperty.getPropertyCategories()) {
 			boolean existsInUpdate = false;
@@ -399,11 +386,6 @@ public class PropertyService implements IPropertyService {
 			boolean exists = false;
 			for (PropertyUilitis existingUtilities : existingProperty.getPropertyUilitis()) {
 				if (existingUtilities.getUtilities().getUtilitiId().equals(utilitiesDTO.getUtilitiesId())) {
-					if (existingUtilities.getQuantity() != utilitiesDTO.getQuantity()) {
-						existingUtilities.setQuantity(utilitiesDTO.getQuantity());
-						exists = true;
-						break;
-					}
 					exists = true;
 					break;
 				}
@@ -414,7 +396,6 @@ public class PropertyService implements IPropertyService {
 				newUtilities.setProperty(existingProperty);
 				Optional<Utilities> temp = utilitiesRepository.findById(utilitiesDTO.getUtilitiesId());
 				newUtilities.setUtilities(temp.get());
-				newUtilities.setQuantity(utilitiesDTO.getQuantity());
 				existingProperty.getPropertyUilitis().add(newUtilities);
 			}
 		}
@@ -422,16 +403,16 @@ public class PropertyService implements IPropertyService {
 	}
 
 	public float getRatingProperty(UUID propertyId) {
-		List<Feedback> feedbackList = feedbackRepository.findByPropertyId(propertyId);
-		float total = 0;
-		for (Feedback feedback : feedbackList) {
-			total += feedback.getRating();
-		}
-		if (feedbackList.size() > 0) {
-			return total / feedbackList.size();
-		} else {
-			return 0;
-		}
+	    List<FeedbackTrip> feedbackList = feedbackRepository.findByPropertyPropertyId(propertyId);
+	    float total = 0;
+	    for (FeedbackTrip feedback : feedbackList) {
+	        total += feedback.getRating();
+	    }
+	    if (feedbackList.size() > 0) {
+	        return total / feedbackList.size(); 
+	    } else {
+	        return 0;
+	    }
 	}
 
 	@Override

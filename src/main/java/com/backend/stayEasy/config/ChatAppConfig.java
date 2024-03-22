@@ -19,7 +19,7 @@ public class ChatAppConfig implements WebSocketMessageBrokerConfigurer{
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		// TODO Auto-generated method stub
-		config.enableSimpleBroker("/api/v1/stayeasy/topic");
+		config.enableSimpleBroker("/api/v1/stayeasy/topic","/api/v1/stayeasy/notification");
 		config.setApplicationDestinationPrefixes("/api/v1/stayeasy/app");
 	}
 

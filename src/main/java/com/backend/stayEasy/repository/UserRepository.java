@@ -1,6 +1,5 @@
 package com.backend.stayEasy.repository;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,4 +25,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
 	@Query("SELECT u FROM User u JOIN Token t ON u.id = t.user.id WHERE t.token = :token AND t.expired = false")
 	Optional<User> findByToken(String token);
+	
+	// Phương thức kiểm tra số điện thoại đã tồn tại hay chưa
+	@Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.phone = :phone")
+    boolean existsByPhone(String phone);
 }

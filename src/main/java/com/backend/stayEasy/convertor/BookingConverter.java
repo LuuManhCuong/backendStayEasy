@@ -24,6 +24,8 @@ public class BookingConverter {
     public BookingDTO toDTO(Booking booking) {
         BookingDTO bookingDTO = new BookingDTO();
         bookingDTO.setBookingId(booking.getBookingId());
+        bookingDTO.setPropertyId(booking.getProperty().getPropertyId());
+        bookingDTO.setUserId(booking.getUser().getId());
         bookingDTO.setDateBooking(booking.getDateBooking());
         bookingDTO.setCheckIn(booking.getCheckIn());
         bookingDTO.setCheckOut(booking.getCheckOut());
@@ -33,7 +35,7 @@ public class BookingConverter {
         bookingDTO.setNumberNight(booking.getNumNight());
         bookingDTO.setNumOfGuest(booking.getNumGuest());
         bookingDTO.setTotal(booking.getTotalPrice());
-        bookingDTO.setStatus(booking.getStatus()); 
+        bookingDTO.setStatus(booking.getStatus());
         bookingDTO.setConfirmation(booking.getConfirmation().name());
 //        bookingDTO.setPropertyName(listingServiceStatic.findById(booking.getProperty().getId()).getPropertyName());
         return  bookingDTO;

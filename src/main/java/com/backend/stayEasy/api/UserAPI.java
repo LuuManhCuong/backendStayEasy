@@ -46,46 +46,56 @@ public class UserAPI {
 		return ResponseEntity.ok(userService.getAllUser());
 	}
 
+	
+	/**
+	 * 
+	 * @author NamHH
+	 * @param request
+	 * @return
+	 */
 	@GetMapping("/token")
 	public ResponseEntity<?> getUserByAccessToken(HttpServletRequest request) {
-		String token = request.getHeader("Authorization");
+		String token = request.getHeader("Authorization");//Lấy chuỗi token từ header
 		if (token != null && token.startsWith("Bearer ")) {
+			//tách ký tự "Bearer " ra khỏi chuỗi token vừa lấy được
 			token = token.substring(7);
-			boolean isValid = jwtService.isTokenValid(token);
-			boolean isExpired = jwtService.isTokenExpired(token);
-			boolean isTokenExist = tokenService.getByToken(token).isPresent();
+			
+			//Tạo các var kiểm tra token
+			boolean isValid = jwtService.isTokenValid(token); //kiểm tra token hợp lệ hay không
+			boolean isExpired = jwtService.isTokenExpired(token);//Kiểm tra token còn hạn không => true -> hết hạn
+			boolean isTokenExist = tokenService.getByToken(token).isPresent();//Kiểm tra tra token có tồn tại trong db không
+			
+			
+			//tạo 1 obj để trả về người dùng
+			CheckLoginResponseDTO result = new CheckLoginResponseDTO("", false, !isExpired, isTokenExist, isValid, null);
+			
 			if (isValid) {
 				if (!isExpired && isTokenExist) {
-					return ResponseEntity.ok(CheckLoginResponseDTO.builder()
-							.message("Thành công!")
-							.isLogin(true)
-							.isExpried(isExpired)
-							.isExist(isTokenExist)
-							.isValid(isValid)
-							.user(userService.getUserByToken(token))
-							.build());
+					//token hợp lệ && còn hạn && có trong db -> lấy ra user
+					result.setMessage("Thành công!");
+					result.setLogin(true);
+					result.setValid(isValid);
+					result.setUser(userService.getUserByToken(token));
+					return ResponseEntity.ok(result);
 				}
-				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(CheckLoginResponseDTO.builder()
-						.message("Token không hợp lệ hoặc hết hạn.")
-						.isLogin(false)
-						.isExpried(isExpired)
-						.isExist(isTokenExist)
-						.isValid(isValid)
-						.user(null)
-						.build());
+				//token hợp lệ && (hết hạn || không tồn tại)
+				result.setMessage("Token không hết hạn hoặc không tồn tại.");
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
 			}
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CheckLoginResponseDTO.builder()
-					.message("Người dùng chưa đăng nhập.")
-					.isLogin(false)
-					.isExpried(isExpired)
-					.isExist(isTokenExist)
-					.isValid(isValid)
-					.user(null)
-					.build());
+			//token không hợp lệ
+			result.setMessage("Token không hợp lệ.");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi server.");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy token.");
 	}
 
+	
+	/**
+	 * 
+	 * @author NamHH
+	 * @param id
+	 * @return
+	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
 		return ResponseEntity.ok(userService.getUserById(UUID.fromString(id)));

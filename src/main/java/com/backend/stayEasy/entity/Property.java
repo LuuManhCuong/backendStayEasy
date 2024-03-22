@@ -1,20 +1,11 @@
 package com.backend.stayEasy.entity;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.Data;
 
 @Entity
 @Data
@@ -50,7 +41,8 @@ public class Property {
 	private int discount;
 
 	@Column(name = "create_at")
-	private LocalDateTime createAt;
+	private Date createAt;
+	
 	@Column (name = "service_fee")
 	private int serviceFee;
 	
@@ -74,9 +66,9 @@ public class Property {
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Images> images;
 
-//	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<Feedback> feedbacks;
-
+	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<FeedbackTrip> feedbacks;
+	
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<PropertyCategory> propertyCategories;
 	

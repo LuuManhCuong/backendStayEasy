@@ -19,11 +19,11 @@ public class PropertyDTO {
     private String description;
     private String thumbnail;
     private String address;
+    private int numBedRoom;
+	private int numBathRoom;
     private Float price;
     private boolean isNull;
     private int numGuests;
-    private int numBedRoom;
-    private int numBathRoom;
     private int serviceFee;
     private int discount;
     private LocalDateTime createAt;

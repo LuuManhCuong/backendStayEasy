@@ -47,7 +47,7 @@ public class SecurityConfig {
 	private LogoutService logoutService;
 
 	private static final String[] WHITE_LIST_URL = {"/**", "/api/v1/auth/**", "/api/v1/stayeasy/**", "/api/v1/user/**"};
-	private static final String[] ADMIN_LIST_URL = {"/api/v1/token/**"};
+	private static final String[] ADMIN_LIST_URL = {"/api/v1/token/**", "/api/v1/stayeasy/admin/**"};
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final AuthenticationProvider authenticationProvider;
 

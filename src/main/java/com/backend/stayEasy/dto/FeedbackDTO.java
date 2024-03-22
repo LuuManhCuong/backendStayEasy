@@ -14,7 +14,6 @@ public class FeedbackDTO {
 	private String content;
 	private String username;
 	private String avatar;
-	private int rating;
 	private UUID userId;
 	private UUID propertyId;
 }
