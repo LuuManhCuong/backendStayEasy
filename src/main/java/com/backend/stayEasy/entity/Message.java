@@ -29,7 +29,7 @@ public class Message {
 	
 	@Column(name="user_id")
 	private UUID userId;
-	@Column(name="content",columnDefinition = "ntext()" )
+	@Column(name="content",columnDefinition = "NTEXT" )
 	private String content;
 	@Column(name = "createAt")
 	private LocalDateTime createAt;

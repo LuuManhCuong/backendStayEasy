@@ -22,7 +22,7 @@ public class Utilities {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID utilitiId;
 	
-	@Column(name = "utilities_name", columnDefinition = "text")
+	@Column(name = "utilities_name", columnDefinition = "ntext")
 	private String utilitiesName;
 	
 	@Column(name = "type")
