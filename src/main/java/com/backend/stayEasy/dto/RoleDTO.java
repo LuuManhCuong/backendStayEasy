@@ -1,20 +1,23 @@
 package com.backend.stayEasy.dto;
 
 import java.util.List;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpRequest {
-	private String email;
-	private String password;
-	private String firstName;
-	private String lastName;
-	private List<String> role;
+public class RoleDTO {
+	
+	private UUID id;
+	private String roleName;
+	private List<UserDTO> users;
+
 }

@@ -1,16 +1,5 @@
 package com.backend.stayEasy.config;
 
-import static com.backend.stayEasy.enums.Permission.ADMIN_CREATE;
-import static com.backend.stayEasy.enums.Permission.ADMIN_DELETE;
-import static com.backend.stayEasy.enums.Permission.ADMIN_READ;
-import static com.backend.stayEasy.enums.Permission.ADMIN_UPDATE;
-import static com.backend.stayEasy.enums.Role.ADMIN;
-import static com.backend.stayEasy.enums.Role.OWNER;
-import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
-
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +45,8 @@ public class SecurityConfig {
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 		.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
 						req -> req.requestMatchers(WHITE_LIST_URL).permitAll()
-						.requestMatchers("/api/v1/owner/**").hasAnyRole(OWNER.name())
-						.requestMatchers(ADMIN_LIST_URL).hasAnyRole(ADMIN.name())
-						.requestMatchers(GET, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_READ.name())
-						.requestMatchers(POST, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_CREATE.name())
-						.requestMatchers(PUT, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_UPDATE.name())
-						.requestMatchers(DELETE, ADMIN_LIST_URL).hasAnyAuthority(ADMIN_DELETE.name())
+						.requestMatchers("/api/v1/owner/**").hasAnyRole("HOST")
+						.requestMatchers(ADMIN_LIST_URL).hasAnyRole("ADMIN")
 						.anyRequest().authenticated())
 				.exceptionHandling(configurer -> configurer
 				        .accessDeniedHandler(new AccessDeniedExceptionHandler())

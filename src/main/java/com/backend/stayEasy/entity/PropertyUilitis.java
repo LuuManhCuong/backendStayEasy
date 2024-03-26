@@ -13,12 +13,10 @@ public class PropertyUilitis {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID propertyUtilitiesId;
 
-    private int quantity;
-    @ManyToOne()
-    private Property property;
-    
-    @ManyToOne()
-    private Utilities utilities;
+	@ManyToOne()
+	private Property property;
 
+	@ManyToOne()
+	private Utilities utilities;
 
 }

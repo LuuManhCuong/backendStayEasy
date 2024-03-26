@@ -1,15 +1,18 @@
 package com.backend.stayEasy.convertor;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.backend.stayEasy.dto.UserDTO;
 import com.backend.stayEasy.entity.Address;
+import com.backend.stayEasy.entity.Role;
 import com.backend.stayEasy.entity.User;
-import com.backend.stayEasy.enums.Role;
 import com.backend.stayEasy.repository.AddressRepository;
+import com.backend.stayEasy.repository.RoleRepository;
 
 @Component
 public class UserConverter {
@@ -19,9 +22,13 @@ public class UserConverter {
 
 	@Autowired
 	private AddressRepository addressRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 
 	public UserDTO toDTO(User user) {
 		UserDTO result = new UserDTO();
+		
 		result.setId(user.getId());
 		result.setEmail(user.getEmail());
 		result.setFirstName(user.getFirstName());
@@ -30,8 +37,8 @@ public class UserConverter {
 		if (user.getAddress() != null) {
 			result.setAddress(addressConverter.toDTO(user.getAddress()));
 		}
+		result.setRoles(user.getRoles().stream().map(Role -> Role.getRoleName()).collect(Collectors.toList()));
 		result.setAvatar(user.getAvatar());
-		result.setRoleName(user.getRole().name());
 		result.setCreateAt(user.getCreatedAt());
 		result.setUpdateAt(user.getUpdatedAt());
 		return result;
@@ -49,8 +56,16 @@ public class UserConverter {
 			user.setAddress(userDTO.getAddress() != null ? addressConverter.toEntity(userDTO.getAddress()) : user.getAddress());
 		}
 		user.setAvatar(Optional.ofNullable(userDTO.getAvatar()).orElse(user.getAvatar()));
-		user.setRole(userDTO.getRoleName() != null ? Role.valueOf(userDTO.getRoleName()) : user.getRole());
+		if(userDTO.getRoles() != null) {
+			// Sử dụng Stream để chuyển đổi từ tên vai trò sang Role Entity
+			List<Role> roles = userDTO.getRoles().stream()
+	                .map(roleName -> roleRepository.findRoleByName("ROLE_"+roleName))
+	                .collect(Collectors.toList());
 
+	        user.setRoles(roles);
+		}else {
+			user.setRoles(user.getRoles());
+		}
 		return user;
 	}
 

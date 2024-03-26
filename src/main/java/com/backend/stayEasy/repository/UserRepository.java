@@ -29,4 +29,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	// Phương thức kiểm tra số điện thoại đã tồn tại hay chưa
 	@Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.phone = :phone")
     boolean existsByPhone(String phone);
+	
+	@Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.id = :userId")
+    User findByIdWithRoles(UUID userId);
 }

@@ -22,7 +22,7 @@ public class HostAPI {
     private BookingService bookingService;
     @Autowired
     private PaymentBillService paymentBillService;
-    @Scheduled(cron = "0 */15 * * * *") // Chạy mỗi 5 phút
+    @Scheduled(cron = "0 */5 * * * *") // Chạy mỗi 5 phút
     public void scheduleBookingStatusUpdate() throws IOException {
         System.out.println("Chạy lịch schedule");
         try {
@@ -49,14 +49,15 @@ public class HostAPI {
 
     // get all booking
     @GetMapping(value = "/{id}&{filter}")
-    public ResponseEntity<List<BookingDTO>> getAllBookingOfHost(@PathVariable("id") UUID hostId, @PathVariable("filter") String Filter ){
-        return ResponseEntity.ok().body(bookingService.returnAllBookingOfHost(hostId, Filter));
+    public ResponseEntity<List<BookingDTO>> getAllBookingOfHost(@PathVariable("id") UUID id, @PathVariable("filter") String Filter ){
+        return ResponseEntity.ok().body(bookingService.returnAllBookingOfHost(id, Filter));
     }
 
     // update status
    
-    public ResponseEntity<String> confirmBooking(@PathVariable UUID id, @PathVariable String status){
-        bookingService.updateConfirmBooking(id, status);
+    @PutMapping(value = "/update/{bookingId}&{status}")
+    public ResponseEntity<String> confirmBooking(@PathVariable UUID bookingId, @PathVariable String status){
+        bookingService.updateConfirmBooking(bookingId, status);
         // khi trạng thái thay đổi thì gửi thông báo or mail
         return ResponseEntity.ok("Confirmed " + status );
     }
