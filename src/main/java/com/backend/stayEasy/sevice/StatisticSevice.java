@@ -137,6 +137,7 @@ public class StatisticSevice {
 	  
 		// Chạy vào ngày cuối cùng của tháng lúc 11:50:00 PM
 		@Scheduled(cron = "0 50 23 L * ?")
+	
 		@Transactional
 	    public void calculateAndSaveMonthlyStatistics() {
 	        System.out.println("auto save");
@@ -153,14 +154,14 @@ public class StatisticSevice {
 	        
 	        // Tính và lưu thống kê cho tháng hiện tại
 	        Statistics currentMonthStatistics = calculateRevenueForMonth(firstDateOfCurrentMonth, todayDate);
-	        System.out.println(currentMonthStatistics);
+//	        System.out.println(currentMonthStatistics);
 	        statisticsRepository.save(currentMonthStatistics);
 //	        return currentMonthStatistics;
 	    }
 	    
 
 	  public Statistics calculateRevenueForMonth(Date startDate, Date endDate) {
-		 System.out.println("detat: " + startDate  + " " + endDate);
+//		 System.out.println("detat: " + startDate  + " " + endDate);
 	        Statistics statistics = new Statistics();
 	        
 	        // Thiết lập date cho đối tượng statistics
