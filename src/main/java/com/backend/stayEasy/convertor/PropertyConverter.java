@@ -7,12 +7,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.backend.stayEasy.dto.BookingDTO;
 import com.backend.stayEasy.dto.CategoryDTO;
 import com.backend.stayEasy.dto.ImagesDTO;
 import com.backend.stayEasy.dto.LikeRequestDTO;
 import com.backend.stayEasy.dto.PropertyDTO;
 import com.backend.stayEasy.dto.PropertyUtilitiesDTO;
 import com.backend.stayEasy.dto.RulesDTO;
+import com.backend.stayEasy.entity.Booking;
 import com.backend.stayEasy.entity.Images;
 import com.backend.stayEasy.entity.Property;
 import com.backend.stayEasy.entity.PropertyCategory;
@@ -20,7 +22,6 @@ import com.backend.stayEasy.entity.PropertyRules;
 import com.backend.stayEasy.entity.PropertyUilitis;
 import com.backend.stayEasy.entity.User;
 import com.backend.stayEasy.repository.UserRepository;
-
 
 @Component
 public class PropertyConverter {
@@ -36,19 +37,21 @@ public class PropertyConverter {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private RulesConverter rulesConverter;
-	
+
 	@Autowired
 	private PropertyUtilitiesConverter propertyUtilitiesConverter;
 	
+//	private final BookingConverter bookingConverter = new BookingConverter();
 
 	public PropertyDTO toDTO(Property property) {
 		List<ImagesDTO> listImages = new ArrayList<>();
 		List<CategoryDTO> listCategory = new ArrayList<>();
 		List<RulesDTO> listRules = new ArrayList<>();
 		List<PropertyUtilitiesDTO> listUtilities = new ArrayList<>();
+//		List<BookingDTO> listBookings = new ArrayList<>();
 		PropertyDTO propertyDTO = new PropertyDTO();
 		propertyDTO.setAddress(property.getAddress());
 		propertyDTO.setDescription(property.getDescription());
@@ -63,6 +66,13 @@ public class PropertyConverter {
 		propertyDTO.setNumBedRoom(property.getNumBedRoom());
 		propertyDTO.setServiceFee(property.getServiceFee());
 		
+		// Bookings
+//		if (!property.getBooking().isEmpty()) {
+//			for(Booking b : property.getBooking()) {
+//				listBookings.add(bookingConverter.toDTO(b));
+//			}
+//		} 
+
 		// CATEGORIES
 		if (!property.getPropertyCategories().isEmpty()) {
 			for (PropertyCategory c : property.getPropertyCategories()) {
@@ -70,10 +80,10 @@ public class PropertyConverter {
 			}
 		}
 		propertyDTO.setCategories(listCategory);
-		
+
 		// THUMBNAIL
 		propertyDTO.setThumbnail(property.getThumbnail());
-		
+
 		if (!property.getImages().isEmpty()) {
 			for (Images i : property.getImages()) {
 				listImages.add(imagesConventer.toDTO(i));
@@ -88,28 +98,28 @@ public class PropertyConverter {
 			}
 		}
 		propertyDTO.setRulesList(listRules);
-		
+
 		// UTILITIESS
 		if (!property.getPropertyUilitis().isEmpty()) {
 			for (PropertyUilitis c : property.getPropertyUilitis()) {
 				listUtilities.add(propertyUtilitiesConverter.toDTO(c));
 			}
 		}
-		System.out.println("o day: "+listUtilities);
+		System.out.println("o day: " + listUtilities);
 		propertyDTO.setPropertyUtilitis(listUtilities);
-		
+
 		// USER
 		if (property.getUser() != null) {
 			propertyDTO.setOwner(userConverter.toDTO(property.getUser()));
 		}
-		
+
 		return propertyDTO;
 	}
 
 	// TO ENTITY
 	public Property toEntity(PropertyDTO propertyDTO) {
 		Property property = new Property();
-		if(propertyDTO.getPropertyId()!=null) {
+		if (propertyDTO.getPropertyId() != null) {
 			property.setPropertyId(propertyDTO.getPropertyId());
 		}
 		property.setAddress(propertyDTO.getAddress());
@@ -129,12 +139,12 @@ public class PropertyConverter {
 		property.setNumBedRoom(propertyDTO.getNumBedRoom());
 
 		Optional<User> optionalUser = userRepository.findById(propertyDTO.getOwner().getId());
-				if (optionalUser.isPresent()) {
-				    User user = optionalUser.get(); 
-				    property.setUser(user);
-				} else {
-				   property.setUser(null);
-				}
+		if (optionalUser.isPresent()) {
+			User user = optionalUser.get();
+			property.setUser(user);
+		} else {
+			property.setUser(null);
+		}
 		return property;
 
 	}
@@ -157,7 +167,6 @@ public class PropertyConverter {
 		propertyDTO.setLikeList(likeRequestDTOlist);
 		return propertyDTO;
 	}
-	
 
 	public List<PropertyDTO> arrayToDTO(List<Property> propertyList) {
 		List<PropertyDTO> propertyDTOList = new ArrayList<>();

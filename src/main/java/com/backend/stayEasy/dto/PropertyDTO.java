@@ -29,6 +29,7 @@ public class PropertyDTO {
     private LocalDateTime createAt;
     private Float rating;
     private UserDTO owner;
+    private List<BookingDTO> bookings;
     private List<ImagesDTO> imagesList;
     private List<CategoryDTO> categories;
     private Set<FeedbackDTO> feedbackList;
