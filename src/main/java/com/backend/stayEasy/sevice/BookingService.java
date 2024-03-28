@@ -207,11 +207,17 @@ public class BookingService {
 		if (bookingOptional.isEmpty()) {
 			throw new RuntimeException("Booking with ID " + bookingId + " not found.");
 		}
+		LocalDate curenDate  = LocalDate.now();
 		try {
 			Booking booking = bookingOptional.get();
+			LocalDate checkInDate = booking.getCheckIn().toLocalDate();
 			Confirmation confirmation = Enum.valueOf(Confirmation.class, status);
 			if (!booking.getConfirmation().equals(confirmation)) {
-				booking.setConfirmation(confirmation);
+				if(checkInDate.equals(curenDate)) {
+					booking.setConfirmation(Confirmation.IN_PROGRESS);
+				} else {
+					booking.setConfirmation(confirmation);
+				}
 				bookingRepository.save(booking);
 			}
 		} catch (IllegalArgumentException e) {
